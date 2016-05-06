@@ -14,8 +14,8 @@
         </commentGenerator>
         
         <jdbcConnection driverClass="org.gjt.mm.mysql.Driver" 
-        connectionURL="jdbc:mysql://localhost:3306/vdq"  
-         userId="root" password="123456"/>  
+        connectionURL="jdbc:mysql://121.40.171.43:3306/vdq"  
+         userId="root" password="8a5c94af1d"/>  
          
         <!-- 指定生成的类型为java类型，避免数据库中number等类型字段 -->  
         <javaTypeResolver>  
@@ -39,12 +39,7 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.tianyi.yw.dao" targetProject="src\main\java">  
             <property name="enableSubPackages" value="true"/>  
         </javaClientGenerator>  
-         
-        <table tableName="t_user" domainObjectName="User"
-           enableSelectByExample="false"
-	       enableDeleteByExample="false"
-	       enableCountByExample="false"
-	       enableUpdateByExample="false"/>  
+          
      
         <table tableName="t_device" domainObjectName="Device"
            enableSelectByExample="false"
@@ -57,5 +52,23 @@
 	       enableDeleteByExample="false"
 	       enableCountByExample="false"
 	       enableUpdateByExample="false"/>  
+     
+        <table tableName="t_log" domainObjectName="Log"
+           enableSelectByExample="false"
+	       enableDeleteByExample="false"
+	       enableCountByExample="false"
+	       enableUpdateByExample="false"/>   
+     
+        <table tableName="t_log_type" domainObjectName="LogType"
+           enableSelectByExample="false"
+	       enableDeleteByExample="false"
+	       enableCountByExample="false"
+	       enableUpdateByExample="false"/>   
+     
+        <table tableName="t_task" domainObjectName="Task"
+           enableSelectByExample="false"
+	       enableDeleteByExample="false"
+	       enableCountByExample="false"
+	       enableUpdateByExample="false"/>    
     </context>  
 </generatorConfiguration>  

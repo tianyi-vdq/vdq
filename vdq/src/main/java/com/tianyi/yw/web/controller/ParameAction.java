@@ -17,10 +17,10 @@ public class ParameAction  extends BaseAction{
 
 	/**
 	 * 视频点位检测参数设置
-	 *  
 	 * @param request
 	 * @param response
-	 * @return 
+	 * @return
+	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = "/parameInfo.do")
 	public String paramInfo( 
