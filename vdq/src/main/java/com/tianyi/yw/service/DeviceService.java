@@ -10,4 +10,9 @@ public interface DeviceService {
 
 	List<Device> getDeviceList(Device device);
 
+	List<Device> getExistProjectPoint(Device device);
+
+	void saveOrUpdateProjectpoint(Device device);
+
+
 }

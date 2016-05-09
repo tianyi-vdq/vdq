@@ -21,6 +21,11 @@ public class Page {
 	 */
     private Integer pageNo;
     /**
+     * 查询条件
+     */
+    private String searchName;
+    
+    /**
 	 * 分页起始行数，自动计算
 	 */
     private Integer pageCount;
@@ -90,6 +95,14 @@ public class Page {
 
 	public void setRoleUserId(Integer roleUserId) {
 		this.roleUserId = roleUserId;
+	}
+
+	public String getSearchName() {
+		return searchName;
+	}
+
+	public void setSearchName(String searchName) {
+		this.searchName = searchName;
 	}
 }
 
