@@ -2,7 +2,7 @@ package com.tianyi.yw.model;
 
 import com.tianyi.yw.common.utils.Page;
 
-public class Device  extends Page {
+public class Device extends Page {
     private Integer id;
 
     private String pointId;
@@ -10,6 +10,8 @@ public class Device  extends Page {
     private String pointNumber;
 
     private String pointName;
+
+    private String pointNaming;
 
     private String type;
 
@@ -47,6 +49,14 @@ public class Device  extends Page {
 
     public void setPointName(String pointName) {
         this.pointName = pointName;
+    }
+
+    public String getPointNaming() {
+        return pointNaming;
+    }
+
+    public void setPointNaming(String pointNaming) {
+        this.pointNaming = pointNaming;
     }
 
     public String getType() {
