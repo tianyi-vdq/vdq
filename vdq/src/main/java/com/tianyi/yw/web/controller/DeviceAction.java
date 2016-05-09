@@ -33,7 +33,6 @@ public class DeviceAction  extends BaseAction{
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 */
-	@ResponseBody
 	@RequestMapping(value = "/deviceList.do", method=RequestMethod.GET)
 	public String deviceList(
 			Device device,

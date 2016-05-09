@@ -31,7 +31,7 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public List<Device> getExistProjectPoint(Device device) {
 		// TODO Auto-generated method stub
-		return deviceMapper.getExistProjectPoint;
+		return deviceMapper.getExistProjectPoint(device);
 	}
 
 	@Override
