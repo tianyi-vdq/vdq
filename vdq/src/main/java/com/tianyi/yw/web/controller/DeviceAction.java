@@ -23,10 +23,11 @@ public class DeviceAction  extends BaseAction{
 	private DeviceService deviceService;
 	/**
 	 * 视频点位设备管理
-	 *  
+	 * @param device
 	 * @param request
 	 * @param response
-	 * @return 
+	 * @return
+	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = "/deviceList.do")
 	public String deviceList(

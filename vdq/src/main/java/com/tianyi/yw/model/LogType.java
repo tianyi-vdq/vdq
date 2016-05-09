@@ -2,14 +2,12 @@ package com.tianyi.yw.model;
 
 import com.tianyi.yw.common.utils.Page;
 
-public class Parame extends Page {
+public class LogType extends Page {
     private Integer id;
 
     private String name;
 
-    private String key;
-
-    private String value;
+    private String description;
 
     public Integer getId() {
         return id;
@@ -27,19 +25,11 @@ public class Parame extends Page {
         this.name = name;
     }
 
-    public String getKey() {
-        return key;
+    public String getDescription() {
+        return description;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

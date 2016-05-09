@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.tianyi.yw.dao.ParameMapper" >
-  <resultMap id="BaseResultMap" type="com.tianyi.yw.model.Parame" >
+<mapper namespace="com.tianyi.yw.dao.LogTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.tianyi.yw.model.LogType" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="key" property="key" jdbcType="VARCHAR" />
-    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, key, value
+    id, name, description
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_parame
+    from t_log_type
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from t_parame
+    delete from t_log_type
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.tianyi.yw.model.Parame" >
-    insert into t_parame (id, name, key, 
-      value)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{key,jdbcType=VARCHAR}, 
-      #{value,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.tianyi.yw.model.LogType" >
+    insert into t_log_type (id, name, description
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.tianyi.yw.model.Parame" >
-    insert into t_parame
+  <insert id="insertSelective" parameterType="com.tianyi.yw.model.LogType" >
+    insert into t_log_type
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -35,11 +34,8 @@
       <if test="name != null" >
         name,
       </if>
-      <if test="key != null" >
-        key,
-      </if>
-      <if test="value != null" >
-        value,
+      <if test="description != null" >
+        description,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -49,34 +45,27 @@
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="key != null" >
-        #{key,jdbcType=VARCHAR},
-      </if>
-      <if test="value != null" >
-        #{value,jdbcType=VARCHAR},
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tianyi.yw.model.Parame" >
-    update t_parame
+  <update id="updateByPrimaryKeySelective" parameterType="com.tianyi.yw.model.LogType" >
+    update t_log_type
     <set >
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="key != null" >
-        key = #{key,jdbcType=VARCHAR},
-      </if>
-      <if test="value != null" >
-        value = #{value,jdbcType=VARCHAR},
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.tianyi.yw.model.Parame" >
-    update t_parame
+  <update id="updateByPrimaryKey" parameterType="com.tianyi.yw.model.LogType" >
+    update t_log_type
     set name = #{name,jdbcType=VARCHAR},
-      key = #{key,jdbcType=VARCHAR},
-      value = #{value,jdbcType=VARCHAR}
+      description = #{description,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
