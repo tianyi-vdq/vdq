@@ -1,9 +1,7 @@
 package com.tianyi.yw.web.controller;
-
-import javax.annotation.Resource;
+ 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse; 
 
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tianyi.yw.dao.DeviceStatusMapper" >
+  <resultMap id="BaseResultMap" type="com.tianyi.yw.model.DeviceStatus" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="device_id" property="deviceId" jdbcType="INTEGER" />
+    <result column="network_status" property="networkStatus" jdbcType="INTEGER" />
+    <result column="stream_status" property="streamStatus" jdbcType="INTEGER" />
+    <result column="noise_status" property="noiseStatus" jdbcType="INTEGER" />
+    <result column="sign_status" property="signStatus" jdbcType="INTEGER" />
+    <result column="color_status" property="colorStatus" jdbcType="INTEGER" />
+    <result column="frame_frozen_status" property="frameFrozenStatus" jdbcType="INTEGER" />
+    <result column="frame_shade_status" property="frameShadeStatus" jdbcType="INTEGER" />
+    <result column="frame_fuzzy_status" property="frameFuzzyStatus" jdbcType="INTEGER" />
+    <result column="frame_displaced_status" property="frameDisplacedStatus" jdbcType="INTEGER" />
+    <result column="frame_strip_status" property="frameStripStatus" jdbcType="INTEGER" />
+    <result column="frame_colorcase_status" property="frameColorcaseStatus" jdbcType="INTEGER" />
+    <result column="light_exception_status" property="lightExceptionStatus" jdbcType="INTEGER" />
+    <result column="record_time" property="recordTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, device_id, network_status, stream_status, noise_status, sign_status, color_status, 
+    frame_frozen_status, frame_shade_status, frame_fuzzy_status, frame_displaced_status, 
+    frame_strip_status, frame_colorcase_status, light_exception_status, record_time, 
+    create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_device_status
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_device_status
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tianyi.yw.model.DeviceStatus" >
+    insert into t_device_status (id, device_id, network_status, 
+      stream_status, noise_status, sign_status, 
+      color_status, frame_frozen_status, frame_shade_status, 
+      frame_fuzzy_status, frame_displaced_status, 
+      frame_strip_status, frame_colorcase_status, 
+      light_exception_status, record_time, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=INTEGER}, #{networkStatus,jdbcType=INTEGER}, 
+      #{streamStatus,jdbcType=INTEGER}, #{noiseStatus,jdbcType=INTEGER}, #{signStatus,jdbcType=INTEGER}, 
+      #{colorStatus,jdbcType=INTEGER}, #{frameFrozenStatus,jdbcType=INTEGER}, #{frameShadeStatus,jdbcType=INTEGER}, 
+      #{frameFuzzyStatus,jdbcType=INTEGER}, #{frameDisplacedStatus,jdbcType=INTEGER}, 
+      #{frameStripStatus,jdbcType=INTEGER}, #{frameColorcaseStatus,jdbcType=INTEGER}, 
+      #{lightExceptionStatus,jdbcType=INTEGER}, #{recordTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tianyi.yw.model.DeviceStatus" >
+    insert into t_device_status
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="deviceId != null" >
+        device_id,
+      </if>
+      <if test="networkStatus != null" >
+        network_status,
+      </if>
+      <if test="streamStatus != null" >
+        stream_status,
+      </if>
+      <if test="noiseStatus != null" >
+        noise_status,
+      </if>
+      <if test="signStatus != null" >
+        sign_status,
+      </if>
+      <if test="colorStatus != null" >
+        color_status,
+      </if>
+      <if test="frameFrozenStatus != null" >
+        frame_frozen_status,
+      </if>
+      <if test="frameShadeStatus != null" >
+        frame_shade_status,
+      </if>
+      <if test="frameFuzzyStatus != null" >
+        frame_fuzzy_status,
+      </if>
+      <if test="frameDisplacedStatus != null" >
+        frame_displaced_status,
+      </if>
+      <if test="frameStripStatus != null" >
+        frame_strip_status,
+      </if>
+      <if test="frameColorcaseStatus != null" >
+        frame_colorcase_status,
+      </if>
+      <if test="lightExceptionStatus != null" >
+        light_exception_status,
+      </if>
+      <if test="recordTime != null" >
+        record_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="deviceId != null" >
+        #{deviceId,jdbcType=INTEGER},
+      </if>
+      <if test="networkStatus != null" >
+        #{networkStatus,jdbcType=INTEGER},
+      </if>
+      <if test="streamStatus != null" >
+        #{streamStatus,jdbcType=INTEGER},
+      </if>
+      <if test="noiseStatus != null" >
+        #{noiseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="signStatus != null" >
+        #{signStatus,jdbcType=INTEGER},
+      </if>
+      <if test="colorStatus != null" >
+        #{colorStatus,jdbcType=INTEGER},
+      </if>
+      <if test="frameFrozenStatus != null" >
+        #{frameFrozenStatus,jdbcType=INTEGER},
+      </if>
+      <if test="frameShadeStatus != null" >
+        #{frameShadeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="frameFuzzyStatus != null" >
+        #{frameFuzzyStatus,jdbcType=INTEGER},
+      </if>
+      <if test="frameDisplacedStatus != null" >
+        #{frameDisplacedStatus,jdbcType=INTEGER},
+      </if>
+      <if test="frameStripStatus != null" >
+        #{frameStripStatus,jdbcType=INTEGER},
+      </if>
+      <if test="frameColorcaseStatus != null" >
+        #{frameColorcaseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="lightExceptionStatus != null" >
+        #{lightExceptionStatus,jdbcType=INTEGER},
+      </if>
+      <if test="recordTime != null" >
+        #{recordTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tianyi.yw.model.DeviceStatus" >
+    update t_device_status
+    <set >
+      <if test="deviceId != null" >
+        device_id = #{deviceId,jdbcType=INTEGER},
+      </if>
+      <if test="networkStatus != null" >
+        network_status = #{networkStatus,jdbcType=INTEGER},
+      </if>
+      <if test="streamStatus != null" >
+        stream_status = #{streamStatus,jdbcType=INTEGER},
+      </if>
+      <if test="noiseStatus != null" >
+        noise_status = #{noiseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="signStatus != null" >
+        sign_status = #{signStatus,jdbcType=INTEGER},
+      </if>
+      <if test="colorStatus != null" >
+        color_status = #{colorStatus,jdbcType=INTEGER},
+      </if>
+      <if test="frameFrozenStatus != null" >
+        frame_frozen_status = #{frameFrozenStatus,jdbcType=INTEGER},
+      </if>
+      <if test="frameShadeStatus != null" >
+        frame_shade_status = #{frameShadeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="frameFuzzyStatus != null" >
+        frame_fuzzy_status = #{frameFuzzyStatus,jdbcType=INTEGER},
+      </if>
+      <if test="frameDisplacedStatus != null" >
+        frame_displaced_status = #{frameDisplacedStatus,jdbcType=INTEGER},
+      </if>
+      <if test="frameStripStatus != null" >
+        frame_strip_status = #{frameStripStatus,jdbcType=INTEGER},
+      </if>
+      <if test="frameColorcaseStatus != null" >
+        frame_colorcase_status = #{frameColorcaseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="lightExceptionStatus != null" >
+        light_exception_status = #{lightExceptionStatus,jdbcType=INTEGER},
+      </if>
+      <if test="recordTime != null" >
+        record_time = #{recordTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tianyi.yw.model.DeviceStatus" >
+    update t_device_status
+    set device_id = #{deviceId,jdbcType=INTEGER},
+      network_status = #{networkStatus,jdbcType=INTEGER},
+      stream_status = #{streamStatus,jdbcType=INTEGER},
+      noise_status = #{noiseStatus,jdbcType=INTEGER},
+      sign_status = #{signStatus,jdbcType=INTEGER},
+      color_status = #{colorStatus,jdbcType=INTEGER},
+      frame_frozen_status = #{frameFrozenStatus,jdbcType=INTEGER},
+      frame_shade_status = #{frameShadeStatus,jdbcType=INTEGER},
+      frame_fuzzy_status = #{frameFuzzyStatus,jdbcType=INTEGER},
+      frame_displaced_status = #{frameDisplacedStatus,jdbcType=INTEGER},
+      frame_strip_status = #{frameStripStatus,jdbcType=INTEGER},
+      frame_colorcase_status = #{frameColorcaseStatus,jdbcType=INTEGER},
+      light_exception_status = #{lightExceptionStatus,jdbcType=INTEGER},
+      record_time = #{recordTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
