@@ -45,4 +45,35 @@ public class DeviceAction  extends BaseAction{
 		request.setAttribute("Devicelist", devicelist); 
 		return "web/device/deviceList";
 	}	
+	/**
+	 * 视频点位设备管理
+	 * @param device
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = "/deviceInfo.do")
+	public String deviceInfo(
+			Device device,
+			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{ 
+		request.setAttribute("Device", device);  
+		return "web/device/deviceInfo";
+	}	
+	
+	/**
+	 * 视频点位设备管理
+	 * @param device
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = "/deviceStatus.do")
+	public String deviceStatus(
+			Device device,
+			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{ 
+		request.setAttribute("Device", device);  
+		return "web/device/deviceStatus";
+	}	
 }

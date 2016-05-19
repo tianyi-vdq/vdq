@@ -19,6 +19,8 @@ public class Device extends Page {
 
     private String ipAddress;
 
+    private Integer areaId;
+
     public Integer getId() {
         return id;
     }
@@ -81,5 +83,13 @@ public class Device extends Page {
 
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
+    }
+
+    public Integer getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(Integer areaId) {
+        this.areaId = areaId;
     }
 }

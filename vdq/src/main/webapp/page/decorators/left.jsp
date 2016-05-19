@@ -32,7 +32,7 @@ function gotoChildMenu(url,selectedChildMenu) {
                 <div class="yw-left-menu">
                 	<ul>
                 		
-                    	 <li class="yw-left-menu-now"> 
+                    	<!--  <li class="yw-left-menu-now"> 
                         	<em></em><span onclick="window.location.href = 'device/deviceList.do'"><i class="fl yw-icon icon-todayjob"></i>设备管理</span>
                         </li> 
                     	 <li class="yw-left-menu-now"> 
@@ -43,7 +43,18 @@ function gotoChildMenu(url,selectedChildMenu) {
                         </li> 
                     	 <li class="yw-left-menu-now"> 
                         	<em></em><span onclick="window.location.href = 'log/logList.do'"><i class="fl yw-icon icon-todayjob"></i>日志管理</span>
-                        </li> 
+                        </li>  -->
+                        
+                	<c:forEach var="mainItem" items="${sessionScope.userFunctions}">
+                	    <c:if test="${mainItem.id == sessionScope.userInfo.selectedMainMemu}">
+	                	    <c:forEach var="item" items="${mainItem.childFunctionlist}">
+		                		<li <c:if test="${item.id == sessionScope.userInfo.selectedChildMenu}">class="yw-left-menu-now"</c:if>>
+		                        	<em></em><span onclick="gotoChildMenu('${pageContext.request.contextPath}${item.url}','${item.id}')">
+		                        	<i class="<c:if test="${item.css != null}">${item.css}</c:if><c:if test="${item.css == null}">fl yw-icon icon-todayjob</c:if>"></i>${item.name}</span>
+		                        </li>
+	                        </c:forEach>
+                        </c:if>
+                	</c:forEach>
                 	<%-- <c:forEach var="mainItem" items="${sessionScope.userFunctions}">
                 	    <c:if test="${mainItem.id == sessionScope.userInfo.selectedMainMemu}">
 	                	    <c:forEach var="item" items="${mainItem.childFunctionlist}">

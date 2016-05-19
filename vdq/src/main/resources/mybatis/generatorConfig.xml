@@ -47,28 +47,31 @@
 	       enableCountByExample="false"
 	       enableUpdateByExample="false"/>  
      
-        <table tableName="t_parame" domainObjectName="Parame"
+        <table tableName="t_area" domainObjectName="Area"
            enableSelectByExample="false"
 	       enableDeleteByExample="false"
 	       enableCountByExample="false"
 	       enableUpdateByExample="false"/>  
-     
-        <table tableName="t_log" domainObjectName="Log"
+        <table tableName="t_device_status" domainObjectName="DeviceStatus"
            enableSelectByExample="false"
 	       enableDeleteByExample="false"
 	       enableCountByExample="false"
-	       enableUpdateByExample="false"/>   
-     
-        <table tableName="t_log_type" domainObjectName="LogType"
+	       enableUpdateByExample="false"/>  
+        <table tableName="t_function" domainObjectName="Functions"
            enableSelectByExample="false"
 	       enableDeleteByExample="false"
 	       enableCountByExample="false"
-	       enableUpdateByExample="false"/>   
-     
-        <table tableName="t_task" domainObjectName="Task"
+	       enableUpdateByExample="false"/>  
+        <table tableName="t_task_item" domainObjectName="TaskItem"
            enableSelectByExample="false"
 	       enableDeleteByExample="false"
 	       enableCountByExample="false"
-	       enableUpdateByExample="false"/>    
+	       enableUpdateByExample="false"/>  
+        <table tableName="t_task_item_type" domainObjectName="TaskItemType"
+           enableSelectByExample="false"
+	       enableDeleteByExample="false"
+	       enableCountByExample="false"
+	       enableUpdateByExample="false"/>  
+       
     </context>  
 </generatorConfiguration>  
