@@ -1,5 +1,6 @@
 package com.tianyi.yw.dao;
 
+import java.util.List;
 import com.tianyi.yw.model.Task;
 @MyBatisRepository
 public interface TaskMapper {
@@ -14,4 +15,12 @@ public interface TaskMapper {
     int updateByPrimaryKeySelective(Task record);
 
     int updateByPrimaryKey(Task record);
+     
+    List<Task> getTaskList(Task task);
+    
+    int getTaskCount(Task task);
+
+	List<Task> getExistTask(Task task);
+
 }
+

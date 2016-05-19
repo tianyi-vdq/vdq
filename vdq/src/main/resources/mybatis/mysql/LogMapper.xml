@@ -90,4 +90,67 @@
       description = #{description,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+  <sql id="query_sql">
+  	from t_log  
+  	 where 1=1 
+  	 <if test="searchName != null and searchName !=''" >
+      and 
+      	content like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
+      	or
+      	 description like CONCAT('%',#{description,jdbcType=VARCHAR},'%')
+    
+     </if>	 
+      <if test="searchTime != null and searchTime !=''" >
+      and
+      	create_time  =   #{searchTime,jdbcType=DATE}  
+     </if>	 
+       <if test="searchTime != null and searchTime !=''" >
+      and 
+       type_id = #{searchTypeId,jdbcType=INTEGER}
+     </if>	 
+  </sql>
+  
+  
+  
+  <select id="getLogList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Log">
+  	 select 
+  	 <include refid="Base_Column_List" /> 
+  	 <include refid="query_sql" />
+  	 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
+        limit #{pageStart}, #{pageSize}
+    </if>
+  </select>
+ 
+  
+  <select id="getLogCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.Log">
+  	 select count(*)
+  	 <include refid="query_sql" />
+  </select>
+  
+  <select id="getExisLog" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Log">
+  	select <include refid="Base_Column_List" />
+  	from t_log
+  	where 1=1
+  	<if test="typeId != null" >
+        and  type_id = #{typeId,jdbcType=VARCHAR}
+    </if>
+    <if test="content != null" >
+        and  content = #{content,jdbcType=VARCHAR}
+    </if>
+    <if test="id != null" >
+        and id != #{id,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+   <select id="getExistList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Log" >
+    select
+    
+    <include refid="Base_Column_List" />
+    <include refid="query_sql"/>
+    <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
+        limit #{pageStart}, #{pageSize}
+  	</if>
+  </select>
 </mapper>

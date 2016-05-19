@@ -10,4 +10,9 @@ public interface TaskService {
 
 	int getTaskCount(Task task);
 
+	void saveOrUpdateTask(Task task);
+
+	List<Task> getExistTask(Task task);
+
+	Task getTaskById(Integer id);
 }
