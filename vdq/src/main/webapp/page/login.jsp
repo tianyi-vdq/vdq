@@ -87,8 +87,8 @@ function login(){
 	        success:function(data){
 	        	var item = eval("(" + data + ")");
 	        	if(item.code == 0){
-	        		//SetPwdAndChk();
-	        		window.location.href =baseurl+"/device/deviceList.do";
+	        		SetPwdAndChk();
+	        		window.location.href =baseurl+item.gotoUrl;
 	        		$("#login-alert").html("");
 	        		$("#login-alert").hide();
 	        	}
@@ -122,8 +122,8 @@ function login(){
                     </p>
                     <p class="login-rows mt30">
                     	<label class="yw-checkbox">
-	                    	<i class="mt4 mr10"  id="icheckspan"></i><!--  onClick="loginCheck(this);" -->
-	                    	<input type="checkbox" value="false" id="chkRememberPwd">下次自动登录
+	                    	<i class="mt4 mr10"  id="icheckspan" onClick="loginCheck(this);" ></i><!-- -->
+	                    	<input type="checkbox" name="rememberMe"  value="false" id="chkRememberPwd">下次自动登录
 	                    </label>
                     	
                     		

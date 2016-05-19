@@ -5,10 +5,12 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList; 
 import java.util.List;
- 
+
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
  
+
 
 
 
@@ -37,13 +39,137 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tianyi.yw.common.JsonResult; 
 import com.tianyi.yw.model.Device;
+import com.tianyi.yw.service.DeviceService;
 
 @Scope("prototype")
 @Controller
 @RequestMapping("/fileUpload")
 public class UploadFileAction extends BaseAction {
  
+	@Resource(name = "deviceService")
+	private DeviceService deviceService;
+	/**
+	 * 导入点位设备信息 导入成功后，跳转到导入结果临时页面
+	 * 
+	 * @param request
+	 * @param response
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping(value = "/uploadDeviceExcel.do")
+	public String uploadDeviceExcelFile(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(value = "file", required = false) MultipartFile file) {
+		List<Device> defaultlist = new ArrayList<Device>();
+		List<Device> list = new ArrayList<Device>();
+		List<Device> nulllist = new ArrayList<Device>();
+		int totalCount = 0;
+		int rightCount = 0;
+		int subCount = 0;
 
+		try {
+			String path = request.getSession().getServletContext()
+					.getRealPath("upload");
+			String fileName = file.getOriginalFilename();
+			File targetFile = new File(path, fileName);
+			if (!targetFile.exists()) {
+				targetFile.mkdirs();
+			}
+			// 保存
+			try {
+				File f = new File(targetFile.getPath());
+				if (f.exists()) {
+					f.delete();
+				}
+				file.transferTo(targetFile);
+				InputStream stream = new FileInputStream(targetFile.getPath());
+				Workbook wb = WorkbookFactory.create(stream);
+				try { 
+					stream = new FileInputStream(targetFile.getPath()); 
+					wb = new XSSFWorkbook(stream);
+					defaultlist = getXSSFResult(wb);
+				} catch (Exception ex) { 
+					stream = new FileInputStream(targetFile.getPath()); 
+					wb = new HSSFWorkbook(stream);
+					defaultlist = getHSSFResult(wb);
+				}
+
+				for(Device point :defaultlist){
+					// 把刚获取的列存入list,判断获取的对象是否按照规则
+					if (point.getPointId() == null
+							|| "".equals(point.getPointId())
+							|| point.getPointName() == null
+							|| "".equals(point.getPointName())
+							|| point.getIpAddress() == null
+							|| "".equals(point.getIpAddress())
+							) {
+						nulllist.add(point);
+					} else {
+						list.add(point);
+					} 
+				}
+				// stream.close();
+				IOUtils.closeQuietly(stream);
+				totalCount = list.size() + nulllist.size();
+				if (totalCount > 0) {
+					List<Device> lst = insertListToDatabase(list);
+					rightCount = list.size() - lst.size();
+					subCount = totalCount - rightCount;
+					if (lst.size() > 0) {
+						for (Device d : lst) {
+							nulllist.add(d);
+						}
+					}
+					File files = new File(targetFile.getPath());
+					if (files.exists()) {
+						files.delete();
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		request.setAttribute("pointlist", nulllist);
+		request.setAttribute("totalCount", totalCount);
+		request.setAttribute("rightCount", rightCount);
+		request.setAttribute("subCount", subCount);
+
+		return "web/importExcel/deviceResult";
+	}
+	/**
+	 * 插入点位设备到数据库
+	 * 
+	 * @param list
+	 * @return
+	 */
+	private List<Device> insertListToDatabase(List<Device> list) {
+		// TODO Auto-generated method stub
+		List<Device> lst = new ArrayList<Device>();
+		try {
+			for(Device device:list){
+
+				if (device.getPointId() == null || device.getAddress() == null) {
+					lst.add(device);
+				} else {
+					device.setId(0);
+					try {
+						deviceService.saveDevicepoint(device);
+					} catch (Exception ex) {
+						lst.add(device);
+						ex.printStackTrace();
+					}
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return lst;
+	}
+
+
+	
 	/**
 	 * 导入故障现象
 	 * 
@@ -135,7 +261,102 @@ public class UploadFileAction extends BaseAction {
 		}
 		return json;
 	}
-
+	private List<Device> getXSSFResult(Workbook wb) {
+		// TODO Auto-generated method stub
+		List<Device> result = new ArrayList<Device>(); 
+        for (int sheetIndex = 0; sheetIndex < wb.getNumberOfSheets(); sheetIndex++)
+        {
+            XSSFSheet st = (XSSFSheet) wb.getSheetAt(sheetIndex);
+            // 第一行为标题，不取
+            for (int rowIndex = 1; rowIndex <= st.getLastRowNum(); rowIndex++)
+            {
+                XSSFRow row = st.getRow(rowIndex);
+                if (row == null)
+                {
+                    continue;
+                } 
+                Device point = new Device();
+                XSSFCell cell0 = row.getCell(0);
+                if(cell0 != null || "".equals(cell0)){
+                	point.setPointId(cell0.getStringCellValue());
+                }
+				XSSFCell cell1 = row.getCell(1);
+				if(cell1 != null || "".equals(cell1)){
+					point.setPointNumber(cell1.getStringCellValue());
+				}
+				XSSFCell cell2 = row.getCell(2);
+				if(cell2 != null || "".equals(cell2)){
+					point.setPointName(cell2.getStringCellValue());
+				}
+				XSSFCell cell3 = row.getCell(3);
+				if(cell3 != null || "".equals(cell3)){
+					point.setPointNaming(cell3.getStringCellValue());
+				}
+				XSSFCell cell4 = row.getCell(4);
+				if(cell4 != null || "".equals(cell4)){
+					point.setType(cell4.getStringCellValue());
+				}
+				XSSFCell cell5 = row.getCell(5);
+				if(cell5 != null || "".equals(cell5)){
+					point.setAddress(cell5.getStringCellValue());
+				}
+				XSSFCell cell6 = row.getCell(6);
+				if(cell6 != null || "".equals(cell6)){
+					point.setIpAddress(cell6.getStringCellValue());
+				}
+				result.add(point);
+            }
+        }
+        return result;
+	}
+	private List<Device> getHSSFResult(Workbook wb) {
+		// TODO Auto-generated method stub
+		 List<Device> result = new ArrayList<Device>(); 
+	        for (int sheetIndex = 0; sheetIndex < wb.getNumberOfSheets(); sheetIndex++)
+	        {
+	            HSSFSheet st = (HSSFSheet) wb.getSheetAt(sheetIndex);
+	            // 第一行为标题，不取
+	            for (int rowIndex = 1; rowIndex <= st.getLastRowNum(); rowIndex++)
+	            {
+	                HSSFRow row = st.getRow(rowIndex);
+	                if (row == null)
+	                {
+	                    continue;
+	                }
+	                Device point = new Device();
+	                HSSFCell cell0 = row.getCell(0);
+	                if(cell0 != null || "".equals(cell0)){
+	                	point.setPointId(cell0.getStringCellValue());
+	                }
+					HSSFCell cell1 = row.getCell(1);
+					if(cell1 != null || "".equals(cell1)){
+						point.setPointNumber(cell1.getStringCellValue());
+					}
+					HSSFCell cell2 = row.getCell(2);
+					if(cell2 != null || "".equals(cell2)){
+						point.setPointName(cell2.getStringCellValue());
+					}
+					HSSFCell cell3 = row.getCell(3);
+					if(cell3 != null || "".equals(cell3)){
+						point.setPointNaming(cell3.getStringCellValue());
+					}
+					HSSFCell cell4 = row.getCell(4);
+					if(cell4 != null || "".equals(cell4)){
+						point.setType(cell4.getStringCellValue());
+					}
+					HSSFCell cell5 = row.getCell(5);
+					if(cell5 != null || "".equals(cell5)){
+						point.setAddress(cell5.getStringCellValue());
+					}
+					HSSFCell cell6 = row.getCell(6);
+					if(cell6 != null || "".equals(cell6)){
+						point.setIpAddress(cell6.getStringCellValue());
+					}
+					result.add(point);
+	            }
+	        }
+	        return result;
+	}
 	private List<Device> getHSSFFaultResult(Workbook wb) {
 		// TODO Auto-generated method stubF
 		List<Device> result = new ArrayList<Device>(); 

@@ -10,4 +10,13 @@ public interface DeviceService {
 
 	List<Device> getDeviceList(Device device);
 
+	List<Device> getExistDevicePoint(Device p);
+
+	void saveOrUpdateDevicepoint(Device device);
+
+	Device getPointDeviceById(Integer pointId);
+
+	void saveDevicepoint(Device device);
+
+
 }

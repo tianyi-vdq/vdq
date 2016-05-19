@@ -8,12 +8,12 @@
     <result column="value" property="value" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, key, value
+    p.id, p.name, p.key, p.value
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_parame
+    from t_parame as p
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
@@ -33,13 +33,13 @@
         id,
       </if>
       <if test="name != null" >
-        name,
+        `name`,
       </if>
       <if test="key != null" >
-        key,
+        `key`,
       </if>
       <if test="value != null" >
-        value,
+        `value`,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -61,13 +61,13 @@
     update t_parame
     <set >
       <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
+        `name` = #{name,jdbcType=VARCHAR},
       </if>
       <if test="key != null" >
-        key = #{key,jdbcType=VARCHAR},
+        `key` = #{key,jdbcType=VARCHAR},
       </if>
       <if test="value != null" >
-        value = #{value,jdbcType=VARCHAR},
+        `value` = #{value,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -79,4 +79,26 @@
       value = #{value,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="getParameList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Parame">
+  	select <include refid="Base_Column_List" /> 
+	from t_parame as p
+	order by p.id desc
+  	 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
+        limit #{pageStart}, #{pageSize}
+    </if>
+  </select>
+  <select id="getParameCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.Parame">
+  	select count(*) from t_parame as p
+  </select>
+  <select id="getExistParame" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Parame">
+  	select <include refid="Base_Column_List" /> 
+  	from t_parame p
+  	where 1=1
+  	<if test="name != null">
+  		and p.name = #{name,jdbcType=VARCHAR}
+  	</if>
+  	<if test="id != null">
+  		and p.id != #{id,jdbcType=INTEGER}
+  	</if>
+  </select>
 </mapper>
