@@ -125,14 +125,6 @@
       ip_address = #{ipAddress,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  
-  
-  
-  
-  
-  
-  
-  
   <sql id="query_sql">
   	from t_device  
   	 where 1=1 
@@ -146,12 +138,10 @@
       )
      </if>	 
   </sql>
-  
-  
-  
   <select id="getDeviceList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Device">
   	 select <include refid="Base_Column_List" /> 
-  	 <include refid="query_sql"></include>
+  	 <include refid="query_sql" />
+    order by id desc
   	 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
         limit #{pageStart}, #{pageSize}
     </if>
@@ -159,7 +149,18 @@
   
   <select id="getDeviceCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.Device">
   	 select count(*)
-  	 <include refid="query_sql"></include>
+  	 <include refid="query_sql" />
   </select>
   
+  <select id="getExistDevicePoint" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Device">
+  	select <include refid="Base_Column_List" />
+  	from t_device
+  	where 1=1
+  	<if test="pointNumber != null" >
+        and  POINT_NUMBER = #{pointNumber,jdbcType=VARCHAR}
+    </if>
+    <if test="id != null" >
+        and id != #{id,jdbcType=VARCHAR}
+    </if>
+  </select>
 </mapper>

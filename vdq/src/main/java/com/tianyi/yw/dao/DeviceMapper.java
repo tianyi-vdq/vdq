@@ -21,6 +21,7 @@ public interface DeviceMapper {
 
 	int getDeviceCount(Device device);
 
-	List<Device> getExistProjectPoint(Device device);
+	List<Device> getExistDevicePoint(Device device);
+
 	
 }

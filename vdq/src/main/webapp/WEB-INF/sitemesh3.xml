@@ -6,7 +6,7 @@
      <mapping path="**/source/**" exclue="true" />
      <mapping path="**/app/**" exclue="true" />
      <mapping path="**/dwr/**" exclue="true" />
-     <mapping path="**/fileUpload/**" exclue="true" />
+     <!-- <mapping path="**/fileUpload/**" exclue="true" /> -->
      <mapping path="**/index.do**" exclue="true" />
      <mapping path="**/login.do**" exclue="true" />
      <mapping path="**/jsonLoad**" exclue="true" />

@@ -39,7 +39,7 @@ function gotoChildMenu(url,selectedChildMenu) {
                         	<em></em><span onclick="window.location.href = 'task/taskList.do'"><i class="fl yw-icon icon-todayjob"></i>任务管理</span>
                         </li> 
                     	 <li class="yw-left-menu-now">
-                        	<em></em><span onclick="window.location.href = 'parame/parameInfo.do'"><i class="fl yw-icon icon-todayjob"></i>参数配置</span>
+                        	<em></em><span onclick="window.location.href = 'parame/parameList.do'"><i class="fl yw-icon icon-todayjob"></i>参数配置</span>
                         </li> 
                     	 <li class="yw-left-menu-now"> 
                         	<em></em><span onclick="window.location.href = 'log/logList.do'"><i class="fl yw-icon icon-todayjob"></i>日志管理</span>

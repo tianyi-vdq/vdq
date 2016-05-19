@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tianyi.yw.common.JsonResult;
@@ -74,29 +75,40 @@ public class DeviceAction  extends BaseAction{
 			if (device.getId() == null || device.getId() == 0) {
 				device.setId(0);
 			}
+			
 			if (device.getPointNumber() != null) {
-				Device p = new Device();
-				p.setPointNumber(device.getPointNumber());
+				Device d = new Device();
+				d.setPointNumber(device.getPointNumber());
 				if (device.getId() > 0) {
-					p.setId(device.getId());
+					d.setId(device.getId());
 				}
-				List<Device> lc = deviceService.getExistProjectPoint(p);
+				List<Device> lc = deviceService.getExistDevicePoint(d);
 				if (lc.size() == 0) {
-					deviceService.saveOrUpdateProjectpoint(device);
+					deviceService.saveOrUpdateDevicepoint(device);
 					js.setCode(new Integer(0));
 					js.setMessage("保存成功!");
 				} else {
-					js.setMessage("点位编号已存在!");
+					js.setMessage("设备编号已存在!");
 				}
 			} else {
-				js.setMessage("点位编号不能为空!");
+				js.setMessage("设备编号都不能为空!");
 			}
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
 		return js;
 	}
-	
+	/**
+	 * 点位设备信息编辑
+	 */
+	@RequestMapping(value="/deviceInfo.do", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	public String editPointDevice(
+			@RequestParam(value="pointId", required = false)Integer pointId,
+			HttpServletRequest req,HttpServletResponse res){
+		Device device = deviceService.getPointDeviceById(pointId);
+		req.setAttribute("Device", device);
+		return "web/device/deviceInfo";
+	}
 	
 	
 }

@@ -32,7 +32,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    totalCount:'${Device.totalCount}',
 			    buttonClickCallback:PageClick                     /* 表示点击分页数按钮调用的方法 */                  
 			});  
-			
+			$("#deviceList tr").each(function(i){
+				if(i>0){
+					$(this).bind("click",function(){
+						var pointId = $(this).find("td").first().text();
+						 window.location.href="device/deviceInfo.do?pointId="+pointId;
+					});
+				}
+			});
 			  
 		});
 		
@@ -57,6 +64,7 @@ function pagesearch(){
 		DeviceForm.submit();
 	}  
 }
+
 function showdialog(){
 	var wz = getDialogPosition($('#pointInfoWindow').get(0),100);
 	$('#pointInfoWindow').window({
@@ -130,7 +138,7 @@ function excelChange(file){
 				<i class="yw-icon icon-partner"></i><span>设备信息</span>
 				<span class="fr yw-btn bg-orange line-hei22 mr10 mt9 cur">导入设备
 					<div class="temp">
-					<form id="fileForms" name="fileForms" action="${pageContext.request.contextPath}/importExcel/uploadDeviceExcel.do"  enctype="multipart/form-data" method="post" style="margin:0;padding:0;">
+					<form id="fileForms" name="fileForms" action="${pageContext.request.contextPath}/fileUpload/uploadDeviceExcel.do"  enctype="multipart/form-data" method="post" style="margin:0;padding:0;">
 				       	<input type="file" name="file" id="jfile" class="yw-upload-file" onChange="excelChange(this);">
 					</form>
 					</div>
@@ -164,7 +172,7 @@ function excelChange(file){
 			</form>
 		</div>
            <div class="fl yw-lump"> 
-				<table class="yw-cm-table yw-center yw-bg-hover" id="deviceinfoList">
+				<table class="yw-cm-table yw-center yw-bg-hover" id="deviceList">
 					<tr style="background-color:#D6D3D3;font-weight: bold;">
 						<th width="4%" style="display:none">&nbsp;</th>
 						<th>设备ID</th>
@@ -192,7 +200,7 @@ function excelChange(file){
 		</div>	
 		</div>
  	  <div id="pointInfoWindow" class="easyui-window" title="新添加设备" style="width:560px;height:580px;overflow:hidden;padding:10px;text-align:center;" iconCls="icon-info" closed="true" modal="true"   resizable="false" collapsible="false" minimizable="false" maximizable="false">
-		<form id="savePointForm" name ="savePointForm" action="jsonSaveOrUpdatePoint.do"  method="post">
+		<form id="savePointForm" name ="savePointForm" action="device/jsonSaveOrUpdatePoint.do"  method="post">
 		<p style="display:none">
         	<span>id：</span><input name="id" type="hidden" value="0" class="easyui-validatebox"/>
         </p>
@@ -205,7 +213,11 @@ function excelChange(file){
 			<span style="color:red">*</span>
         </p>
         <p class="yw-window-p">
-        	<span>设备名称：</span><input name="name" type="text" value="" onblur="valueTrim(this);"   class="easyui-validatebox" required="true"  validType="Length[1,30]" style="width:254px;height:28px;"/>
+        	<span>设备名称：</span><input name="pointName" type="text" value="" onblur="valueTrim(this);"   class="easyui-validatebox" required="true"  validType="Length[1,30]" style="width:254px;height:28px;"/>
+			<span style="color:red">*</span>
+        </p>
+        <p class="yw-window-p">
+        	<span>&nbsp;&nbsp;Naming：</span><input name="pointNaming" type="text" value="" onblur="valueTrim(this);"   class="easyui-validatebox" required="true"  validType="Length[1,30]" style="width:254px;height:28px;"/>
 			<span style="color:red">*</span>
         </p>
         <p class="yw-window-p">
@@ -218,7 +230,7 @@ function excelChange(file){
 			<span style="color:red">*</span>
         </p>
         <p class="yw-window-p">
-        	<span>IP地址：</span><input name="ipaddress" type="text" value="" onblur="valueTrim(this);"  class="easyui-validatebox" required="true"  validType="Length[1,50]" style="width:254px;height:28px;"/>
+        	<span>&nbsp;&nbsp;&nbsp;&nbsp;IP地址：</span><input name="ipAddress" type="text" value="" onblur="valueTrim(this);"  class="easyui-validatebox" required="true"  validType="IP" style="width:254px;height:28px;"/>
 			<span style="color:red">*</span>
         </p>
         <div class="yw-window-footer txt-right">

@@ -29,15 +29,31 @@ public class DeviceServiceImpl implements DeviceService {
 	}
 
 	@Override
-	public List<Device> getExistProjectPoint(Device device) {
+	public List<Device> getExistDevicePoint(Device device) {
 		// TODO Auto-generated method stub
-		return deviceMapper.getExistProjectPoint(device);
+		return deviceMapper.getExistDevicePoint(device);
 	}
 
 	@Override
-	public void saveOrUpdateProjectpoint(Device device) {
+	public void saveOrUpdateDevicepoint(Device device) {
 		// TODO Auto-generated method stub
-		
+		if(device.getId()>0){
+			deviceMapper.updateByPrimaryKeySelective(device);
+		}else{
+			deviceMapper.insertSelective(device);
+		}
+	}
+
+	@Override
+	public Device getPointDeviceById(Integer pointId) {
+		// TODO Auto-generated method stub
+		return deviceMapper.selectByPrimaryKey(pointId);
+	}
+
+	@Override
+	public void saveDevicepoint(Device device) {
+		// TODO Auto-generated method stub
+		deviceMapper.insertSelective(device);
 	}
 
 
