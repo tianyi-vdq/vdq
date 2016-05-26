@@ -157,12 +157,9 @@ function excelChange(file){
 						<input type="text" name="searchName"   validType="SpecialWord" class="easyui-validatebox" 
 							placeholder="搜索" value="${Device.searchName}" /> 
 						<span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>
-						<!-- <button class="yw-btn bg-blue cur">全部客户</button> -->
-						<!-- <button class="yw-btn bg-gray ml20 cur">满意度调查</button> -->
 					</div>
 					<div class="fr">
-						<span class="fl yw-btn bg-green cur" onclick="showdialog();">新建设备</span>
-						
+						<span class="fl yw-btn bg-green cur" onclick="window.location.href='device/deviceInfo.do?pointId='+ 0">新建设备</span>
 					</div>
 					<div class="cl"></div>
 				</div>
@@ -182,6 +179,7 @@ function excelChange(file){
 						<th>设备类型</th> 
 						<th>设备地址</th>
 						<th>IP地址</th> 
+						<th>所属区域</th>
 					</tr>
 					<c:forEach var="item" items="${Devicelist}">
 						<tr>
@@ -193,6 +191,7 @@ function excelChange(file){
 							<td>${item.type}</td>
 							<td>${item.address}</td> 
 							<td>${item.ipAddress}</td> 
+							<td>${item.areaName}</td>
 						</tr>
 					</c:forEach>
 				</table>

@@ -23,5 +23,7 @@ public interface DeviceMapper {
 
 	List<Device> getExistDevicePoint(Device device);
 
+	List<Device> getAreaListByAreaId(Device device);
+
 	
 }

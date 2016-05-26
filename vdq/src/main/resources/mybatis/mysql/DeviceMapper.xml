@@ -11,16 +11,18 @@
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="ip_address" property="ipAddress" jdbcType="VARCHAR" />
     <result column="area_id" property="areaId" jdbcType="INTEGER" />
+    <result column="AREA_NAME" property="areaName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, point_id, point_number, point_name, point_naming, type, address, ip_address, 
-    area_id
+    t.id, t.point_id, t.point_number, t.point_name, t.point_naming, t.type, t.address, t.ip_address, 
+    t.area_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_device
-    where id = #{id,jdbcType=INTEGER}
+    from t_device t
+    where t.id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_device
@@ -140,22 +142,28 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <sql id="query_sql">
-  	from t_device  
+  	from t_device t left join t_area a on t.area_id = a.id
   	 where 1=1 
   	 <if test="searchName != null and searchName !=''" >
       and ( 
-      	point_number like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%') 
+      	t.point_number like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%') 
       	OR 
-      	point_name like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
+      	t.point_name like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
       	OR 
-      	address like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
+      	t.address like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
       )
-     </if>	 
+     </if>
+     <if test="pointNumber != null" >
+        and  t.POINT_NUMBER = #{pointNumber,jdbcType=VARCHAR}
+    </if>
+    <if test="id != null" >
+        and t.id != #{id,jdbcType=VARCHAR}
+    </if>
   </sql>
   <select id="getDeviceList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Device">
-  	 select <include refid="Base_Column_List" /> 
+  	 select <include refid="Base_Column_List" />,a.name as AREA_NAME  
   	 <include refid="query_sql" />
-    order by id desc
+    order by t.id desc
   	 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
         limit #{pageStart}, #{pageSize}
     </if>
@@ -168,13 +176,15 @@
   
   <select id="getExistDevicePoint" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Device">
   	select <include refid="Base_Column_List" />
-  	from t_device
-  	where 1=1
-  	<if test="pointNumber != null" >
-        and  POINT_NUMBER = #{pointNumber,jdbcType=VARCHAR}
-    </if>
-    <if test="id != null" >
-        and id != #{id,jdbcType=VARCHAR}
-    </if>
+  	<include refid="query_sql"/>
+  </select>
+  
+  <select id="getAreaListByAreaId" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Device">
+  	select <include refid="Base_Column_List"/>
+  	from t_device t 
+  	where 1=1 
+  	<if test="areaId != null">
+	  and	t.area_id = #{areaId,jdbcType = INTEGER}
+  	</if>
   </select>
 </mapper>

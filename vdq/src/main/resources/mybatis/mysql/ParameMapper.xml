@@ -79,16 +79,26 @@
       value = #{value,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <sql id="sql_query">
+  	from t_parame as p
+  	where 1=1 
+	<if test="searchName != null and searchName != ''">
+		and (p.name like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
+		OR p.key like  CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
+		)
+	</if>
+  </sql>
   <select id="getParameList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Parame">
   	select <include refid="Base_Column_List" /> 
-	from t_parame as p
-	order by p.id desc
+	<include refid="sql_query" />
+	order by p.id DESC
   	 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
         limit #{pageStart}, #{pageSize}
     </if>
   </select>
   <select id="getParameCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.Parame">
-  	select count(*) from t_parame as p
+  	select count(*) 
+  	<include refid="sql_query"></include>
   </select>
   <select id="getExistParame" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Parame">
   	select <include refid="Base_Column_List" /> 

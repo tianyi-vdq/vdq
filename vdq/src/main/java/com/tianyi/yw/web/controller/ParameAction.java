@@ -34,35 +34,31 @@ public class ParameAction  extends BaseAction{
 	 * @param response
 	 * @return
 	 * @throws UnsupportedEncodingException
-	 */  
-	@RequestMapping(value = "/parameList.do")
-	public String parameList( 
-			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{ 
-		 
-		return "web/parame/parameList";
-	}	
-	/**
-	 * 视频点位检测参数设置
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws UnsupportedEncodingException
 	 */
-	@RequestMapping(value = "/parameInfo.do")
-	public String paramInfo(  
-			Parame parame,
+	@RequestMapping(value = "/parameList.do", method=RequestMethod.GET)
+	public String parameList(Parame parame, 
 			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{ 
+		//判断搜索名是否为空，不为空则转为utf-8编码
+		if(parame.getSearchName() != null && parame.getSearchName() != ""){
+			String searchName = new String(parame.getSearchName().getBytes(
+					"iso8859-1"), "utf-8");
+			parame.setSearchName(searchName);
+		}
+		//设置页面初始值及页面大小
 		if (parame.getPageNo() == null)
 			parame.setPageNo(1);
 		parame.setPageSize(Constants.DEFAULT_PAGE_SIZE);  
 		int totalCount =  0;
 		List<Parame> listParam = new ArrayList<Parame>();
 		try{
+			//t_parame取满足要求的参数数据
 			listParam =  paramService.getParameList(parame);
+			//t_parame取满足要求的记录总数
 			totalCount = paramService.getParameCount(parame);
 		}catch(Exception ex){ 
 			ex.printStackTrace();
 		}
+		//通过request对象传值到前台
 		parame.setTotalCount(totalCount); 
 		request.setAttribute("Param", parame); 
 		request.setAttribute("paramList", listParam); 
@@ -75,19 +71,24 @@ public class ParameAction  extends BaseAction{
 	@RequestMapping(value ="/jsonSaveOrUpdateParame.do", method=RequestMethod.POST)
 	public JsonResult<Parame> SaveOrUpdateDevice(Parame parame,
 			HttpServletRequest request, HttpServletResponse response){
+		//新建json对象并赋初值
 		JsonResult<Parame> js = new JsonResult<Parame>();
 		js.setCode(new Integer(1));
 		js.setMessage("保存失败");
 		try{
+			//如为新增，则给id置0
 			if(parame.getId() == null || parame.getId() == 0){
 				parame.setId(0);
 			}
+			//判断参数名是否为空
 			if(parame.getName() != null){
 				Parame p = new Parame();
 				p.setName(parame.getName());
+				//如为编辑，则给p对象赋前台传来的参数id值
 				if (parame.getId() > 0) {
 					p.setId(parame.getId());
 				}
+				//根据参数名，参数id去t_parame匹配数据，如新增，则只匹配参数名是否重复；如编辑，则可以直接保存
 				List<Parame> lc = paramService.getExistParame(p);
 				if (lc.size() == 0) {
 					paramService.saveOrUpdateParame(parame);
@@ -107,19 +108,22 @@ public class ParameAction  extends BaseAction{
 		return js;
 	}
 	/**
-	 * 编辑参数
+	 * 新增，编辑参数
 	 */
 	@RequestMapping(value="/parameInfo.do", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public String editParame(
 			@RequestParam(value="id",required = false)Integer parameId,
 			HttpServletRequest req,HttpServletResponse res){
-		Parame parame = new Parame();
-		try{
-			parame = paramService.getParameById(parameId);
-		}catch(Exception ex){
-			ex.printStackTrace();
+		//根据参数id判断是新增还是编辑，新增为0，不用传值；编辑为选中的参数id值，取对象，传值
+		if(parameId != null && parameId != 0){
+			Parame parame = new Parame();
+			try{
+				parame = paramService.getParameById(parameId);
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
+			req.setAttribute("Parame", parame);
 		}
-		req.setAttribute("Parame", parame);
 		return "web/parame/parameInfo";
 	}
 }

@@ -51,7 +51,8 @@
 						<th>设备Naming</th> 
 						<th>设备类型</th> 
 						<th>设备地址</th>
-						<th>Ip地址</th>  
+						<th>Ip地址</th> 
+						<th>所属区域</th> 
 					</tr>
 					<c:forEach var="item" items="${pointlist}">
 						<tr>
@@ -63,6 +64,7 @@
 							<td>${item.type}</td>
 							<td>${item.address}</td> 
 							<td>${item.ipAddress}</td> 
+							<td>${item.areaName}</td>
 						</tr>
 					</c:forEach>
 				</table> 

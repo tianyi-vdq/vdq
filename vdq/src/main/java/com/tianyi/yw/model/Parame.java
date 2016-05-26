@@ -10,8 +10,18 @@ public class Parame extends Page {
     private String key;
 
     private String value;
+    
+    private String searchName;
 
-    public Integer getId() {
+    public String getSearchName() {
+		return searchName;
+	}
+
+	public void setSearchName(String searchName) {
+		this.searchName = searchName;
+	}
+
+	public Integer getId() {
         return id;
     }
 

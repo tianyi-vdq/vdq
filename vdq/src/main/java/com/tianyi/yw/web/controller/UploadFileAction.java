@@ -19,11 +19,15 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
+
+
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -38,7 +42,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tianyi.yw.common.JsonResult; 
+import com.tianyi.yw.model.Area;
 import com.tianyi.yw.model.Device;
+import com.tianyi.yw.service.AreaService;
 import com.tianyi.yw.service.DeviceService;
 
 @Scope("prototype")
@@ -48,6 +54,8 @@ public class UploadFileAction extends BaseAction {
  
 	@Resource(name = "deviceService")
 	private DeviceService deviceService;
+	@Resource(name = "areaService")
+	private AreaService areaService;
 	/**
 	 * 导入点位设备信息 导入成功后，跳转到导入结果临时页面
 	 * 
@@ -60,16 +68,24 @@ public class UploadFileAction extends BaseAction {
 	public String uploadDeviceExcelFile(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(value = "file", required = false) MultipartFile file) {
+		//导入总记录数
 		List<Device> defaultlist = new ArrayList<Device>();
+		//导入成功记录数
 		List<Device> list = new ArrayList<Device>();
+		//导入失败记录
 		List<Device> nulllist = new ArrayList<Device>();
+		//导入总数
 		int totalCount = 0;
+		//导入成功数
 		int rightCount = 0;
+		//导入失败数
 		int subCount = 0;
 
 		try {
+			//项目在容器中的实际发布运行的upload路径
 			String path = request.getSession().getServletContext()
 					.getRealPath("upload");
+			//获取文件名
 			String fileName = file.getOriginalFilename();
 			File targetFile = new File(path, fileName);
 			if (!targetFile.exists()) {
@@ -81,9 +97,12 @@ public class UploadFileAction extends BaseAction {
 				if (f.exists()) {
 					f.delete();
 				}
+				//把MultipartFile转换成File类型,MultipartFile自带的transferTo
 				file.transferTo(targetFile);
 				InputStream stream = new FileInputStream(targetFile.getPath());
 				Workbook wb = WorkbookFactory.create(stream);
+				//HSSFWorkbook是解析出来excel 2007 以前版本的，后缀名为xls的;
+				//XSSFWorkbook是解析excel 2007 版的，后缀名为xlsx。
 				try { 
 					stream = new FileInputStream(targetFile.getPath()); 
 					wb = new XSSFWorkbook(stream);
@@ -261,6 +280,7 @@ public class UploadFileAction extends BaseAction {
 		}
 		return json;
 	}
+	//解析excel文件
 	private List<Device> getXSSFResult(Workbook wb) {
 		// TODO Auto-generated method stub
 		List<Device> result = new ArrayList<Device>(); 
@@ -303,6 +323,19 @@ public class UploadFileAction extends BaseAction {
 				XSSFCell cell6 = row.getCell(6);
 				if(cell6 != null || "".equals(cell6)){
 					point.setIpAddress(cell6.getStringCellValue());
+				}
+				XSSFCell cell7 = row.getCell(7);
+				if(cell7 != null || "".equals(cell7)){
+					try{
+						cell7.setCellType(Cell.CELL_TYPE_STRING);  
+						String s = cell7.getStringCellValue();
+						Integer i = Integer.valueOf(s);
+						point.setAreaId(i);
+						Area area = areaService.getAreaById(i);
+						point.setAreaName(area.getName());
+					}catch(Exception ex){
+						ex.printStackTrace();
+					}
 				}
 				result.add(point);
             }
@@ -351,6 +384,19 @@ public class UploadFileAction extends BaseAction {
 					HSSFCell cell6 = row.getCell(6);
 					if(cell6 != null || "".equals(cell6)){
 						point.setIpAddress(cell6.getStringCellValue());
+					}
+					HSSFCell cell7 = row.getCell(7);
+					if(cell7 != null || "".equals(cell7)){
+						try{
+							cell7.setCellType(Cell.CELL_TYPE_STRING);  
+							String s = cell7.getStringCellValue();
+							Integer i = Integer.valueOf(s);
+							point.setAreaId(i);
+							Area area = areaService.getAreaById(i);
+							point.setAreaName(area.getName());
+						}catch(Exception ex){
+							ex.printStackTrace();
+						}
 					}
 					result.add(point);
 	            }
