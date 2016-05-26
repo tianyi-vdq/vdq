@@ -16,6 +16,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Resource
 	private DeviceMapper deviceMapper;
+	
 	@Override
 	public int getDeviceCount(Device device) {
 		// TODO Auto-generated method stub
