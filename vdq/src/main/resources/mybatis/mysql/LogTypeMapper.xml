@@ -68,4 +68,10 @@
       description = #{description,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="getLogTypeList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.LogType">
+  	 select 
+  	 <include refid="Base_Column_List" /> 
+  	 from t_log_type
+  </select>
 </mapper>

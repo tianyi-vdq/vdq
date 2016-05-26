@@ -31,17 +31,29 @@ function gotoChildMenu(url,selectedChildMenu) {
                 </div>
                 <div class="yw-left-menu">
                 	<ul>
-                		
+ 
                     	<!--  <li class="yw-left-menu-now"> 
                         	<em></em><span onclick="window.location.href = 'device/deviceList.do'"><i class="fl yw-icon icon-todayjob"></i>设备管理</span>
+>>>>>>> branch 'master' of https://github.com/tianyi-vdq/vdq.git
                         </li> 
                     	 <li class="yw-left-menu-now"> 
-                        	<em></em><span onclick="window.location.href = 'task/taskList.do'"><i class="fl yw-icon icon-todayjob"></i>任务管理</span>
+                        	<em></em><span onclick="window.location.href = '${pageContext.request.contextPath}/task/taskList.do'"><i class="fl yw-icon icon-todayjob"></i>任务管理</span>
                         </li> 
                     	 <li class="yw-left-menu-now">
+<<<<<<< HEAD
+                        	<em></em><span onclick="window.location.href = '${pageContext.request.contextPath}/parame/parameInfo.do'"><i class="fl yw-icon icon-todayjob"></i>参数配置</span>
+=======
                         	<em></em><span onclick="window.location.href = 'parame/parameList.do'"><i class="fl yw-icon icon-todayjob"></i>参数配置</span>
+>>>>>>> branch 'master' of https://github.com/tianyi-vdq/vdq.git
                         </li> 
                     	 <li class="yw-left-menu-now"> 
+<<<<<<< HEAD
+                        	<em></em><span onclick="window.location.href = '${pageContext.request.contextPath}/log/logList.do'"><i class="fl yw-icon icon-todayjob"></i>日志管理</span>
+                        </li> 
+                         <li class="yw-left-menu-now"> 
+                        	<em></em><span onclick="window.location.href = '${pageContext.request.contextPath}/deviceGroup/deviceGroupList'"><i class="fl yw-icon icon-todayjob"></i>设备分组</span>
+                        </li> 
+=======
                         	<em></em><span onclick="window.location.href = 'log/logList.do'"><i class="fl yw-icon icon-todayjob"></i>日志管理</span>
                         </li>  -->
                         
@@ -54,7 +66,7 @@ function gotoChildMenu(url,selectedChildMenu) {
 		                        </li>
 	                        </c:forEach>
                         </c:if>
-                	</c:forEach>
+                	</c:forEach> 
                 	<%-- <c:forEach var="mainItem" items="${sessionScope.userFunctions}">
                 	    <c:if test="${mainItem.id == sessionScope.userInfo.selectedMainMemu}">
 	                	    <c:forEach var="item" items="${mainItem.childFunctionlist}">

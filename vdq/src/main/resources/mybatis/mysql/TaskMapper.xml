@@ -3,14 +3,16 @@
 <mapper namespace="com.tianyi.yw.dao.TaskMapper" >
   <resultMap id="BaseResultMap" type="com.tianyi.yw.model.Task" >
     <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
     <result column="run_intervals" property="runIntervals" jdbcType="INTEGER" />
     <result column="run_times" property="runTimes" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="run_count" property="runCount" jdbcType="INTEGER" />
     <result column="flag" property="flag" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, start_time, run_intervals, run_times, run_count, flag
+    id, name,start_time, run_intervals, run_times, run_count,create_time, flag
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -23,11 +25,11 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tianyi.yw.model.Task" >
-    insert into t_task (id, start_time, run_intervals, 
-      run_times, run_count, flag
+    insert into t_task (id,name, start_time, run_intervals, 
+      run_times, run_count, create_time,flag
       )
-    values (#{id,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, #{runIntervals,jdbcType=INTEGER}, 
-      #{runTimes,jdbcType=INTEGER}, #{runCount,jdbcType=INTEGER}, #{flag,jdbcType=INTEGER}
+    values (#{id,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},  #{startTime,jdbcType=TIMESTAMP}, #{runIntervals,jdbcType=INTEGER}, 
+      #{runTimes,jdbcType=INTEGER}, #{runCount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{flag,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tianyi.yw.model.Task" >
@@ -35,6 +37,9 @@
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
+      </if>
+      <if test="name != null" >
+        name,
       </if>
       <if test="startTime != null" >
         start_time,
@@ -48,6 +53,9 @@
       <if test="runCount != null" >
         run_count,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
       <if test="flag != null" >
         flag,
       </if>
@@ -55,6 +63,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
+      </if>     
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
       </if>
       <if test="startTime != null" >
         #{startTime,jdbcType=TIMESTAMP},
@@ -68,6 +79,9 @@
       <if test="runCount != null" >
         #{runCount,jdbcType=INTEGER},
       </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="flag != null" >
         #{flag,jdbcType=INTEGER},
       </if>
@@ -76,8 +90,14 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.tianyi.yw.model.Task" >
     update t_task
     <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
       <if test="startTime != null" >
         start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="runIntervals != null" >
         run_intervals = #{runIntervals,jdbcType=INTEGER},
@@ -96,11 +116,84 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tianyi.yw.model.Task" >
     update t_task
-    set start_time = #{startTime,jdbcType=TIMESTAMP},
+    set name = #{name,jdbcType=VARCHAR},
+    start_time = #{startTime,jdbcType=TIMESTAMP},
       run_intervals = #{runIntervals,jdbcType=INTEGER},
       run_times = #{runTimes,jdbcType=INTEGER},
       run_count = #{runCount,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       flag = #{flag,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  
+  <sql id="query_sql">
+  	from t_task  
+  	 where 1=1 
+  	 <if test="searchName != null and searchName !=''" >
+      and   
+      	name like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
+     </if>
+     <if test="startedTime != null and startedTime !='' and endTime !='' and endTime != null">
+     and 
+        start_time  between #{startedTime,jdbcType=DATE}  and #{endTime,jdbcType=DATE}
+  
+     </if>	
+      
+  </sql>
+  
+   <select id="getExistList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Task" >
+    select
+    
+    <include refid="Base_Column_List" />
+    <include refid="query_sql"/>
+    <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
+        limit #{pageStart}, #{pageSize}
+  	</if>
+  </select>
+   
+   <select id="getTaskList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Task" >
+    select
+    <include refid="Base_Column_List" />
+
+   <include refid="query_sql"/>   
+    <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
+        limit #{pageStart}, #{pageSize}
+  	</if>
+  </select>
+    <select id="getTaskCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.Task">
+  	 select count(*)
+  	 <include refid="query_sql" />
+  </select>
+  
+  <select id="getExistTask" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Task">
+  	select <include refid="Base_Column_List" />
+  	from t_task    where 
+  	  1 = 1
+  	<if test="name != null" >
+        and  name = #{name,jdbcType=VARCHAR}
+    </if>
+    <if test="id != null" >
+        and id != #{id,jdbcType=INTEGER}
+    </if>
+  </select>
+  
+   
+  
+  
 </mapper>
+
+
+
+
+
+
+
+
+ 
+  
+  
+  
+  
+  
+  

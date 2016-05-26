@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>  
+ <?xml version="1.0" encoding="UTF-8"?>  
 <!DOCTYPE generatorConfiguration  
   PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"  
   "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">  
@@ -65,13 +65,34 @@
         <table tableName="t_task_item" domainObjectName="TaskItem"
            enableSelectByExample="false"
 	       enableDeleteByExample="false"
-	       enableCountByExample="false"
-	       enableUpdateByExample="false"/>  
-        <table tableName="t_task_item_type" domainObjectName="TaskItemType"
+	       enableCountByExample="false" 
+	       enableUpdateByExample="false"/>    
+	       
+	       
+        <table tableName="t_grade_value" domainObjectName="GradeValue"
            enableSelectByExample="false"
 	       enableDeleteByExample="false"
 	       enableCountByExample="false"
-	       enableUpdateByExample="false"/>  
-       
+	       enableUpdateByExample="false"/>    
+	       
+	    <table tableName="t_group" domainObjectName="Group"
+           enableSelectByExample="false"
+	       enableDeleteByExample="false"
+	       enableCountByExample="false"
+	       enableUpdateByExample="false"/>   
+     
+        <table tableName="t_device_group" domainObjectName="DeviceGroup"
+           enableSelectByExample="false"
+	       enableDeleteByExample="false"
+	       enableCountByExample="false"
+	       enableUpdateByExample="false"/>    
+	       
+	       
+        <table tableName="t_vdq_grade" domainObjectName="VdqGroup"
+           enableSelectByExample="false"
+	       enableDeleteByExample="false"
+	       enableCountByExample="false"
+	       enableUpdateByExample="false"/>    
+	        
     </context>  
 </generatorConfiguration>  

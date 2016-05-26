@@ -28,12 +28,14 @@ public class Page {
     /**
 	 * 分页起始行数，自动计算
 	 */
-    private Integer pageCount;
+    @SuppressWarnings("unused")
+	private Integer pageCount;
+    
     private Integer totalCount;
     
     private Integer pageEnd;
     
-    private Integer roleUserId;
+    private Integer roleUserId; 
     
 	public Integer getPageStart() {
 		if (pageNo != null && pageSize != null) {
@@ -103,6 +105,10 @@ public class Page {
 
 	public void setSearchName(String searchName) {
 		this.searchName = searchName;
-	}
+	} 
+
+	public void setPageCount(Integer pageCount) {
+		this.pageCount = pageCount;
+	} 
 }
 
