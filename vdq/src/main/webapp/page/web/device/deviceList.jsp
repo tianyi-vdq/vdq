@@ -176,6 +176,7 @@ function excelChange(file){
 						<th>设备编号</th>
 						<th>设备名称</th>
 						<th>Naming</th>
+						<th>RTSP</th>
 						<th>设备类型</th> 
 						<th>设备地址</th>
 						<th>IP地址</th> 
@@ -188,6 +189,7 @@ function excelChange(file){
 							<td>${item.pointNumber}</td>
 							<td>${item.pointName}</td>
 							<td>${item.pointNaming}</td>
+							<td>${item.rtspUrl}</td>
 							<td>${item.type}</td>
 							<td>${item.address}</td> 
 							<td>${item.ipAddress}</td> 

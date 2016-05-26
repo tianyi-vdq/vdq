@@ -150,6 +150,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								<span style="color:red">*</span> 
 								</td>
 							</tr>
+							<tr>
+								<td align="right">RTSP地址:</td>
+								<td><input  name="rtspUrl" doc="pointInfo"  type="text" value="${Device.rtspUrl}" class="easyui-validatebox" required="true" validType="Length[1,150]" style="width:254px;height:28px;" />
+								<span style="color:red">*</span> 
+								</td>
+								
+								<td align="right"></td>
+								<td> 
+								</td>
+							</tr>
 						</table> 
 					</div>  
 				</form>

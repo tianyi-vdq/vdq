@@ -13,10 +13,11 @@
     <result column="area_id" property="areaId" jdbcType="INTEGER" />
     <result column="AREA_NAME" property="areaName" jdbcType="VARCHAR" />
     <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="rtsp_url" property="rtspUrl" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     t.id, t.point_id, t.point_number, t.point_name, t.point_naming, t.type, t.address, t.ip_address, 
-    t.area_id
+    t.area_id,t.rtsp_url
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -31,11 +32,12 @@
   <insert id="insert" parameterType="com.tianyi.yw.model.Device" >
     insert into t_device (id, point_id, point_number, 
       point_name, point_naming, type, 
-      address, ip_address, area_id
+      address, ip_address, area_id,rtsp_url
       )
     values (#{id,jdbcType=INTEGER}, #{pointId,jdbcType=VARCHAR}, #{pointNumber,jdbcType=VARCHAR}, 
       #{pointName,jdbcType=VARCHAR}, #{pointNaming,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{ipAddress,jdbcType=VARCHAR}, #{areaId,jdbcType=INTEGER}
+      #{address,jdbcType=VARCHAR}, #{ipAddress,jdbcType=VARCHAR}, #{areaId,jdbcType=INTEGER},
+      #{rtspUrl,jdbcType=VARCHAR}	
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tianyi.yw.model.Device" >
@@ -68,6 +70,9 @@
       <if test="areaId != null" >
         area_id,
       </if>
+      <if test="rtspUrl != null" >
+        rtsp_url,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -96,6 +101,9 @@
       </if>
       <if test="areaId != null" >
         #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="rtspUrl != null" >
+        #{rtspUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -126,6 +134,9 @@
       <if test="areaId != null" >
         area_id = #{areaId,jdbcType=INTEGER},
       </if>
+      <if test="rtspUrl != null" >
+        rtsp_url = #{rtspUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -138,7 +149,8 @@
       type = #{type,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
       ip_address = #{ipAddress,jdbcType=VARCHAR},
-      area_id = #{areaId,jdbcType=INTEGER}
+      area_id = #{areaId,jdbcType=INTEGER},
+      rtsp_url = #{rtspUrl,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <sql id="query_sql">

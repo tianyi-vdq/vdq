@@ -21,6 +21,7 @@ public class Device extends Page {
 
     private Integer areaId;
     
+    private String rtspUrl;
     //自定义
     private String areaName;
     
@@ -112,5 +113,13 @@ public class Device extends Page {
 
 	public void setParentId(Integer parentId) {
 		this.parentId = parentId;
+	}
+
+	public String getRtspUrl() {
+		return rtspUrl;
+	}
+
+	public void setRtspUrl(String rtspUrl) {
+		this.rtspUrl = rtspUrl;
 	}
 }
