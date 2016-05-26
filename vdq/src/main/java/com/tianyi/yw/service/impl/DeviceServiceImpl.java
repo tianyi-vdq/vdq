@@ -56,6 +56,12 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceMapper.insertSelective(device);
 	}
 
+	@Override
+	public List<Device> getAreaListByAreaId(Device device) {
+		// TODO Auto-generated method stub
+		return deviceMapper.getAreaListByAreaId(device);
+	}
+
 
 
 }

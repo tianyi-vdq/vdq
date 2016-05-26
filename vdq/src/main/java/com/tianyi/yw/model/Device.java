@@ -20,6 +20,11 @@ public class Device extends Page {
     private String ipAddress;
 
     private Integer areaId;
+    
+    //自定义
+    private String areaName;
+    
+    private Integer parentId;
 
     public Integer getId() {
         return id;
@@ -92,4 +97,20 @@ public class Device extends Page {
     public void setAreaId(Integer areaId) {
         this.areaId = areaId;
     }
+
+	public String getAreaName() {
+		return areaName;
+	}
+
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
+	}
+
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
 }

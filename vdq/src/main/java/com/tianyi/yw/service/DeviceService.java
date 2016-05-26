@@ -18,5 +18,7 @@ public interface DeviceService {
 
 	void saveDevicepoint(Device device);
 
+	List<Device> getAreaListByAreaId(Device device);
+
 
 }
