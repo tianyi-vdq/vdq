@@ -19,6 +19,10 @@
     delete from t_task_item
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteItemByTaskId" parameterType="java.lang.Integer" >
+    delete from t_task_item
+    where task_id = #{id,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.tianyi.yw.model.TaskItem" >
     insert into t_task_item (id, task_id, item_type_id
       )
@@ -68,4 +72,23 @@
       item_type_id = #{itemTypeId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="getTaskItemList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.TaskItem" >
+    select
+    <include refid="Base_Column_List" />
+   <include refid="query_sql"/>   
+  </select>
+  
+  <sql id="query_sql">
+  	from t_task_item  
+  	 where 1=1 
+  	 <if test="taskId != null and taskId !='0'" >
+      and   
+      	task_id = #{taskId,jdbcType=INTEGER}
+     </if>
+      <if test="itemTypeId != null and itemTypeId !='0'" >
+      and   
+      	item_type_id = #{itemTypeId,jdbcType=INTEGER}
+     </if>
+  </sql>
 </mapper>

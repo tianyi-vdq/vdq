@@ -1,9 +1,12 @@
 package com.tianyi.yw.web.controller;
 
+
+import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -11,11 +14,19 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tianyi.yw.common.JsonResult;
 import com.tianyi.yw.common.utils.Constants;
@@ -32,6 +43,7 @@ public class LogAction extends BaseAction
 	@Resource(name = "logService")
 	private LogService logService;
 	
+
 	/**
 	 * 
 	 * 日志管理管理
@@ -42,7 +54,8 @@ public class LogAction extends BaseAction
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = "/logList.do",method=RequestMethod.GET)
-	public String logList(Log log,LogType logType,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException
+	public String logList(Log log,LogType logType,HttpServletRequest request, HttpServletResponse response) 
+			throws UnsupportedEncodingException
 	{ 
 		//内容，描述
 		if (log.getSearchName() != null	&& log.getSearchName().length() > 0) 
@@ -54,10 +67,14 @@ public class LogAction extends BaseAction
 		if (log.getSearchTimes() != null	&& log.getSearchTimes().length() > 0) 
 		{
 			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");//小写的mm表示的是分钟  
-			Date date1;
+			Date date1;			
 			try {
 				date1 = sdf.parse(log.getSearchTimes());
 				log.setSearchTime(date1);
+    			Calendar c = Calendar.getInstance();
+	    		c.setTime(date1);
+	    		c.add(Calendar.DATE, 1);
+		    	log.setSearchTimeNext(c.getTime());  		    	
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -66,8 +83,9 @@ public class LogAction extends BaseAction
 		//类型
 		if (log.getSearchTypeIds() != null	&& log.getSearchTypeIds().length() > 0) 
 		{
-			int date2 = Integer.parseInt(log.getSearchTypeIds());
-			log.setSearchTypeId(date2);			
+			int date2 = Integer.parseInt(log.getSearchTypeIds());			
+			log.setSearchTypeId(date2);		
+			
 		}
 		//分页
 		if (log.getPageNo() == null)
@@ -87,7 +105,13 @@ public class LogAction extends BaseAction
 		
 		for(Log t:loglist)
 		{
-            t.setCreateTimes( Format.format( t.getCreateTime() ));
+			LogType logtype = logService.getLogTypeById(t.getTypeId());
+			String type = logtype.getName();
+			t.setType(type);
+			if( t.getCreateTimes()==null ||  t.getCreateTimes().length() == 0 )
+			{
+				t.setCreateTimes( Format.format( t.getCreateTime() ));
+			}
 		    
 		}
 		log.setTotalCount(totalCount); 
@@ -97,49 +121,87 @@ public class LogAction extends BaseAction
 		return "web/log/logList";
 	}
 	
-	@ResponseBody
-	@RequestMapping(value = "/jsonSaveOrUpdateLog.do", method=RequestMethod.POST)
-	public JsonResult<Log> SaveOrUpdateTask(Log log,HttpServletRequest request, HttpServletResponse response)
-	{
-		JsonResult<Log> js = new JsonResult<Log>();
-		js.setCode(new Integer(1));
-		js.setMessage("保存失败!");
-		try {
-			if (log.getId() == null || log.getId() == 0) 
-			{
-				log.setId(0);
-			}
-			
-			if (log.getContent() != null) 
-			{
-				Log p = new Log();
-				p.setContent(log.getContent());
-				if (log.getId() > 0) 
-				{
-					p.setId(log.getId());
-				}
-				List<Log> lc = logService.getExistLog(p);
-			if(lc.size()==0)
-			{   
-				//获取createTime
-				log.setCreateTime(new Date()) ; 
 
-				logService.saveOrUpdateLog(log);
-				js.setCode(new Integer(0));
-				js.setMessage("保存成功!");
-			} else 	{
-				js.setMessage("任务已存在!");
-			}
-			}else {
-				js.setMessage("任务名称不能为空!"); 
-			}
 
-		}catch(Exception ex){
-			ex.printStackTrace();
+     
+	@RequestMapping(value = "/jsonExportExcel.do", method=RequestMethod.POST)
+    public  JsonResult<Log> ExportExcel(HttpServletRequest request, HttpServletResponse response)
+		throws  Exception{
+	   
+			JsonResult<Log> js = new JsonResult<Log>();
+			js.setCode(new Integer(1));
+			js.setMessage("导出失败!");
+			Log log = new Log();
+			List<Log> loglist = new ArrayList<Log>();
+			loglist =  logService.getLogList(log);
+			SimpleDateFormat df = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");  
+		        // 第一步，创建一个webbook，对应一个Excel文件  
+		    HSSFWorkbook logbook = new HSSFWorkbook();  
+		        // 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet  
+		    HSSFSheet sheet = logbook.createSheet("日志表一");    
+		        // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short  
+		    sheet.setDefaultColumnWidth(15);  
+		    HSSFRow row = sheet.createRow(0);  
+		        // 第四步，创建单元格，并设置值表头 设置表头居中  
+		    HSSFCellStyle style = logbook.createCellStyle();  
+		        style.setFillForegroundColor(HSSFColor.SKY_BLUE.index);  
+		         style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);  
+		         style.setBorderBottom(HSSFCellStyle.BORDER_THIN);  
+		         style.setBorderLeft(HSSFCellStyle.BORDER_THIN);  
+		         style.setBorderRight(HSSFCellStyle.BORDER_THIN);  
+		         style.setBorderTop(HSSFCellStyle.BORDER_THIN);  		    
+		         style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式  
+		         HSSFFont font = logbook.createFont();  
+		         font.setColor(HSSFColor.VIOLET.index);  
+		         font.setFontHeightInPoints((short) 12);  
+		         font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);  
+		         style.setFont(font);  
+		         HSSFCell cell = row.createCell(0);  
+		         cell.setCellValue("id");  
+		         cell.setCellStyle(style);  
+		         cell = row.createCell((int) 1);  
+		         cell.setCellValue("日志内容");  
+		         cell.setCellStyle(style);  
+		         cell = row.createCell(2);  
+		         cell.setCellValue("日志类型");  
+		         cell.setCellStyle(style);  
+		         cell = row.createCell(3);  
+		         cell.setCellValue("创建时间");  
+		         cell.setCellStyle(style);  
+		         cell = row.createCell(4);  
+		         cell.setCellValue("详细描述");  
+		         cell.setCellStyle(style);  
+		  		     
+		        int i=0;
+		        for (Log t:loglist)  
+		        {  
+		            row = sheet.createRow(i + 1);               
+		            // 第四步，创建单元格，并设置值  
+		            log.setCreateTimes(df.format(t.getCreateTime()));
+		            row.createCell(0).setCellValue((Integer) t.getId());  
+		            row.createCell(1).setCellValue((String) t.getContent());  
+		            row.createCell(2).setCellValue((String) t.getType());  
+		            row.createCell(3).setCellValue((String) t.getCreateTimes()); 
+		            row.createCell(4).setCellValue((String) t.getDescription()); 
+		   
+		           // cell = row.createCell((short) 3);  
+		             
+		        }  
+		        // 第六步，将文件存到指定位置  
+		        try  
+		        {  
+		            FileOutputStream fout = new FileOutputStream("D:/code_github/log.xls");  
+		            logbook.write(fout);  
+		            fout.close(); 
+		            js.setCode(new Integer(0));
+					js.setMessage("导出成功!");
+		        }  
+		        catch (Exception e)  
+		        {  
+		            e.printStackTrace();  
+		        }  
+			    return js;
 		}
-		return js;
-	}
-	
 	
 }
 

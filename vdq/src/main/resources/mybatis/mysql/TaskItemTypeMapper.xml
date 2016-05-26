@@ -68,4 +68,10 @@
       description = #{description,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="getTaskItemTypeList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.TaskItemType" >
+    select
+    <include refid="Base_Column_List" />   
+    from t_task_item_type
+  </select>
 </mapper>

@@ -3,6 +3,8 @@ package com.tianyi.yw.service;
 import java.util.List;
 
 import com.tianyi.yw.model.Task;
+import com.tianyi.yw.model.TaskItem;
+import com.tianyi.yw.model.TaskItemType;
 
 public interface TaskService {
 
@@ -10,9 +12,19 @@ public interface TaskService {
 
 	int getTaskCount(Task task);
 
-	void saveOrUpdateTask(Task task);
+	void saveOrUpdateTask(Task task) ;
 
 	List<Task> getExistTask(Task task);
 
 	Task getTaskById(Integer id);
+	
+	List<TaskItemType> getTaskItemTypeList(TaskItemType taskItemType);
+	
+	TaskItemType getTaskItemTypeById(Integer id);
+	
+	List<TaskItem> getTaskItemList(TaskItem taskItem);
+
+	void deleteTaskById(Integer id);
+
+	void saveOrUpdateTaskItem(TaskItem taskIem);
 }

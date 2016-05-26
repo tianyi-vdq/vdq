@@ -1,5 +1,7 @@
 package com.tianyi.yw.dao;
 
+import java.util.List;
+
 import com.tianyi.yw.model.TaskItem;
 @MyBatisRepository
 public interface TaskItemMapper {
@@ -14,4 +16,9 @@ public interface TaskItemMapper {
     int updateByPrimaryKeySelective(TaskItem record);
 
     int updateByPrimaryKey(TaskItem record);
+    
+    List<TaskItem> getTaskItemList(TaskItem taskItem);
+
+	void deleteItemByTaskId(Integer id);
+    
 }

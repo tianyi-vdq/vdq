@@ -55,6 +55,11 @@ public class LogServiceImpl implements LogService {
 		return logMapper.getExistLog(log);
 	}
 
+	@Override
+	public LogType getLogTypeById(Integer id)
+	{
+		return logTypeMapper.selectByPrimaryKey(id);
+	}
 }
 
 

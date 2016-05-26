@@ -1,7 +1,7 @@
 package com.tianyi.yw.model;
 
 
-import java.util.Date;
+import java.util.Date; 
 
 import com.tianyi.yw.common.utils.Page;
 
@@ -28,15 +28,21 @@ public class Task extends Page {
 
     private Integer runCount;
 
-    private Integer flag;
+    private Integer flag;  
 
     private Date endTime;
     
     private String endTimes;
-
+     
+    /**
+     * 增加前台显示字段，诊断项目名称
+     * @return
+     */
+    private String itemTypeName;
+    
+    private String itemTypeId;
     
     
-
 	public Integer getId() {
         return id;
     }
@@ -149,6 +155,20 @@ public class Task extends Page {
 	public void setStartedTime(Date startedTime) {
 		this.startedTime = startedTime;
 	}
-	
 
+	public String getItemTypeName() {
+		return itemTypeName;
+	}
+
+	public void setItemTypeName(String itemTypeName) {
+		this.itemTypeName = itemTypeName;
+	}
+
+	public String getItemTypeId() {
+		return itemTypeId;
+	}
+
+	public void setItemTypeId(String itemTypeId) {
+		this.itemTypeId = itemTypeId;
+	}    
 }

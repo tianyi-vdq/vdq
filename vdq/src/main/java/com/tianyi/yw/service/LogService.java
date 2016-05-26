@@ -16,6 +16,8 @@ public interface LogService {
 	List<Log> getExistLog(Log p);
 
 	void saveOrUpdateLog(Log log);
+	
+	LogType getLogTypeById(Integer id);
 
 }
 

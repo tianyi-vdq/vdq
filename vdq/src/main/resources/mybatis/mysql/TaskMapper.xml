@@ -12,19 +12,22 @@
     <result column="flag" property="flag" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name,start_time, run_intervals, run_times, run_count,create_time, flag
+    t.id, t.name,t.start_time, t.run_intervals, t.run_times, t.run_count,t.create_time, t.flag
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_task
-    where id = #{id,jdbcType=INTEGER}
+    from t_task t
+    where t.id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_task
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tianyi.yw.model.Task" >
+		<selectKey resultType="INTEGER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
     insert into t_task (id,name, start_time, run_intervals, 
       run_times, run_count, create_time,flag
       )
@@ -128,15 +131,16 @@
   
   
   <sql id="query_sql">
-  	from t_task  
-  	 where 1=1 
+  	from t_task t
+  	 where t.flag=1 
+  	    
   	 <if test="searchName != null and searchName !=''" >
       and   
-      	name like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
+      	t.name like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
      </if>
      <if test="startedTime != null and startedTime !='' and endTime !='' and endTime != null">
      and 
-        start_time  between #{startedTime,jdbcType=DATE}  and #{endTime,jdbcType=DATE}
+        t.start_time  between #{startedTime,jdbcType=DATE}  and #{endTime,jdbcType=DATE}
   
      </if>	
       
@@ -150,17 +154,7 @@
     <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
         limit #{pageStart}, #{pageSize}
   	</if>
-  </select>
-   
-   <select id="getTaskList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Task" >
-    select
-    <include refid="Base_Column_List" />
-
-   <include refid="query_sql"/>   
-    <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
-        limit #{pageStart}, #{pageSize}
-  	</if>
-  </select>
+  </select> 
     <select id="getTaskCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.Task">
   	 select count(*)
   	 <include refid="query_sql" />
@@ -168,18 +162,54 @@
   
   <select id="getExistTask" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Task">
   	select <include refid="Base_Column_List" />
-  	from t_task    where 
+  	from t_task t   where 
   	  1 = 1
   	<if test="name != null" >
-        and  name = #{name,jdbcType=VARCHAR}
+        and  t.name = #{name,jdbcType=VARCHAR}
     </if>
     <if test="id != null" >
-        and id != #{id,jdbcType=INTEGER}
+        and t.id != #{id,jdbcType=INTEGER}
     </if>
   </select>
-  
-   
-  
+  <resultMap id="VMModelResultMap" type="com.tianyi.yw.model.Task" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="run_intervals" property="runIntervals" jdbcType="INTEGER" />
+    <result column="run_times" property="runTimes" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="run_count" property="runCount" jdbcType="INTEGER" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <result column="item_type_name" property="itemTypeName" jdbcType="VARCHAR" />
+    <result column="item_type_id" property="itemTypeId" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="getTaskById" resultMap="VMModelResultMap" parameterType="java.lang.Integer" >
+    select <include refid="Base_Column_List" />, 
+		(select GROUP_CONCAT( tt.`id` SEPARATOR "," )  from t_task as t1
+		 left join t_task_item  ti on t1.id = ti.task_id
+		 left join t_task_item_type tt on ti.item_type_id = tt.id
+		where t.id = t1.id
+		) as item_type_id	
+		from t_task t
+		 where t.id =  #{id,jdbcType=INTEGER} 
+  </select> 
+  <select id="getTaskList" resultMap="VMModelResultMap" parameterType="com.tianyi.yw.model.Task" >
+    select <include refid="Base_Column_List" />, 
+		(select GROUP_CONCAT( tt.`name` SEPARATOR "," )  from t_task as t1
+		 left join t_task_item  ti on t1.id = ti.task_id
+		 left join t_task_item_type tt on ti.item_type_id = tt.id
+		where t.id = t1.id
+		) as item_type_name,
+		(select GROUP_CONCAT( tt.`id` SEPARATOR "," )  from t_task as t1
+		 left join t_task_item  ti on t1.id = ti.task_id
+		 left join t_task_item_type tt on ti.item_type_id = tt.id
+		where t.id = t1.id
+		) as item_type_id	
+		<include refid="query_sql"/>   
+		 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
+        limit #{pageStart}, #{pageSize}
+  		</if>
+  </select> 
   
 </mapper>
 

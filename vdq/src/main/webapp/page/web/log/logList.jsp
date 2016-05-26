@@ -61,29 +61,7 @@ function showdialog(){
 	});
 	$('#logInfoWindow').window('open');
 }
-function saveLog(obj){
-	if ($('#saveLogForm').form('validate')) {
-		$(obj).attr("onclick", ""); 
-		showProcess(true, '温馨提示', '正在提交数据...'); 
-		 $('#saveLogForm').form('submit',{
-		  		success:function(data){ 
-					showProcess(false);
-		  			data = $.parseJSON(data);
-		  			if(data.code==0){
-	  					$('#logInfoWindow').window('close');
-		  				$.messager.alert('保存信息',data.message,'info',function(){
-	        			});
-	  					search();
-		  			}else{
-						$.messager.alert('错误信息',data.message,'error',function(){
-	        			});
-						$(obj).attr("onclick", "saveLog(this);"); 
-		  			}
-		  		}
-		  	 });  
-	}
 
-} 
 function getDateModel(date){
 	var year = date.getFullYear();
 	var month = date.getMonth()+1;
@@ -94,14 +72,39 @@ function getDateModel(date){
 	if(day <10){
 		day = "0"+day;
 	}
-	var dates = year+month+day;
+	var dates = year+"-"+month+"-"+day;
 	return dates;
 }
 
 function getSelectDate(date){
 	var dates = getDateModel(date);
+	alert(dates);
 	$("#searchTimes").val(dates);
 }
+ function exportLog(){
+	$.messager.confirm("导出确认","确认导出该任务?",function(r){  
+		    if (r){  
+		    //$.messager.alert('导出成功!');
+		 	$.ajax({
+				url : "jsonExportExcel.do",
+				type : "post",  
+				dataType:"json",
+				success : function(data) { 
+		  			if(data.code==0){ 
+		  				$.messager.alert('导出信息',data.message,'info',function(){ 
+		  		//		window.Location.href="log/jsonExportExcel.do";
+		  					search();
+		      		});
+		  			}else{
+		  			    
+						$.messager.alert('错误信息',data.message,'error');
+		  			} 
+			}
+			});
+	    }  
+	}); 
+} 
+
 
 </script>
 </head>
@@ -109,52 +112,44 @@ function getSelectDate(date){
 	<div class="con-right" id="conRight">
 		<div class="fl yw-lump">
 			<div class="yw-lump-title">
-				<i class="yw-icon icon-partner"></i><span>日志信息</span> 
-			</div>
+				<i class="yw-icon icon-partner" style="left"></i><span>日志信息</span> 
+		        	<span class="yw-btn bg-blue ml30 cur"  onclick="exportLog()">导出日志</span> 			 	
+		  </div>
+		  
 		</div>
 		
 		
 		
 		<div class="fl yw-lump mt10">
 			<form id="LogForm" name="LogForm"
-				action="logList.do" method="get">
-				<div class="pd10">
-					<div class="fr">
-						<span class="fl yw-btn bg-green cur" onclick="showdialog();">新建日志</span>
-					</div>	
-				</div>
-			
+				action="logList.do" method="get">				
 			<div class="fr">  
+					
 						<span>日志信息查询：</span><input type="text" name="searchName"   validType="SpecialWord"
-						 class="easyui-validatebox" 
-							placeholder="搜索" value="${Log.searchName}" type="hidden"/> 
+						 class="easyui-validatebox" placeholder="搜索" value="${Log.searchName}" type="hidden"/> 
+					
 						<span>日志时间查询：</span>
-						<input id="searchTimes" name="searchTimes" value="${Log.searchName}" type="hidden" />
-						 <input data-options="editable:false,nSelect:getSelectDate" type="text"  class="easyui-datebox" 
-					    	 style="width:254px;height:28px;"/>  
+						<input id="searchTimes" name="searchTimes" value="${Log.searchTimes}" type="hidden" />
+						 <input data-options="editable:false,onSelect:getSelectDate" type="text"  class="easyui-datebox" 
+					    	 style="width:254px;height:28px;"/> 
+					 
 						<span class="fl wid82">日志类型查询：</span>
-                       <input data-options="editable:false" name="searchTypeId" value="${Log.searchTypeId}" type="hidden" /> 
-					      <select class="easyui-combobox" style="height:28px;width:254px;" id="searchTypeId"  name="searchTypeId"  data-options="editable:false">
-		             	<option name="searchTypeId" value="">请选择日志类型</option>
-		             	<c:forEach var="item" items="${LogTypelist}">
-		             	
+                       <input data-options="editable:false"  value="${Log.searchTypeIds}" type="hidden" /> 
+					      <select class="easyui-combobox" style="height:28px;width:254px;" id="searchTypeIds"  name="searchTypeIds"  data-options="editable:false">
+		             	<option name="searchTypeIds" value="">请选择日志类型</option>
+		             	<c:forEach var="item" items="${LogTypelist}">	             	
 				    	<option value="${item.id}">${item.name}</option>
-				        </c:forEach>
-<!-- 				    <option value="2">视屏捕获</option>
-				    	<option value="3">视屏解析</option>
-				    	<option value="4">视屏诊断</option>
-				    	<option value="5">推送</option>
-				    	<option value="6">服务器监控</option>
-				    	<option value="7">光收发器监控</option>	 -->									
-					</select>
-					<div class="cl"></div>
+				        </c:forEach>							
+					</select>				
 						<span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>
-					</div>
-			
-        
+				     </div>
+					<div class="cl"></div>
                 <input type="hidden" id="pageNumber" name="pageNo" value="${log.pageNo}" />        
              </form>
              </div>
+             
+             	
+             
 				
            <div class="fl yw-lump"> 
 				<table class="yw-cm-table yw-center yw-bg-hover">
@@ -170,7 +165,7 @@ function getSelectDate(date){
 						<tr>
 							<td  style="display:none">${item.id}</td>
 							<td>${item.content}</td>  
-							<td>${item.typeId}</td> 
+							<td>${item.type}</td> 
 						  	<td>${item.createTimes}</td>
 							<td>${item.description}</td> 
 							
@@ -180,7 +175,7 @@ function getSelectDate(date){
 				<div class="page" id="pager"></div>
 				</div>
 				 </div>
-	<div id="logInfoWindow" class="easyui-window" title="新建日志" style="width:560px;height:430px;overflow:hidden;padding:10px;"
+	<%-- <div id="logInfoWindow" class="easyui-window" title="新建日志" style="width:560px;height:430px;overflow:hidden;padding:10px;"
    iconCls="icon-info" closed="true" modal="true" resizable="false" collapsible="false" minimizable="false" maximizable="false">
 		<form id="saveLogForm" name ="saveLogForm" action="jsonSaveOrUpdateLog.do"  method="post">
 		<p style="display:none">
@@ -220,7 +215,7 @@ function getSelectDate(date){
         	<span class="yw-window-btn bg-blue mt12" onClick="savelog(this);">保存</span>
         </div>
         </form>
-      </div>
+      </div>  --%>
       
   </body>
 </html>

@@ -8,6 +8,8 @@ public class TaskItem  extends Page{
     private Integer taskId;
 
     private Integer itemTypeId;
+    
+    private String itemTypeName;
 
     public Integer getId() {
         return id;
@@ -32,4 +34,12 @@ public class TaskItem  extends Page{
     public void setItemTypeId(Integer itemTypeId) {
         this.itemTypeId = itemTypeId;
     }
+
+	public String getItemTypeName() {
+		return itemTypeName;
+	}
+
+	public void setItemTypeName(String itemTypeName) {
+		this.itemTypeName = itemTypeName;
+	}
 }

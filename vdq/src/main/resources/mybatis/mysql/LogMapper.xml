@@ -99,14 +99,14 @@
       and 
       	content like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
       	or
-      	 description like CONCAT('%',#{description,jdbcType=VARCHAR},'%')
+      	 description like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
     
      </if>	 
-      <if test="searchTime != null and searchTime !=''" >
-      and
-      	create_time  =   #{searchTime,jdbcType=DATE}  
+        <if test="searchTime != null and searchTime !='' and searchTimeNext !='' and searchTimeNext != null">
+     and 
+        create_time  between #{searchTime,jdbcType=DATE}  and #{searchTimeNext,jdbcType=DATE}  
      </if>	 
-       <if test="searchTime != null and searchTime !=''" >
+       <if test="searchTypeId != null and searchTypeId !=''" >
       and 
        type_id = #{searchTypeId,jdbcType=INTEGER}
      </if>	 

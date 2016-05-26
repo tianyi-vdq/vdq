@@ -24,16 +24,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    totalCount:'${Task.totalCount}',
 			    buttonClickCallback:PageClick                     /* 表示点击分页数按钮调用的方法 */                  
 			});
-	 			$("#taskList tr").each(function(i){
+			/* 编辑跳转 */
+	 		/*  $("#taskList tr").each(function(i){
 				if(i>0){
 					$(this).bind("click",function(){
-						var name = $(this).find("td").first().text();
-						 window.location.href="taskInfo.do?name="+name;
+						var id = $(this).find("td").first().text();
+						 window.location.href="taskInfo.do?id="+id;
 					});
 				}
-			});	
+			});	 */
+			
 		}); 
-		
+	
+		 
 PageClick = function(pageclickednumber) {
 	$("#pager").pager({
 	    pagenumber:pageclickednumber,                 /* 表示启示页 */
@@ -116,6 +119,30 @@ function sltSchEtime(date){
 	var dates = getDateModel(date);
 	$("#endTimes").val(dates);
 }
+function deleteTask(id){
+	$.messager.confirm("删除确认","确认删除该任务?",function(r){  
+		    if (r){  
+		    $.messager.alert('删除成功!');
+		 	$.ajax({
+				url : "jsonDeleteTask.do?id="+id,
+				type : "post",  
+				dataType:"json",
+				success : function(data) { 
+		  			if(data.code==0){ 
+		  				$.messager.alert('删除信息',data.message,'info',function(){ 
+		  					search();
+		      		});
+		  			}else{
+		  			    
+						$.messager.alert('错误信息',data.message,'error');
+		  			} 
+			}
+			});
+	    }  
+	}); 
+}
+function runTaskById(id){
+}
 </script>
 </head>
 <body>
@@ -129,11 +156,6 @@ function sltSchEtime(date){
 		<div class="fl yw-lump mt10">
 			<form id="taskForm" name="taskForm"
 				action="taskList.do" method="get">
-				<div class="pd10">
-					<div class="fr">
-			 			<span class="fl yw-btn bg-green cur" onclick="showdialog();">新建任务</span>
-					</div>	
-				</div>
 					<div class="fr">  
 						<span>任务名称：</span><input type="text" name="searchName"   validType="SpecialWord"
 						 class="easyui-validatebox" 
@@ -147,8 +169,11 @@ function sltSchEtime(date){
 						 <input data-options="editable:false,onSelect:sltSchEtime"   type="text"  class="easyui-datebox"
 						   style="width:254px;height:28px;"/> 
 						<span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>
+						<span class="yw-btn bg-green ml20 cur" onclick="window.location.href='taskInfo.do?id=0';">新建任务</span> 
 					</div>
+
 					<div class="cl"></div>
+					
 					
                      <input type="hidden" id="pageNumber" name="pageNo"
 				    	value="${Task.pageNo}" />
@@ -161,24 +186,26 @@ function sltSchEtime(date){
 				<table class="yw-cm-table yw-center yw-bg-hover" id="taskList">
 					<tr style="background-color:#D6D3D3;font-weight: bold;">
 						<th width="4%" style="display:none">&nbsp;</th>
-						<th>状态</th>  
-						<th>任务名称</th> 
-						<th>启动时间</th> 
-						<th>执行间隔</th>
-						<th>执行次数</th>
-						<th>诊断并发路数</th>
-						<th>创建时间</th>
+						<th width="8%" >任务名称</th> 
+						<th width="10%" >启动时间</th> 
+						<th width="8%" >执行间隔</th>
+						<th width="8%" >执行次数</th>
+						<th width="8%" >诊断并发路数</th> 
+				 		<th>诊断项目</th>  
+						<th width="8%">执行</th>
+						<th width="8%" >删除任务</th>
 					</tr>
 					<c:forEach var="item" items="${Tasklist}">
-						<tr>
-							<td align="right" style="display:none">${item.id}</td>
-							<td align="right" >${item.flag}</td>  
-							<td align="right" >${item.name}</td> 
-							<td align="right" >${item.startTimes}</td> 
-							<td align="right" >${item.runIntervals}</td> 
-							<td align="right" >${item.runTimes}</td> 
-							<td align="right" >${item.runCount}</td> 
-							<td align="right" >${item.createTimes}</td> 
+						<tr> 
+							<td align="right" style="display:none">${item.id}</td> 
+							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.name}</td> 
+							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.startTimes}</td> 
+							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.runIntervals}</td> 
+							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.runTimes}</td> 
+							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.runCount}</td>  						  
+							<td style="text-align: left" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.itemTypeName}</td>  							  
+							<td><span class="yw-btn bg-orange cur" onclick="runTaskById(${item.id});">立即执行</span></td>
+						    <td><span class="yw-btn bg-orange cur" onclick="deleteTask(${item.id});">×</span></td>
 						</tr>
 					</c:forEach>
 				</table>
@@ -186,45 +213,7 @@ function sltSchEtime(date){
 				</div>
 			</div>
 
- 			<div id="taskInfoWindow" class="easyui-window" title="新建任务" style="width:560px;height:430px;overflow:hidden;padding:10px;"
-               iconCls="icon-info" closed="true" modal="true" resizable="false" collapsible="false" minimizable="false" maximizable="false">
-		<form id="saveTaskForm" name ="saveTaskForm" action="jsonSaveOrUpdateTask.do"  method="post">
-		<p style="display:none">
-        	<span class="fl ml80 wid102 line-hei30">id：</span><input name="id"  value="0" class="easyui-validatebox"/>
-        </p>
-        <p class="yw-window-p">
-        	<span class="fl ml80 wid102 line-hei30"> 任务名称：</span><input name="name"  type="text" value="" class="easyui-validatebox" required="true" validType="Length[1,10]" style="width:254px;height:28px;"/>
-        	<span style="color:red">*</span> 
-        </p> 
-       
-		<p class="yw-window-p">
-        	<span class="fl ml80 wid102 line-hei30">启动时间：</span><input  name="startTimes" data-options="editable:false"  onblur="valueTrim(this);"  type="text" value="" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>
-        	<span style="color:red">*</span> 
-        </p>
-        <p lass="yw-window-p">
-        	<span class="fl ml80 wid102 line-hei30">执行间隔：</span><input name="runIntervals" onblur="valueTrim(this);"  type="text" value="" class="easyui-validatebox" required="true"  validType="number" style="width:254px;height:28px;"/>
-        	<span style="color:red">*</span> 
-        </p> 
-        <p class="yw-window-p">
-        	<span class="fl ml80 wid102 line-hei30">执行次数：</span><input name="runTimes" onblur="valueTrim(this);" type="text" value="" class="easyui-validatebox"  required="true"   validType="number" style="width:254px;height:28px;"/>
-        	<span style="color:red">*</span> 
-        </p>
-        <p class="yw-window-p">
-        	<span class="fl ml80 wid102 line-hei30">并发路数：</span><input name="runCount" onblur="valueTrim(this);" type="text" value="" class="easyui-validatebox"  required="true"   validType="number" style="width:254px;height:28px;"/>
-            <span style="color:red">*</span>
-        </p>
-        <p class="yw-window-p">
-        	<span class="fl ml80 wid102 line-hei30">是否有效任务：</span>
-        	<label><input type="radio" name="flag" value="0" checked="checked" />无效</label> 
-		 	<label><input type="radio" name="flag" value="1" checked="checked" />有效</label> 
-            <span style="color:red">*</span>      
-        </p>
-           <div class="yw-window-footer txt-right">
-        	<span id="btnCancel" class="yw-window-btn bg-lightgray mt12"  onclick="$('#saveTaskForm .easyui-validatebox').val('');$('#taskInfoWindow').window('close');">退出</span>
-        	<span class="yw-window-btn bg-blue mt12" onClick="saveTask(this);">保存</span>
-        </div>
-        </form>
-      </div> 
+ 		
 
   </body>
 </html>
