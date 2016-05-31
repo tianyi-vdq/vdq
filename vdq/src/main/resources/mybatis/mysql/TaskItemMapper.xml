@@ -24,6 +24,9 @@
     where task_id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tianyi.yw.model.TaskItem" >
+    <selectKey resultType="INTEGER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
     insert into t_task_item (id, task_id, item_type_id
       )
     values (#{id,jdbcType=INTEGER}, #{taskId,jdbcType=INTEGER}, #{itemTypeId,jdbcType=INTEGER}

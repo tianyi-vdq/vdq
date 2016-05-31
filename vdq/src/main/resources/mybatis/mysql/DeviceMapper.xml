@@ -30,6 +30,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tianyi.yw.model.Device" >
+    <selectKey resultType="INTEGER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
     insert into t_device (id, point_id, point_number, 
       point_name, point_naming, type, 
       address, ip_address, area_id,rtsp_url

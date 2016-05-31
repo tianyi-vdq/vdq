@@ -41,7 +41,7 @@ public class DeviceServiceImpl implements DeviceService {
 		if(device.getId()>0){
 			deviceMapper.updateByPrimaryKeySelective(device);
 		}else{
-			deviceMapper.insertSelective(device);
+			deviceMapper.insert(device);
 		}
 	}
 

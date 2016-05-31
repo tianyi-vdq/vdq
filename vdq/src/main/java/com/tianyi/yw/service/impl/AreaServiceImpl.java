@@ -51,7 +51,7 @@ public class AreaServiceImpl implements AreaService {
 		if(a.getId() > 0){
 			areaMapper.updateByPrimaryKeySelective(a);
 		}else{
-			areaMapper.insertSelective(a);
+			areaMapper.insert(a);
 		}
 	}
 
