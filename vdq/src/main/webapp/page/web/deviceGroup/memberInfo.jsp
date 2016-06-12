@@ -102,9 +102,8 @@ $(document).ready(function(){
 				method="get">
 				<div class="yw-bi-rows">
 					<div class="yw-bi-tabs mt5" id="ywTabs">
-						<span class="yw-bi-now"
-							onclick="window.location.href='groupInfo.do?groupId=${group.id}'">基本信息</span>
-						<span onclick="javaScript:void(0);">分组成员</span>
+						<span onclick="window.location.href='groupInfo.do?groupId=${group.id}'">基本信息</span>
+						<span class="yw-bi-now" onclick="javaScript:void(0);">分组成员</span>
 					</div>
 					<div class="fr">
 						<span class="yw-btn bg-red mr26" id="saveBtn"

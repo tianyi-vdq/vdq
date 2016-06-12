@@ -33,19 +33,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		function saveParame(obj) { 
 		if ($('#parameForm').form('validate')) {
 			$(obj).attr("onclick", ""); 
-			showProcess(true, 'æ¸©é¦¨æç¤º', 'æ­£å¨æäº¤æ°æ®...'); 
+			showProcess(true, '参数保存中...'); 
 			$('#parameForm').form('submit',{
 				success : function(data) {
 					showProcess(false);
 					data = $.parseJSON(data);
 					if (data.code == 0) {
-						$.messager.alert('ä¿å­ä¿¡æ¯', data.message, 'info',function() {
+						$.messager.alert('成功信息', data.message, 'info',function() {
 							window.location.href ="parame/parameList.do";
 						});
 						//$("#i_back").click();
 						
 					} else {
-						$.messager.alert('éè¯¯ä¿¡æ¯', data.message, 'error',function() {});
+						$.messager.alert('失败信息', data.message, 'error',function() {});
 						$(obj).attr("onclick","saveParame(this);");
 					}
 				}
@@ -69,7 +69,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<span class="yw-bi-now">参数信息</span>
 				</div>
 				<div class="fr">
-					<span class="yw-btn bg-green mr26 hide" id="editBtn" onclick="editParame();">编辑/span> 
+					<span class="yw-btn bg-green mr26 hide" id="editBtn" onclick="editParame();">编辑</span> 
 					<span class="yw-btn bg-red mr26" id="saveBtn" onclick="saveParame(this);">保存</span> 
 					<span class="yw-btn bg-green mr26"  onclick="$('#i_back').click();">退出</span>
 				</div>

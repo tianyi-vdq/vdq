@@ -175,12 +175,8 @@ function sltSchEtime(date){
 						<th width="8%" >执行次数</th>
 						<th width="8%" >诊断并发路数</th> 
 				 		<th>诊断项目</th>  
-<<<<<<< HEAD
 						<th width="8%">是否立即执行</th>					
-=======
-						<th width="8%">是否立即执行</th>
 					<!--  	<th width="8%" >删除任务</th> -->
->>>>>>> branch 'master' of https://github.com/tianyi-vdq/vdq.git
 					</tr>
 					<c:forEach var="item" items="${Tasklist}">
 						<tr> 
@@ -198,13 +194,9 @@ function sltSchEtime(date){
 							</c:if>
                             <c:if test="${item.flag == 0 && Task.flagCount == 1}">未执行</c:if>
                             <c:if test="${item.flag == 1 && Task.flagCount == 1}">正在执行中...</c:if> 
-<<<<<<< HEAD
                              <c:if test="${Task.flagCount != 0 && Task.flagCount != 1}">错误！</c:if>
-                                                                                                      
-=======
                              <c:if test="${item.flag == 0 && Task.flagCount != 0 && Task.flagCount != 1}">未执行</c:if>
                             <c:if test="${item.flag == 1 && Task.flagCount != 0 && Task.flagCount != 1}">任务不能同时执行...</c:if>                                                                               
->>>>>>> branch 'master' of https://github.com/tianyi-vdq/vdq.git
 							</td>
 					 	 <%--    <td><span class="yw-btn bg-orange cur" onclick="deleteTask(${item.id});">×</span></td>  --%>
 						</tr>
