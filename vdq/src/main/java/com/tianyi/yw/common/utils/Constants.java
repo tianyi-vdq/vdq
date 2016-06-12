@@ -1,6 +1,6 @@
 /**
  * copy right 2012 sctiyi all rights reserved
- * create time:下午03:08:21
+ * create time:涓嬪崍03:08:21
  * author:ftd
  */
 package com.tianyi.yw.common.utils;
@@ -13,8 +13,7 @@ package com.tianyi.yw.common.utils;
 public class Constants {
 
 	/**
-	 * 系统默认管理员账户
-	 */
+	 * 绯荤粺榛樿绠＄悊鍛樿处鎴�	 */
 	public static final String ADMINISTRATOR_ACCOUNT="admin";
 	
 	public static final String USER_SESSION_NAME = "userInfo";
@@ -29,7 +28,7 @@ public class Constants {
 
 	public static final int DEFAULT_PAGE_SIZE = 10;
 	/**
-	 * api接口返回状�?公共码表 start
+	 * api鎺ュ彛杩斿洖鐘讹拷?鍏叡鐮佽〃 start
 	 */
 	public static final Integer API_RESULT_SUCCESS = 0;
 	public static final Integer API_RESULT_FAILURE = 1;
@@ -39,22 +38,21 @@ public class Constants {
 	public static final Integer API_RESULT_TOKEN_ERROR = 98;
 	public static final Integer API_RESULT_ORTHER_ERROR = 99;
 	/**
-	 * api接口返回状�?公共码表 end
+	 * api鎺ュ彛杩斿洖鐘讹拷?鍏叡鐮佽〃 end
 	 */
 	
 	/**
-	 * 数据状�?，启用�?停用
+	 * 鏁版嵁鐘讹拷?锛屽惎鐢拷?鍋滅敤
 	 */
 	public static final Integer STATUS_ENABLE = 0;
 	public static final Integer STATUS_DISABLE = 1;
 	
 	/**
-	 * 最新汇报时间段
-	 */
+	 * 鏈�柊姹囨姤鏃堕棿娈�	 */
 	
 	public static final Integer LATEST_TIME =10;
 	
-	/** openfire可配置*/
+	/** openfire鍙厤缃�*/
 	public final static String BLOWFISHCODE = PropertiesUtil.getInstance().getParamsProperty("BLOWFISHCODE"); 
 	public final static String OPENFIRE_IP = PropertiesUtil.getInstance().getParamsProperty("OPENFIRE_IP");  
 	public final static String OPENFIRE_DOMAIN = PropertiesUtil.getInstance().getParamsProperty("OPENFIRE_DOMAIN"); 

@@ -11,7 +11,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <head>
     <base href="<%=basePath%>">
     
-    <title>åæ°ä¿¡æ¯</title>
+    <title>参数信息</title>
     
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
@@ -59,19 +59,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <div class="con-right" id="conRight">
 		<div class="fl yw-lump">
 			<div class="yw-lump-title">
-				<i  id="i_back"  class="yw-icon icon-back" onclick="javascript:history.back();"></i><span>åæ°ï¼${Parame.name }</span> 
+				<i  id="i_back"  class="yw-icon icon-back" onclick="javascript:history.back();"></i><span>参数名：${Parame.name }</span> 
 			</div>
 		</div>
 
 		<div class="fl yw-lump mt10">
 			<div class="yw-bi-rows">
 				<div class="yw-bi-tabs mt5" id="ywTabs">
-					<span class="yw-bi-now">åæ°ä¿¡æ¯</span>
+					<span class="yw-bi-now">参数信息</span>
 				</div>
 				<div class="fr">
-					<span class="yw-btn bg-green mr26 hide" id="editBtn" onclick="editParame();">ç¼è¾</span> 
-					<span class="yw-btn bg-red mr26" id="saveBtn" onclick="saveParame(this);">ä¿å­</span> 
-					<span class="yw-btn bg-green mr26"  onclick="$('#i_back').click();">è¿å</span>
+					<span class="yw-btn bg-green mr26 hide" id="editBtn" onclick="editParame();">编辑/span> 
+					<span class="yw-btn bg-red mr26" id="saveBtn" onclick="saveParame(this);">保存</span> 
+					<span class="yw-btn bg-green mr26"  onclick="$('#i_back').click();">退出</span>
 				</div>
 			</div>
 			<div>
@@ -79,19 +79,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<div id="tab1" class="yw-tab">
 						<table class="yw-cm-table font16">
 							<tr>
-								<td align="right">åæ°åç§°ï¼</td>
+								<td align="right">参数名称</td>
 								<td><input  name="name" doc="deviceInfo" onblur="valueTrim(this);"    type="text" value="${Parame.name}" class="easyui-validatebox" required="true" validType="Length[1,10]" style="width:254px;height:28px;" />
 								<span style="color:red">*</span>
 								<input type="hidden" name="id" value="${Parame.id }" />
 								</td>
 							</tr>
 							<tr>
-								<td align="right">åæ°å³é®å­ï¼</td>
+								<td align="right">参数关键字</td>
 								<td><input  name="key" doc="deviceInfo"  onblur="valueTrim(this);"   type="text" value="${Parame.key}" class="easyui-validatebox" required="true" validType="Length[1,30]" style="width:254px;height:28px;" />
 								<span style="color:red">*</span></td>
 							</tr>
 							<tr>
-								<td align="right">åæ°å¼ï¼</td>
+								<td align="right">参数值</td>
 								<td><input  name="value" doc="deviceInfo"  onblur="valueTrim(this);"   type="text" value="${Parame.value}" class="easyui-validatebox" required="true" validType="Length[1,50]" style="width:254px;height:28px;" />
 								<span style="color:red">*</span></td>
 							</tr>

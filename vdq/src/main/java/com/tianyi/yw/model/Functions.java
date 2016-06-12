@@ -146,4 +146,12 @@ public class Functions extends Page{
 	public void setChildFunctionlist(List<Functions> childFunctionlist) {
 		this.childFunctionlist = childFunctionlist;
 	}
+
+	public int getSelected() {
+		return selected;
+	}
+
+	public void setSelected(int selected) {
+		this.selected = selected;
+	}
 }
