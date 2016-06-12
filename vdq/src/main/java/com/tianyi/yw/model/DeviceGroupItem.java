@@ -9,6 +9,7 @@ public class DeviceGroupItem extends Page {
 
     private Integer groupId;
 
+    
     public Integer getId() {
         return id;
     }
@@ -32,4 +33,5 @@ public class DeviceGroupItem extends Page {
     public void setGroupId(Integer groupId) {
         this.groupId = groupId;
     }
+
 }

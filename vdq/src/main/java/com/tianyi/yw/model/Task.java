@@ -42,7 +42,6 @@ public class Task extends Page {
     
     private String itemTypeId;
     
-    
 	public Integer getId() {
         return id;
     }
@@ -170,5 +169,6 @@ public class Task extends Page {
 
 	public void setItemTypeId(String itemTypeId) {
 		this.itemTypeId = itemTypeId;
-	}    
+	}
+
 }

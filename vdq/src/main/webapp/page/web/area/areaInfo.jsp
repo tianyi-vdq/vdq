@@ -17,8 +17,11 @@
 			//setShowStates();
 			
 			 $("#cmbParentArea").combotree({
-				 url: 'jsonLoadAreaTreeList.do?rootId='+0,  
+				 url: 'jsonLoadAreaTreeList.do',  
    				 required: false,
+   				 onBeforeExpand:function(node){
+   				 	$('#cmbParentArea').combotree('tree').tree('options').url = 'jsonLoadAreaTreeList.do?pid='+ node.id;
+   				 },
    				 onSelect:function(record){
    				 	 var areaId = $("#areaId").val();
    				 	 if(areaId != undefined && areaId != 0 && areaId !="" && areaId != null){
@@ -77,11 +80,13 @@
    				 onLoadSuccess:function(){
 					//$("#cmbParentArea").combotree("disable",true);
 					var parentId = $("#parentId").val();
+					var parentName = $("#parentName").val();
 					if(parentId==0){
    				 		$("#cmbParentArea").combotree("setText","=请选择所属区域=");
 					}else{
 						//appendParentNode();
 						$("#cmbParentArea").combotree("setValue",parentId);
+						$("#cmbParentArea").combotree("setText",parentName);
 					}
    				 }
 			}); 
@@ -170,6 +175,7 @@ function saveArea(obj){
 							<td>
 								<input id="cmbParentArea" class="easyui-combotree"  style="width:254px;height:32px;" />
 								<input id="parentId" name="parentId" type="hidden" value="${area.parentId}"/>
+								<input id="parentName" name="parentName" type="hidden" value="${area.parentName }"/>
 								<input name="oldParentId" type="hidden"  value="${area.parentId}" />
 							</td>
 						</tr> 

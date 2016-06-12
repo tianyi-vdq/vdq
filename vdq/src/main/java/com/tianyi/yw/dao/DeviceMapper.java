@@ -3,6 +3,7 @@ package com.tianyi.yw.dao;
 import java.util.List;
 
 import com.tianyi.yw.model.Device;
+import com.tianyi.yw.model.DeviceGroup;
 @MyBatisRepository
 public interface DeviceMapper {
     int deleteByPrimaryKey(Integer id);
@@ -24,6 +25,14 @@ public interface DeviceMapper {
 	List<Device> getExistDevicePoint(Device device);
 
 	List<Device> getAreaListByAreaId(Device device);
+
+	List<Device> getExistDevice(Device d);
+
+	int getTotalCountByGroupId(Device device);
+
+	int getDeviceCountSearch(Device d);
+
+	void update(Device d);
 
 	
 }

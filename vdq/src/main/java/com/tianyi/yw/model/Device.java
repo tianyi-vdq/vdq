@@ -1,5 +1,6 @@
 package com.tianyi.yw.model;
 
+
 import com.tianyi.yw.common.utils.Page;
 
 public class Device extends Page {
@@ -22,11 +23,17 @@ public class Device extends Page {
     private Integer areaId;
     
     private String rtspUrl;
+    
+    private Integer flag;
     //自定义
     private String areaName;
     
     private Integer parentId;
-
+    
+    private Integer groupId;
+    
+    private String[] Ids;
+    
     public Integer getId() {
         return id;
     }
@@ -122,4 +129,30 @@ public class Device extends Page {
 	public void setRtspUrl(String rtspUrl) {
 		this.rtspUrl = rtspUrl;
 	}
+
+	public Integer getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
+	}
+
+	public String[] getIds() {
+		return Ids;
+	}
+
+	public void setIds(String[] ids) {
+		Ids = ids;
+	}
+
+	public Integer getFlag() {
+		return flag;
+	}
+
+	public void setFlag(Integer flag) {
+		this.flag = flag;
+	}
+
+
 }

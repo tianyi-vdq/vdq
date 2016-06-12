@@ -18,6 +18,8 @@ import com.tianyi.yw.common.JsonResult;
 import com.tianyi.yw.common.utils.Constants;
 import com.tianyi.yw.model.Area;
 import com.tianyi.yw.model.Device; 
+import com.tianyi.yw.model.DeviceGroup;
+import com.tianyi.yw.model.DeviceGroupItem;
 import com.tianyi.yw.service.AreaService;
 import com.tianyi.yw.service.DeviceService;
 
@@ -145,5 +147,45 @@ public class DeviceAction  extends BaseAction{
 			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{ 
 		request.setAttribute("Device", device);  
 		return "web/device/deviceStatus";
-	}	 
+	}
+	@ResponseBody
+	@RequestMapping(value = "/jsonLoadStopOrStartDevice.do", method = RequestMethod.POST, produces = { "text/html;charset=UTF-8" })
+	public JsonResult<Device> stopOrStartDevice(
+			@RequestParam(value = "deviceId", required = false) Integer deviceId,
+			@RequestParam(value = "flag", required = false) Integer flag,
+			HttpServletRequest request, HttpServletResponse response) {
+		JsonResult<Device> js = new JsonResult<Device>();
+		Device d = new Device();
+		List<DeviceGroup> deviceGroup = new ArrayList<DeviceGroup>();
+		DeviceGroupItem dg = new DeviceGroupItem();
+		dg.setDeviceId(deviceId);
+		if(flag == 1){
+			js.setMessage("启用失败!");
+			d.setFlag(0);
+		}else{
+			js.setMessage("停用失败!");
+			d.setFlag(1);
+		}
+		js.setCode(1);
+		d.setId(deviceId);
+		try{
+			if(flag == 1){
+				deviceService.stopOrStartDeviceById(d);
+				js.setMessage("启用成功!");
+				js.setCode(0);
+			}else{
+				deviceGroup = deviceService.getExistGroupByDeviceId(dg);
+				if(deviceGroup.size() == 0){
+					deviceService.stopOrStartDeviceById(d);
+					js.setMessage("停用成功!");
+					js.setCode(0);
+				}else{
+					js.setMessage("该设备属于其他分组成员，不能停用!");
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return js;
+	}
 }

@@ -25,10 +25,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$("#cmbParentArea").combotree({
-				 url: 'area/jsonLoadAreaTreeList.do?rootId='+0,  
+				 url: 'area/jsonLoadAreaTreeList.do',  
    				 required: false,
    				 onSelect:function(record){ 
  				 	 	$("#areaId").val(record.id); 
+   				 },
+   				 onBeforeExpand:function(node){
+   				 	$('#cmbParentArea').combotree('tree').tree('options').url = 'area/jsonLoadAreaTreeList.do?pid='+ node.id;
    				 },
    				 onLoadSuccess:function(){
    				 	var deviceId = $("#deviceId").val();
@@ -156,8 +159,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								<span style="color:red">*</span> 
 								</td>
 								
-								<td align="right"></td>
-								<td> 
+								<td align="right">flag:</td>
+								<td><input  name="flag" doc="pointInfo"  type="text" value="${Device.flag}" class="easyui-validatebox" required="true" validType="Length[1,150]" style="width:254px;height:28px;" />
+								<span style="color:red">*</span>  
 								</td>
 							</tr>
 						</table> 

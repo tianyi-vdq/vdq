@@ -6,6 +6,7 @@
     <result column="device_id" property="deviceId" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
   </resultMap>
+  
   <sql id="Base_Column_List" >
     id, device_id, group_id
   </sql>
@@ -68,4 +69,42 @@
       group_id = #{groupId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <resultMap id="BaseResultMap1" type="com.tianyi.yw.model.Device" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="point_id" property="pointId" jdbcType="VARCHAR" />
+    <result column="point_number" property="pointNumber" jdbcType="VARCHAR" />
+    <result column="point_name" property="pointName" jdbcType="VARCHAR" />
+    <result column="point_naming" property="pointNaming" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="ip_address" property="ipAddress" jdbcType="VARCHAR" />
+    <result column="area_id" property="areaId" jdbcType="INTEGER" />
+    <result column="AREA_NAME" property="areaName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="rtsp_url" property="rtspUrl" jdbcType="VARCHAR" />
+    <result column="dgi_group_id" property="groupId" jdbcType="INTEGER"/>
+  </resultMap>
+  <select id="getDeviceListByGroupId" parameterType="com.tianyi.yw.model.Device" resultMap="BaseResultMap1">
+  	select d.*,dgi.group_id as dgi_group_id,a.name as AREA_NAME from t_device_group_item dgi left join t_device_group dg on dgi.group_id=dg.id
+  									  		 left join t_device d on dgi.device_id=d.id
+  									  		 left join t_area a on d.area_id=a.id
+  									  		 where dgi.group_id=#{groupId,jdbcType=INTEGER}
+  									  		 and d.flag=0
+  									  		 order by d.id DESC
+  	<if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
+        limit #{pageStart}, #{pageSize}
+    </if>
+  </select>
+  <delete id="deleteMemberById" parameterType="com.tianyi.yw.model.DeviceGroupItem">
+  	delete from t_device_group_item 
+  	where device_id=#{deviceId,jdbcType=INTEGER}
+  	and group_id=#{groupId,jdbcType=INTEGER}
+  </delete>
+  <select id="getExistDeviceById" parameterType="com.tianyi.yw.model.DeviceGroupItem" resultMap="BaseResultMap1">
+  	select d.* from t_device_group_item dgi left join t_device_group dg on dgi.group_id=dg.id
+  									  		 left join t_device d on dgi.device_id=d.id
+  									  		 where dgi.group_id=#{groupId,jdbcType=INTEGER}
+  									  		 and dgi.device_id=#{deviceId,jdbcType=INTEGER}
+  									  		 and d.flag=0
+  </select>
 </mapper>

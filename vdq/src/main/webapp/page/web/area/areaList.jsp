@@ -18,51 +18,14 @@
 	rel="stylesheet" />
 <script type="text/javascript">
 		$(document).ready(function(){
-			showProcess(true, '温馨提示', '正在提交数据...'); 
 			$("#pager").pager({
 			    pagenumber:'${area.pageNo}',                         /* 表示初始页数 */
 			    pagecount:'${area.pageCount}',                      /* 表示总页数 */
 			    totalCount:'${area.totalCount}',
 			    buttonClickCallback:PageClick                     /* 表示点击分页数按钮调用的方法 */                  
 			});
-			/* $("#areainfoList tr").each(function(i){
-				if(i>0){
-					$(this).bind("dblclick",function(){
-						var areaId = $(this).find("td").first().text();
-						 window.location.href="areainfo.do?areaId="+areaId;
-					});
-				}
-			}); */
-			//新增弹框下拉树
-			 /* $("#cmbParentArea").combotree({
-				 url: 'jsonLoadAreaTreeList.do?rootId='+0,  
-   				 required: false,
-   				 onSelect:function(record){
-   				 	 if(record!=null){
-	   				 	 var parId = $("#parentId").val();
-	   				 	 if(record.id  == parId){
-	   				 	 	//$("#cmbParentCompany").combotree("setValue",0);
-	   				 	 	$("#cmbParentArea").combotree("clear");
-	   				 	 	$("#parentId").val(0);
-		   				 	$("#cmbParentArea").combotree("reload",'jsonLoadAreaTreeList.do?rootId='+0);
-	   				 	 	$("#cmbParentArea").combotree("setText","=请选择所属区域=");
-	   				 	 }else{  
-	   				 	 	$("#parentId").val(record.id);
-	   				 	 }   
-   				 	  } else{
-  				 	 	$("#cmbParentArea").combotree("clear");
-  				 	 	$("#parentId").val(0);
- 				 	 	$("#cmbParentArea").combotree("reload",'jsonLoadAreaTreeList.do?rootId='+0);
-  				 	 	$("#cmbParentArea").combotree("setText","=请选择所属区域=");
-   				 	 } 
-   				 	 appendParentNode()
-   				 },
-   				 onLoadSuccess:function(){
-   				 	$("#cmbParentArea").combotree("setText","=请选择所属区域=");
-   				 }
-			}); */ 
 			 $("#treeList").tree({
-				 url: 'jsonLoadAreaTreeList.do?rootId='+0,   
+				 url: 'jsonLoadAreaTreeList.do',   
    				 onClick:function(node){
    				 	getAreaListByCode(node.serialCode);
    				 	//window.location.href = 'areaList.do?areaId=' + node.id + '&serialCode=' + node.serialCode;
@@ -71,6 +34,9 @@
    				 	}else{
    				 	  	window.location.href = 'areaList.do?parentId='+node.id;
    				 	} */
+   				 },
+   				 onBeforeExpand:function(node){
+   				 	$('#treeList').tree('options').url = 'jsonLoadAreaTreeList.do?pid='+ node.id;
    				 },
    				 onLoadSuccess:function(){
 					showProcess(false); 
@@ -83,6 +49,11 @@
 			}); 
 			//loadCompanyList();
 		});
+function getAreaListByParentId(pid){
+	$.ajax({
+ 		url:'jsonLoadAreaTreeList.do?pid='+pid
+	});
+} 
 function appendParentNode(){
 	var html = "<li><div id='_easyui_tree_0' class='tree-node'>";
 	html+="<span class='tree-indent'></span>";
@@ -93,20 +64,23 @@ function appendParentNode(){
 	//$(html).appendTo($(".tree"));
 }
 function getAreaListByCode(serialCode){
+	  var pageNumber = $("#pageNumber").val();
 	  $.ajax({
-		url : "jsonLoadAreaListByCode.do?serialCode="+serialCode,
+		url : "jsonLoadAreaListByCode.do?serialCode="+serialCode+"&&pageNumber="+pageNumber,
 		type : "post",  
 		dataType:"json",
 		success : function(data) { 
   			if(data.code == 0){ 
-  				 $("#pageNumber").val(1); 
+  				 /* $("#pageNumber").val(1);  */
   				 $("#pager").pager({
 				    pagenumber:data.obj.pageNo,                         /* 表示初始页数 */
 				    pagecount:data.obj.pageCount,                      /* 表示总页数 */
 				    totalCount:data.obj.totalCount,
-				    buttonClickCallback:PageClick                     /* 表示点击分页数按钮调用的方法 */                  
+				    buttonClickCallback:PageClick2                     /* 表示点击分页数按钮调用的方法 */                  
 				});
 				$("#areainfoList").html("");
+				$("#pageNumber").val("");
+				$("#serialCode").val(data.obj.serialCode);
 				fillAreaList(data.list);
   			}else{
 				$.messager.alert('错误信息',data.message,'error');
@@ -137,6 +111,17 @@ PageClick = function(pageclickednumber) {
 	/* 执行Action */
 	pagesearch();
 }
+PageClick2 = function(pageclickednumber) {
+	$("#pager").pager({
+	    pagenumber:pageclickednumber,                 /* 表示启示页 */
+	    pagecount:'${Area.pageCount}',                  /* 表示最大页数pagecount */
+	    buttonClickCallback:PageClick2                 /* 表示点击页数时的调用的方法就可实现javascript分页功能 */            
+	});
+	
+	$("#pageNumber").val(pageclickednumber);          /* 给pageNumber从新赋值 */
+	/* 执行Action */
+	pagesearch2();
+}
 function search(){
 	$("#pageNumber").val("1");
 	pagesearch();
@@ -144,6 +129,11 @@ function search(){
 
 function pagesearch(){
 	userAreaForm.submit();
+}
+function pagesearch2(){
+	var serialCode = $("#serialCode").val();
+	getAreaListByCode(serialCode);	
+	$("#serialCode").val("");
 }
 function showdialog(){
 	var wz = getDialogPosition($('#areaInfoWindow').get(0),100);
@@ -242,6 +232,8 @@ function deleteAreaById(id){
 
 				<input type="hidden" id="pageNumber" name="pageNo"
 					value="${area.pageNo}" />
+				<input type="hidden" id="serialCode" name="serialCode"
+				value="${Area.serialCode}" />
 			</form>
 		</div>
 		<div class="fl">

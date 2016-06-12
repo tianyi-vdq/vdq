@@ -7,13 +7,13 @@
     <result column="description" property="description" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, description
+    dg.id, dg.name, dg.description
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_device_group
-    where id = #{id,jdbcType=INTEGER}
+    from t_device_group dg
+    where dg.id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_device_group
@@ -68,4 +68,34 @@
       description = #{description,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <sql id="query_sql">
+  	from t_device_group dg
+  	where 1=1
+  	<if test="name!=null">
+  		and dg.name = #{name,jdbcType=VARCHAR}
+  	</if>
+  </sql>
+  <select id="getGroupList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.DeviceGroup">
+  	select <include refid="Base_Column_List" />
+  	<include refid="query_sql" />
+  </select>
+  <select id="getDeviceGroupById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+  	from t_device_group dg
+  	where dg.id=#{id,jdbcType=INTEGER}
+  </select>
+  <select id="getExistGroup" parameterType="com.tianyi.yw.model.DeviceGroup" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+  	<include refid="query_sql" />
+  	<if test="id!=null">
+  		and dg.id != #{id,jdbcType=INTEGER}
+  	</if>
+  </select>
+  <select id="getExistGroupByDeviceId" parameterType="com.tianyi.yw.model.DeviceGroupItem" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>
+  	from t_device_group dg
+  	left join t_device_group_item dgi on dg.id = dgi.group_id
+  	left join t_device d on d.id = dgi.device_id
+  	where  dgi.device_id = #{deviceId,jdbcType=VARCHAR}	
+  </select>
 </mapper>

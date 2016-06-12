@@ -337,6 +337,21 @@ public class UploadFileAction extends BaseAction {
 						ex.printStackTrace();
 					}
 				}
+				XSSFCell cell8 = row.getCell(8);
+				if(cell8 != null || "".equals(cell8)){
+					point.setRtspUrl((cell8.getStringCellValue()));
+				}
+				XSSFCell cell9 = row.getCell(9);
+				if(cell9 != null || "".equals(cell9)){
+					try{
+						cell9.setCellType(Cell.CELL_TYPE_STRING);  
+						String s = cell9.getStringCellValue();
+						Integer i = Integer.valueOf(s);
+						point.setFlag(i);
+					}catch(Exception ex){
+						ex.printStackTrace();
+					}
+				}
 				result.add(point);
             }
         }
@@ -397,6 +412,17 @@ public class UploadFileAction extends BaseAction {
 						}catch(Exception ex){
 							ex.printStackTrace();
 						}
+					}
+					HSSFCell cell8 = row.getCell(8);
+					if(cell8 != null || "".equals(cell8)){
+						point.setRtspUrl((cell8.getStringCellValue()));
+					}
+					HSSFCell cell9 = row.getCell(9);
+					if(cell9 != null || "".equals(cell9)){
+						cell9.setCellType(Cell.CELL_TYPE_STRING);  
+						String s = cell9.getStringCellValue();
+						Integer i = Integer.valueOf(s);
+						point.setFlag(i);
 					}
 					result.add(point);
 	            }
