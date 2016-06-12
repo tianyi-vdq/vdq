@@ -2,7 +2,6 @@ package com.tianyi.yw.service;
 
 import java.util.List;
 
-import com.tianyi.yw.model.Device;
 import com.tianyi.yw.model.Parame;
 
 public interface ParamService {

@@ -168,21 +168,7 @@ public class DeviceAction  extends BaseAction{
 		}
 		return "web/device/deviceInfo";
 	} 
-	/**
-	 * 视频点位设备管理
-	 * @param device
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws UnsupportedEncodingException
-	 */
-	@RequestMapping(value = "/deviceStatus.do")
-	public String deviceStatus(
-			Device device,
-			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{ 
-		request.setAttribute("Device", device);  
-		return "web/device/deviceStatus";
-	}
+
 	@ResponseBody
 	@RequestMapping(value = "/jsonLoadStopOrStartDevice.do", method = RequestMethod.POST, produces = { "text/html;charset=UTF-8" })
 	public JsonResult<Device> stopOrStartDevice(
