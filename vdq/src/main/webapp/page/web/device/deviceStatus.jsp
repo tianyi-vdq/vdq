@@ -49,28 +49,7 @@ function pagesearch(){
 	}  
 }
 
-/* private String chooseStatus(int status) {		
-		// TODO Auto-generated method stub
-		String statuss = null;
-		if(status==1)
-		{
-			statuss= "异常";
-		}
-		else if(status==2)
-		{
-			statuss= "警告";
-		}
-		else if(status==3)
-		{
-			statuss= "正常";
-		}
-		if(status==4)
-		{
-			statuss= "失败";
-		}
-		
-		alert(statuss);
-	} */
+
 
 </script>
   </head>  
