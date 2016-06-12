@@ -32,14 +32,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    totalCount:'${Device.totalCount}',
 			    buttonClickCallback:PageClick                     /* 表示点击分页数按钮调用的方法 */                  
 			});  
-			$("#deviceList tr").each(function(i){
+			/* $("#deviceList tr").each(function(i){
 				if(i>0){
 					$(this).bind("click",function(){
 						var pointId = $(this).find("td").first().text();
 						 window.location.href="device/deviceInfo.do?pointId="+pointId;
 					});
 				}
-			});
+			}); */
 			  
 		});
 		
@@ -127,6 +127,23 @@ function excelChange(file){
 				}
 			});	  */
 	    }
+}
+function stopOrStartDevice(id,flag){
+	$.ajax({
+		url:"device/jsonLoadStopOrStartDevice.do?deviceId="+id+"&&flag="+flag,
+		type:"post",
+		dataType:"json",
+		success:function(data) {
+			if (data.code == 0) {
+				$.messager.alert('成功信息', data.message, 'info',function(){
+					location.reload(true);
+				});
+			} else {
+				$.messager.alert('错误信息', data.message, 'error');
+			}
+		},
+		error:function(XMLResponse){alert(XMLResponse.responseText)}
+	});
 } 
 </script>
   </head>
@@ -176,22 +193,33 @@ function excelChange(file){
 						<th>设备编号</th>
 						<th>设备名称</th>
 						<th>Naming</th>
+						<th>RTSP</th>
 						<th>设备类型</th> 
 						<th>设备地址</th>
 						<th>IP地址</th> 
 						<th>所属区域</th>
+						<th>操作</th>
 					</tr>
 					<c:forEach var="item" items="${Devicelist}">
 						<tr>
 							<td align="center" style="display:none">${item.id}</td>
-							<td align="left">${item.pointId}</td>
-							<td>${item.pointNumber}</td>
-							<td>${item.pointName}</td>
-							<td>${item.pointNaming}</td>
-							<td>${item.type}</td>
-							<td>${item.address}</td> 
-							<td>${item.ipAddress}</td> 
-							<td>${item.areaName}</td>
+							<td align="left" onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'" >${item.pointId}</td>
+							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointNumber}</td>
+							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointName}</td>
+							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointNaming}</td>
+							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.rtspUrl}</td>
+							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.type}</td>
+							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.address}</td> 
+							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.ipAddress}</td> 
+							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.areaName}</td>
+							<td>
+							<c:if test="${item.flag == 0}">
+							<span class="yw-btn bg-orange cur" onclick="stopOrStartDevice(${item.id},${item.flag});">停用设备</span>
+							</c:if>
+							<c:if test="${item.flag == 1}">
+							 <span class="yw-btn bg-gray cur" onclick="stopOrStartDevice(${item.id},${item.flag});">启用设备</span>
+							</c:if>
+							</td>
 						</tr>
 					</c:forEach>
 				</table>

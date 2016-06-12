@@ -23,6 +23,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tianyi.yw.model.Log" >
+    <selectKey resultType="INTEGER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
     insert into t_log (id, content, type_id, 
       create_time, description)
     values (#{id,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{typeId,jdbcType=INTEGER}, 

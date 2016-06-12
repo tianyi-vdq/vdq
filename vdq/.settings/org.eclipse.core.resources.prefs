@@ -1,7 +1,5 @@
 eclipse.preferences.version=1
 encoding//src/main/java=UTF-8
-encoding//src/main/resources=UTF-8
-encoding//src/main/webapp/page/web/device/deviceInfo.jsp=UTF-8
-encoding//src/main/webapp/page/web/parame/parameList.jsp=UTF-8
+encoding//src/main/java/com/tianyi/yw/common/utils/Constants.java=UTF-8
 encoding//src/test/java=UTF-8
 encoding/<project>=UTF-8

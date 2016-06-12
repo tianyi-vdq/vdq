@@ -118,53 +118,28 @@ public class AreaAction  extends BaseAction {
 	@ResponseBody
 	@RequestMapping(value = "/jsonLoadAreaTreeList.do")
 	public List<Area> getAreaList(
-			@RequestParam(value = "rootId", required = false) Integer rootId,
-			@RequestParam(value = "id", required = false) String pid,
+			@RequestParam(value = "pid", required = false) Integer pid,
 			HttpServletRequest request, HttpServletResponse response) {
-		Integer parentId = null;
 		Area area = new Area();
-		if (pid != null && !pid.equals("")) {
-			parentId = new Integer(pid);
-		} else {
-			parentId = rootId;
+		Area parentArea = new Area();
+		if (pid != null){
+			area.setParentId(pid);
+			parentArea = areaService.getAreaById(pid);
+		}else {
+			area.setParentId(new Integer(0));
+			parentArea = areaService.getAreaById(new Integer(550));
 		}
-		area.setParentId(parentId);
 		List<Area> list = new ArrayList<Area>();
 		list = areaService.getAreaListByParentId(area);
-		for (Area a : list) {
-			a.setText(a.getName());
-			Area a1 = new Area();
-			a1.setParentId(a.getId());
-			List<Area> ls = areaService.getAreaListByParentId(a1);
-			if (ls.size() > 0) {
-				ls = setChildren(ls);
-				a.setChildren(ls);
-				a.setState("open");
-			} else {
-				a.setChildren(new ArrayList<Area>());
-				a.setState("open");
+		if(list.size() > 0){
+			for(Area a:list){
+				a.setText(a.getName());
+				a.setState("closed");
 			}
+			parentArea.setChildren(list);
+			parentArea.setState("closed");
 		}
 		return list;// json.toString();
-	}
-	//遍历，取节点子节点
-	private List<Area> setChildren(List<Area> ls) {
-		// TODO Auto-generated method stub
-		for (Area a : ls) {
-			a.setText(a.getName());
-			Area a1 = new Area();
-			a1.setParentId(a.getId());
-			List<Area> lst = areaService.getAreaListByParentId(a1);
-			if (lst.size() > 0) {
-				lst = setChildren(lst);
-				a.setChildren(lst);
-				a.setState("closed");
-			} else {
-				a.setChildren(new ArrayList<Area>());
-				a.setState("open");
-			}
-		}
-		return ls;// json.toString();
 	}
 	/**
 	 * 新增，编辑区域
@@ -351,14 +326,18 @@ public class AreaAction  extends BaseAction {
 	@ResponseBody
 	@RequestMapping(value = "/jsonLoadAreaListByCode.do")
 	public JsonResult<Area> jsonLoadAreaListByCode(
-			@RequestParam(value = "serialCode", required = false) String serialCode, 
+			@RequestParam(value = "serialCode", required = false) String serialCode,
+			@RequestParam(value = "pageNumber", required = false) String pageNumber,
 			HttpServletRequest request, HttpServletResponse response) {
 		JsonResult<Area> js = new JsonResult<Area>();
 		js.setCode(new Integer(1));
 		js.setMessage("获取数据失败!");
 		Area area = new Area();
-		if (area.getPageNo() == null)
+		if (pageNumber != null && !pageNumber.endsWith("undefined") && pageNumber != ""){
+			area.setPageNo(Integer.valueOf(pageNumber));
+		}else{
 			area.setPageNo(1);
+		}
 		area.setPageSize(Constants.DEFAULT_PAGE_SIZE); 
 		if (serialCode != null) {
 			area.setSerialCode(serialCode);
@@ -376,6 +355,7 @@ public class AreaAction  extends BaseAction {
 			}
 			int totalCount = areaService.getTotalCount(area);
 			area.setTotalCount(totalCount);
+			request.setAttribute("Area", area);
 			js.setObj(area); 
 			js.setCode(0);
 			js.setList(lc); 

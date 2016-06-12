@@ -36,6 +36,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tianyi.yw.model.DeviceStatus" >
+    <selectKey resultType="INTEGER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
     insert into t_device_status (id, device_id, network_status, 
       stream_status, noise_status, sign_status, 
       color_status, frame_frozen_status, frame_shade_status, 

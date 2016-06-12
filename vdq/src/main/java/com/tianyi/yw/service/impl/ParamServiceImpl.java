@@ -36,7 +36,7 @@ public class ParamServiceImpl implements ParamService {
 		if(parame.getId()>0){
 			paramMapper.updateByPrimaryKeySelective(parame);
 		}else{
-			paramMapper.insertSelective(parame);
+			paramMapper.insert(parame);
 		}
 	}
 	@Override

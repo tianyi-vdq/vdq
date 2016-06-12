@@ -16,7 +16,8 @@
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
-    <include refid="Base_Column_List" />
+    <include refid="Base_Column_List" />,
+    (select x.name from t_area as x where x.id = t.parent_id) as PARENT_NAME
     from t_area t
     where t.ID = #{id,jdbcType=INTEGER}
   </select>
@@ -25,6 +26,9 @@
     where ID = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tianyi.yw.model.Area" >
+  <selectKey resultType="INTEGER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
     insert into t_area (ID, NAME, CREATE_TIME, 
       SERIAL_CODE, PARENT_ID, FLAG, 
       DELETE_TIME)

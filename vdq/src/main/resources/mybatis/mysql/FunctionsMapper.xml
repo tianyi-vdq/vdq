@@ -31,6 +31,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tianyi.yw.model.Functions" >
+    <selectKey resultType="INTEGER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
     insert into t_function (id, resource_type, node_type, 
       parent_id, level, path, 
       leaf, name, url, css, 
