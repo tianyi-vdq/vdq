@@ -78,73 +78,73 @@ function getDateModel(date){
 
 function getSelectDate(date){
 	var dates = getDateModel(date);
-	alert(dates);
 	$("#searchTimes").val(dates);
-}
- function exportLog(){
-	$.messager.confirm("导出确认","确认导出该任务?",function(r){  
+}    
+function exportLog(){
+    var filepath = "d:/temp";
+	$.messager.confirm("执行确认","确认导出全部日志?导出路径:"+filepath,function(r){  
 		    if (r){  
-		    //$.messager.alert('导出成功!');
-		 	$.ajax({
-				url : "jsonExportExcel.do",
+		  //  $.messager.alert('导出开始!');
+			$.ajax({
+				url : "jsonloadLogExport.do?filepath="+filepath,
 				type : "post",  
-				dataType:"json",
-				success : function(data) { 
-		  			if(data.code==0){ 
+		    	dataType : "json",								
+				success : function(data) { 									
+		  			if(data.code == 0){ 
 		  				$.messager.alert('导出信息',data.message,'info',function(){ 
-		  		//		window.Location.href="log/jsonExportExcel.do";
 		  					search();
 		      		});
-		  			}else{
-		  			    
-						$.messager.alert('错误信息',data.message,'error');
-		  			} 
-			}
+		  			}else{		  			    
+						$.messager.alert('错误信息',data.massage,'error');
+		  			} 		 				
+			    } 			
 			});
 	    }  
 	}); 
 } 
-
 
 </script>
 </head>
 <body>
 	<div class="con-right" id="conRight">
 		<div class="fl yw-lump">
-			<div class="yw-lump-title">
-				<i class="yw-icon icon-partner" style="left"></i><span>日志信息</span> 
-		        	<span class="yw-btn bg-blue ml30 cur"  onclick="exportLog()">导出日志</span> 			 	
-		  </div>
+		<div class="yw-lump-title">		 
+			<i class="yw-icon icon-partner"></i><span>日志信息  </span>  					
+	<!--      <span class="fr yw-btn bg-blue line-hei22 mr10 mt9 cur"
+			  onclick="window.location.href='exportLogExcel.do'">导出日志</span>  -->
+			  <span class="fr yw-btn bg-blue line-hei22 mr10 mt9 cur" onclick="exportLog();">导出日志</span>
+	    <</div>
+	    </div>	 	 	
 		  
-		</div>
-		
-		
-		
+	
 		<div class="fl yw-lump mt10">
 			<form id="LogForm" name="LogForm"
-				action="logList.do" method="get">				
-			<div class="fr">  
+				action="logList.do" method="get">
+				<div class=pd10>							
+		        	<div class="fr">  
 					
 						<span>日志信息查询：</span><input type="text" name="searchName"   validType="SpecialWord"
 						 class="easyui-validatebox" placeholder="搜索" value="${Log.searchName}" type="hidden"/> 
 					
 						<span>日志时间查询：</span>
-						<input id="searchTimes" name="searchTimes" value="${Log.searchTimes}" type="hidden" />
-						 <input data-options="editable:false,onSelect:getSelectDate" type="text"  class="easyui-datebox" 
-					    	 style="width:254px;height:28px;"/> 
+						<input id="searchTimes" name="searchTimes" value="${Log.searchTimes}" style="width:180px;height:32px;"
+						  data-options="editable:false,onSelect:getSelectDate" type="text"  class="easyui-datebox" /> 
 					 
-						<span class="fl wid82">日志类型查询：</span>
+						<span>日志类型查询：</span>
                        <input data-options="editable:false"  value="${Log.searchTypeIds}" type="hidden" /> 
-					      <select class="easyui-combobox" style="height:28px;width:254px;" id="searchTypeIds"  name="searchTypeIds"  data-options="editable:false">
-		             	<option name="searchTypeIds" value="">请选择日志类型</option>
+					      <select class="easyui-combobox"  id="searchTypeIds"  name="searchTypeIds" style="width:180px;height:32px;" data-options="editable:false">
+		             	<option name="searchTypeIds" value="" >请选择日志类型</option>
 		             	<c:forEach var="item" items="${LogTypelist}">	             	
 				    	<option value="${item.id}">${item.name}</option>
 				        </c:forEach>							
-					</select>				
+					</select>		
+						
 						<span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>
+					
 				     </div>
 					<div class="cl"></div>
-                <input type="hidden" id="pageNumber" name="pageNo" value="${log.pageNo}" />        
+                <input type="hidden" id="pageNumber" name="pageNo" value="${log.pageNo}" />    
+                </div>    
              </form>
              </div>
              
@@ -155,9 +155,9 @@ function getSelectDate(date){
 				<table class="yw-cm-table yw-center yw-bg-hover">
 					<tr style="background-color:#D6D3D3;font-weight: bold;">
 						<th style="display:none">&nbsp;</th>
-						<th>日志内容</th>  
-						<th>日志类型</th> 
-			    		<th>日志记录时间</th>
+						<th width="20%">日志内容</th>  
+						<th width="14%">日志类型</th> 
+			    		<th width="14%">日志记录时间</th>
 						<th>日志详细描述</th>
 						
 					</tr>
@@ -165,7 +165,7 @@ function getSelectDate(date){
 						<tr>
 							<td  style="display:none">${item.id}</td>
 							<td>${item.content}</td>  
-							<td>${item.type}</td> 
+							<td>${item.typeName}</td> 
 						  	<td>${item.createTimes}</td>
 							<td>${item.description}</td> 
 							
@@ -174,48 +174,8 @@ function getSelectDate(date){
 				</table>
 				<div class="page" id="pager"></div>
 				</div>
-				 </div>
-	<%-- <div id="logInfoWindow" class="easyui-window" title="新建日志" style="width:560px;height:430px;overflow:hidden;padding:10px;"
-   iconCls="icon-info" closed="true" modal="true" resizable="false" collapsible="false" minimizable="false" maximizable="false">
-		<form id="saveLogForm" name ="saveLogForm" action="jsonSaveOrUpdateLog.do"  method="post">
-		<p style="display:none">
-        	<span class="fl ml80 wid102 line-hei30">id：</span><input name="id"  value="0" class="easyui-validatebox"/>
-        </p>
-        <p class="yw-window-p">
-        	<span class="fl ml80 wid102 line-hei30"> 日志内容：</span><input name="content"  type="text" value="" class="easyui-validatebox" required="true"  style="width:254px;height:28px;"/>
-        	<span style="color:red">*</span> 
-        </p> 
-       
-        <p class="yw-window-p">
-        	<span class="fl ml80 wid102 line-hei30">日志类型选择：</span>
-                   <input data-options="editable:false" name="typeId" value="" type="hidden"  class="easyui-validatebox"  required="true" 
-					     style="width:254px;height:28px;"/>
-                   <select class="easyui-combobox" style="height:28px;width:254px;" id="typeId"  name="typeId"  data-options="editable:false">
-		             	<option name="typeId" value="">请选择日志类型</option>
-		<!-- 		    	<option value="1">网络</option>
-				    	<option value="2">视屏捕获</option>
-				    	<option value="3">视屏解析</option>
-				    	<option value="4">视屏诊断</option>
-				    	<option value="5">推送</option>
-				    	<option value="6">服务器监控</option>
-				    	<option value="7">光收发器监控</option>		
-		 -->
-		             	<c:forEach var="item" items="${LogTypelist}">		             	
-				    	<option value="${item.id}">${item.name}</option>
-				        </c:forEach>								
-					</select>
-            <span style="color:red">*</span>      
-        </p>
-         <p class="yw-window-p">
-        	<span class="fl ml80 wid102 line-hei30">日志详细描述：</span><input name="description"  type="text" value="" class="easyui-validatebox" required="false" validType="Length[1,100]" style="width:254px;height:28px;"/>
-        	
-        </p> 
-           <div class="yw-window-footer txt-right">
-        	<span id="btnCancel" class="yw-window-btn bg-lightgray mt12"  onclick="$('#saveLogForm .easyui-validatebox').val('');$('#logInfoWindow').window('close');">退出</span>
-        	<span class="yw-window-btn bg-blue mt12" onClick="savelog(this);">保存</span>
-        </div>
-        </form>
-      </div>  --%>
+			 </div>
+
       
   </body>
 </html>

@@ -9,7 +9,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
   <head>
     <base href="<%=basePath%>">
-    <meta charset="utf-8">
+   
     <title>任务管理</title>
     
 	<meta name="viewport"
@@ -29,19 +29,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		 	}
 		 });
 function saveTask(obj){
-	if ($('#taskForm').form('validate')) {
+	if ($('#taskInfoForm').form('validate')) {
 		$(obj).attr("onclick", ""); 
 		showProcess(true, '温馨提示', '正在提交数据...'); 
-		 $('#taskForm').form('submit',{
+		 $('#taskInfoForm').form('submit',{
 		  		success:function(data){ 
 					showProcess(false);
 		  			data = $.parseJSON(data);
-		  			if(data.code==0){
-	  					$('#taskInfoWindow').window('close');
+		  			if(data.code==0){	  					
 		  				$.messager.alert('保存信息',data.message,'info',function(){
-		  					window.Location.href="task/taskList.do";
+		  					window.location.href="task/taskList.do";
 	        			});
-	  					
+	  		/* 			success : function(data) {
+										showProcess(false);
+										data = $.parseJSON(data);
+										if (data.code == 0) {
+											$.messager.alert('保存信息',data.message,'info',
+															function() {
+																window.location.href = "device/deviceList.do";
+															});
+											//$("#i_back").click();	 */
 		  			}else{
 						$.messager.alert('错误信息',data.message,'error',function(){
 	        			});
@@ -65,17 +72,19 @@ function saveTask(obj){
 		<div class="fl yw-lump mt10">
 			<div class="yw-bi-rows">
 				<div class="yw-bi-tabs mt5" id="ywTabs">
-					<span class="yw-bi-now" >任务名称：${Task.id == 0?"新建任务":Task.name}</span> <%--  <span onclick="window.location.href='taskList.do?id=${task.id}'?editBtn:">id</span> --%>
+				<span class="yw-bi-now">基本信息</span>
+					 <%-- <span class="yw-bi-now" >任务名称：${Task.id == 0?"新建任务":Task.name}</span> <span onclick="window.location.href='taskList.do?id=${task.id}'?editBtn:">id</span> --%>
 				</div>
 				<div class="fr">
-					<span class="yw-btn bg-green mr26 hide" id="editBtn"  onclick="editTask();">编辑</span>
+					<!-- <span class="yw-btn bg-green mr26 hide" id="editBtn"  onclick="editTask();">编辑</span> -->
 					<span class="yw-btn bg-red mr26" id="saveBtn" onclick="saveTask(this);">保存</span>
 					<span class="yw-btn bg-green mr26"  onclick="$('#i_back').click();">返回</span>
 				</div>
 			</div>
 			
-			<div id="tab1" class="yw-tab">
-				<form id="taskForm" name="taskForm" action="task/jsonSaveOrUpdateTask.do" method="post">
+			
+				<form id="taskInfoForm" name="taskInfoForm" action="task/jsonSaveOrUpdateTask.do" method="post">
+					<div id="tab1" class="yw-tab">
 					<table class="yw-cm-table font16">
 						<tr>
 							<td width="8%" align="right">任务名称：</td>
@@ -114,6 +123,19 @@ function saveTask(obj){
                         	</td>
                          </tr> 
                          <tr>
+							<td align="right">是否立即执行：</td>
+							<td>
+								 	 <c:if test="${Task.flag == 1 }">
+								 	 	<label><input type="radio" name="flag" value="1" checked="checked" />是</label> 
+		 								<label><input type="radio" name="flag" value="0" />否</label> 
+								 	 </c:if>  
+								 	 <c:if test="${Task.flag == 0 || Task.flag == null}">
+								 	 	<label><input type="radio" name="flag" value="1" />是</label> 
+		 								<label><input type="radio" name="flag" value="0" checked="checked" />否</label> 
+								 	 </c:if> 
+							</td>
+						</tr>
+                         <tr>
 							<td align="right">诊断项目：</td>
                          	<td>
 								<p class="yw-window-p">
@@ -125,9 +147,10 @@ function saveTask(obj){
                          	</td> 
                          </tr>           
 					</table>  
+					</div>
 				</form>
 			</div> 
-		</div>
+		
 		<div class="cl"></div>
 	</div>
 	<div class="cl"></div>

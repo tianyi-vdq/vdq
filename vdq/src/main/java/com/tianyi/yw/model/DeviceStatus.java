@@ -34,9 +34,13 @@ public class DeviceStatus extends Page {
     private Integer lightExceptionStatus;
 
     private Date recordTime;
+    
+    private String recordTimes;
 
     private Date createTime;
-
+    
+    private String createTimes;
+    
     public Integer getId() {
         return id;
     }
@@ -164,4 +168,20 @@ public class DeviceStatus extends Page {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
+	public String getRecordTimes() {
+		return recordTimes;
+	}
+
+	public void setRecordTimes(String recordTimes) {
+		this.recordTimes = recordTimes;
+	}
+
+	public String getCreateTimes() {
+		return createTimes;
+	}
+
+	public void setCreateTimes(String createTimes) {
+		this.createTimes = createTimes;
+	}
 }

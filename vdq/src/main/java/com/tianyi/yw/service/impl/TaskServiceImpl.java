@@ -38,6 +38,12 @@ public class TaskServiceImpl implements TaskService {
 		// TODO Auto-generated method stub
 		return taskMapper.getTaskCount(task);
 	}
+
+	@Override
+	public int getRunTaskCount(Task task) {
+		// TODO Auto-generated method stub
+		return taskMapper.getRunTaskCount(task);
+	}
 	
 	@Override
 	public void saveOrUpdateTask(Task task) {

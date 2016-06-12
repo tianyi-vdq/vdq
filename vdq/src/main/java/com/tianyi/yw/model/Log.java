@@ -15,7 +15,7 @@ public class Log extends Page {
     
     private String createTimes;
     
-    private String type;
+    private String typeName;
     
     private Date searchTime;
     
@@ -110,20 +110,20 @@ public class Log extends Page {
 		this.searchTypeId = searchTypeId;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
 	public Date getSearchTimeNext() {
 		return searchTimeNext;
 	}
 
 	public void setSearchTimeNext(Date searchTimeNext) {
 		this.searchTimeNext = searchTimeNext;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
 
 	

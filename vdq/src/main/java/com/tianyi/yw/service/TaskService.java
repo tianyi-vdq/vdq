@@ -27,4 +27,6 @@ public interface TaskService {
 	void deleteTaskById(Integer id);
 
 	void saveOrUpdateTaskItem(TaskItem taskIem);
+
+	int getRunTaskCount(Task task);
 }

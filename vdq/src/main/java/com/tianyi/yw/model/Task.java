@@ -29,6 +29,9 @@ public class Task extends Page {
     private Integer runCount;
 
     private Integer flag;  
+    //task执行前提
+    private Integer flagCount;  
+  
 
     private Date endTime;
     
@@ -170,5 +173,17 @@ public class Task extends Page {
 
 	public void setItemTypeId(String itemTypeId) {
 		this.itemTypeId = itemTypeId;
-	}    
+	}
+
+	public Integer getFlagCount() {
+		return flagCount;
+	}
+
+	public void setFlagCount(Integer flagCount) {
+		this.flagCount = flagCount;
+	}
+
+	
+
+	
 }

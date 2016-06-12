@@ -7,7 +7,9 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.tianyi.yw.dao.DeviceMapper;
+import com.tianyi.yw.dao.DeviceStatusMapper;
 import com.tianyi.yw.model.Device;
+import com.tianyi.yw.model.DeviceStatus;
 import com.tianyi.yw.service.DeviceService;
 
 @Service("deviceService")
@@ -17,16 +19,31 @@ public class DeviceServiceImpl implements DeviceService {
 	@Resource
 	private DeviceMapper deviceMapper;
 	
+	@Resource
+	private DeviceStatusMapper deviceStatusMapper;
+	
 	@Override
 	public int getDeviceCount(Device device) {
 		// TODO Auto-generated method stub
 		return deviceMapper.getDeviceCount(device);
+	}
+	
+	@Override
+	public int getDeviceStatusCount(DeviceStatus deviceStatus)
+	{
+		return deviceStatusMapper.getDeviceStatusCount(deviceStatus);
 	}
 
 	@Override
 	public List<Device> getDeviceList(Device device) {
 		// TODO Auto-generated method stub
 		return deviceMapper.getDeviceList(device);
+	}
+	
+	@Override
+	public List<DeviceStatus> getDeviceStatusList(DeviceStatus deviceStatus)
+	{
+		return deviceStatusMapper.getDeviceStatusList(deviceStatus);
 	}
 
 	@Override

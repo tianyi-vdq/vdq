@@ -9,7 +9,8 @@
     <result column="description" property="description" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, content, type_id, create_time, description
+    id, content, type_id, create_time, description,
+   
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -114,9 +115,12 @@
   
   
   
-  <select id="getLogList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Log">
+  <select id="getLogList" resultMap="VMModelResultMap" parameterType="com.tianyi.yw.model.Log">
   	 select 
   	 <include refid="Base_Column_List" /> 
+  	 (select t2.name  from t_log_type t2
+		where type_id = t2.id
+		) as type_name		
   	 <include refid="query_sql" />
   	 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
         limit #{pageStart}, #{pageSize}
@@ -153,4 +157,12 @@
         limit #{pageStart}, #{pageSize}
   	</if>
   </select>
+   <resultMap id="VMModelResultMap" type="com.tianyi.yw.model.Log" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+  </resultMap>
 </mapper>

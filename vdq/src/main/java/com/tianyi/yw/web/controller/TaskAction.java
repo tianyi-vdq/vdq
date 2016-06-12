@@ -38,12 +38,12 @@ public class TaskAction extends BaseAction {
 	private TaskService taskService;
 
 	/**
-	 * 任务管理
+	 * 任务列表
 	 * 
 	 * @param task
 	 * @param request
 	 * @param response
-	 * @return
+	 * @return web/task/taskList
 	 * @throws UnsupportedEncodingException
 	 * @throws ParseException
 	 */
@@ -64,40 +64,49 @@ public class TaskAction extends BaseAction {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");// 小写的mm表示的是分钟
 			Date date1 = sdf.parse(task.getStartedTimes());
 			Date date2 = sdf.parse(task.getEndTimes());
-			if (date1.before(date2)) {
+			if (date1.before(date2)) {	
+											
 				task.setStartedTime(date1);
 				Calendar c = Calendar.getInstance();
-				c.setTime(date2);
+				c.setTime(date2);				
 				c.add(Calendar.DATE, 1);
 				task.setEndTime(c.getTime());
 			}
-		}
+		}		
+
 		if (task.getPageNo() == null)
 			task.setPageNo(1);
 		task.setPageSize(Constants.DEFAULT_PAGE_SIZE);
 		List<Task> tasklist = new ArrayList<Task>();
 		int totalCount = 0;
-
+		int flagCount = 0;
 		try {
-			SimpleDateFormat Format = new SimpleDateFormat(
-					"yyyy/MM/dd HH:mm:ss");// 可以方便地修改日期格式
+			SimpleDateFormat Format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			tasklist = taskService.getTaskList(task);
 			totalCount = taskService.getTaskCount(task);
-			for (Task t : tasklist) {
+			flagCount = taskService.getRunTaskCount(task);			
+			for(Task t : tasklist) {
 				t.setCreateTimes(Format.format(t.getCreateTime()));
-				t.setStartTimes(Format.format(t.getStartTime()));
-			}
-
+				t.setStartTimes(Format.format(t.getStartTime()));				
+			}		
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
+        task.setFlagCount(flagCount);
 		task.setTotalCount(totalCount);
 		request.setAttribute("Task", task);
 		request.setAttribute("Tasklist", tasklist);
 		return "web/task/taskList";
 	}
 
+	/**
+	 * 任务保存
+	 * 
+	 * @param task
+	 * @param request
+	 * @param response
+	 * @return js
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/jsonSaveOrUpdateTask.do", method = RequestMethod.POST)
 	public JsonResult<Task> SaveOrUpdateTask(Task task,
@@ -115,6 +124,7 @@ public class TaskAction extends BaseAction {
 						"yyyy-MM-dd HH:mm:ss");
 				task.setStartTime(sdf.parse(startTimes));
 			}
+			String message = null;
 			if (task.getName() != null) {
 				Task p = new Task();
 				String name = task.getName();
@@ -122,14 +132,32 @@ public class TaskAction extends BaseAction {
 				if (task.getId() > 0) {
 					p.setId(task.getId());
 				}
-
+				//启动判断
+				if(task.getFlag() == 1)
+				{			  
+				    int flagCount = taskService.getRunTaskCount(task);
+				    if(flagCount == 1)
+				    {
+				    	task.setFlag(0);
+				    	message = "当前已有任务执行，启动失败！";
+				    }else if(flagCount == 0)
+				    {
+				    	task.setFlag(1);
+				    }
+				}
 				List<Task> lc = taskService.getExistTask(p);
 				if (lc.size() == 0) {
 					task.setCreateTime(new Date());
-					task.setFlag(1);
 					taskService.saveOrUpdateTask(task); 
 					js.setCode(new Integer(0));
-					js.setMessage("保存成功!");
+					if(message != null)
+					{
+						js.setMessage("保存成功!"+message);
+					}else
+					{
+						js.setMessage("保存成功!");
+					}
+					
 				} else {
 					js.setMessage("任务已存在!");
 				}
@@ -143,6 +171,15 @@ public class TaskAction extends BaseAction {
 		return js;
 	}
 
+	/**
+	 * 任务新建
+	 * 
+	 * @param task
+	 * @param request
+	 * @param response
+	 * {@value id}
+	 * @return web/task/taskInfo
+	 */
 	@RequestMapping(value = "/taskInfo.do", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public String editTask(
 			@RequestParam(value = "id", required = false) Integer id,
@@ -165,20 +202,32 @@ public class TaskAction extends BaseAction {
 
 	}
 
+
+	
+
+	 /**
+	 * 任务执行
+	 * 
+	 * @param task
+	 * @param request
+	 * @param response
+	 * {@value id}
+	 * @return js
+	 */
 	@ResponseBody
-	@RequestMapping(value = "/jsonDeleteTask.do", method = RequestMethod.POST, produces = { "text/html;charset=UTF-8" })
-	public JsonResult<Task> DeleteTask(
+	@RequestMapping(value = "/jsonloadTaskRun.do", method = RequestMethod.POST, produces = { "text/html;charset=UTF-8" })
+	public JsonResult<Task> RunTask(
 			@RequestParam(value = "id", required = false) Integer id,
 			HttpServletRequest request, HttpServletResponse response) {
 		JsonResult<Task> js = new JsonResult<Task>();
 		js.setCode(new Integer(1));
-		js.setMessage("删除失败!");
+		js.setMessage("任务启动失败!");
 		try {
 			Task task = taskService.getTaskById(id);
-			task.setFlag(0);
+			task.setFlag(1);
 			taskService.saveOrUpdateTask(task);
 			js.setCode(new Integer(0));
-			js.setMessage("删除成功!");
+			js.setMessage("任务启动成功!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,5 +1,6 @@
 package com.tianyi.yw.web.controller;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tianyi.yw.common.JsonResult;
 import com.tianyi.yw.common.utils.Constants;
-import com.tianyi.yw.model.Area;
 import com.tianyi.yw.model.Device; 
+import com.tianyi.yw.model.DeviceStatus;
 import com.tianyi.yw.service.AreaService;
 import com.tianyi.yw.service.DeviceService;
 
@@ -69,6 +70,42 @@ public class DeviceAction  extends BaseAction{
 		request.setAttribute("Devicelist", devicelist); 
 		return "web/device/deviceList";
 	}	
+	
+	/**
+	 * 设备状态列表
+	 * @param deviceStatus
+	 * @param request
+	 * @param response
+	 * @return web/device/deviceStatus
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = "/deviceStatus.do", method=RequestMethod.GET)
+	public String deviceStatusList(
+			DeviceStatus deviceStatus,
+			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{ 	
+		if (deviceStatus.getPageNo() == null)
+			deviceStatus.setPageNo(1);
+		deviceStatus.setPageSize(Constants.DEFAULT_PAGE_SIZE);  
+		List<DeviceStatus> deviceStatuslist = new ArrayList<DeviceStatus>();
+		int totalCount =  0;
+		try{			
+			deviceStatuslist =  deviceService.getDeviceStatusList(deviceStatus);
+			totalCount = deviceService.getDeviceStatusCount(deviceStatus);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");		
+			for(DeviceStatus ds:deviceStatuslist )
+			{				
+				ds.setCreateTimes(sdf.format(ds.getCreateTime()));
+				ds.setRecordTimes(sdf.format(ds.getRecordTime()));			
+			}
+		}catch(Exception ex){ 
+			ex.printStackTrace();
+		}	
+		deviceStatus.setTotalCount(totalCount); 
+		request.setAttribute("DeviceStatus", deviceStatus); 
+		request.setAttribute("DeviceStatuslist", deviceStatuslist); 
+		return "web/device/deviceStatus";
+	}		
+	
 	/** 
 	 * 新增,编辑设备
 	 */
@@ -131,19 +168,5 @@ public class DeviceAction  extends BaseAction{
 	}
 	
 	 
-	/**
-	 * 视频点位设备管理
-	 * @param device
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws UnsupportedEncodingException
-	 */
-	@RequestMapping(value = "/deviceStatus.do")
-	public String deviceStatus(
-			Device device,
-			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{ 
-		request.setAttribute("Device", device);  
-		return "web/device/deviceStatus";
-	}	 
+
 }

@@ -130,20 +130,17 @@
   </update>
   
   
-  <sql id="query_sql">
-  	from t_task t
-  	 where t.flag=1 
-  	    
+   <sql id="query_sql">
+  	from t_task t 
+  	where 1=1 	    
   	 <if test="searchName != null and searchName !=''" >
       and   
       	t.name like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
      </if>
      <if test="startedTime != null and startedTime !='' and endTime !='' and endTime != null">
      and 
-        t.start_time  between #{startedTime,jdbcType=DATE}  and #{endTime,jdbcType=DATE}
-  
-     </if>	
-      
+        t.start_time  between #{startedTime,jdbcType=DATE}  and #{endTime,jdbcType=DATE} 
+     </if>	     
   </sql>
   
    <select id="getExistList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Task" >
@@ -158,6 +155,12 @@
     <select id="getTaskCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.Task">
   	 select count(*)
   	 <include refid="query_sql" />
+  </select>
+  
+   <select id="getRunTaskCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.Task">
+  	 select count(*) 	 
+  	 from t_task t 
+  	 where t.flag=1  	 
   </select>
   
   <select id="getExistTask" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Task">
@@ -205,7 +208,8 @@
 		 left join t_task_item_type tt on ti.item_type_id = tt.id
 		where t.id = t1.id
 		) as item_type_id	
-		<include refid="query_sql"/>   
+		<include refid="query_sql"/> 
+		order by t.id desc  
 		 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
         limit #{pageStart}, #{pageSize}
   		</if>
@@ -216,7 +220,7 @@
 
 
 
-
+ 
 
 
 

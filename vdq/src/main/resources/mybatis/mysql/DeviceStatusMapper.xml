@@ -224,4 +224,16 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+   <select id="getDeviceStatusList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.DeviceStatus" >
+    select <include refid="Base_Column_List" /> 
+
+		from t_device_status   
+		 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
+        limit #{pageStart}, #{pageSize}
+  		</if>
+  </select> 
+    <select id="getDeviceStatusCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.DeviceStatus">
+  	 select count(*)
+  	 from t_device_status 
+  </select>
 </mapper>

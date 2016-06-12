@@ -20,6 +20,8 @@ public interface TaskMapper {
     List<Task> getTaskList(Task task);
     
     int getTaskCount(Task task);
+    
+    int getRunTaskCount(Task task);
 
 	List<Task> getExistTask(Task task);
 
