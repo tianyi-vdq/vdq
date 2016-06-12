@@ -81,7 +81,7 @@ function getSelectDate(date){
 	$("#searchTimes").val(dates);
 }    
 function exportLog(){
-    var filepath = "d:/temp";
+    var filepath = "d:/DownLog";
 	$.messager.confirm("执行确认","确认导出全部日志?导出路径:"+filepath,function(r){  
 		    if (r){  
 		  //  $.messager.alert('导出开始!');
@@ -110,7 +110,7 @@ function exportLog(){
 		<div class="fl yw-lump">
 		<div class="yw-lump-title">	 
 		<i class="yw-icon icon-partner"></i><span>日志信息</span>		
-		<!-- <span class="fr yw-btn bg-orange line-hei22 mr10 mt9 cur" onclick="exportLog();">导出日志</span> -->
+		<span class="fr yw-btn bg-orange line-hei22 mr10 mt9 cur" onclick="exportLog();">导出日志</span> 
 	    </div>
 	    </div>	 	 	
 		  

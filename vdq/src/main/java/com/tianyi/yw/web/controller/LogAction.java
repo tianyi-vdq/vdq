@@ -1,6 +1,8 @@
 package com.tianyi.yw.web.controller;
 
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -172,7 +174,7 @@ public class LogAction extends BaseAction
 	         cell.setCellValue("详细描述");  
 	         cell.setCellStyle(style);  
 	  		     
-	        int i=0;
+	        int i=1;
 	        for (Log t:loglist)  
 	        {  
 	        	if( t.getCreateTimes()==null ||  t.getCreateTimes().length() == 0 )
@@ -189,9 +191,16 @@ public class LogAction extends BaseAction
 	            row.createCell(4).setCellValue((String) t.getDescription()); 		             
 	        }  	
 	        //设置下载路径
-	        if(filepath == null)
-	        	filepath = "d:/temp";
 	        String fileName = "视频诊断日志.xls";
+	        File file = new File(filepath);
+	        if(!file.mkdirs())
+	        {	        		       
+	        	try {
+	        		 file.createNewFile();
+	        		 } catch (IOException e) {
+	        		 e.printStackTrace();
+	        		 }
+	        }
 	        String filePath = filepath + "/" + fileName;
 	        // 第六步，将文件存到指定位置       	         
 	        try  
