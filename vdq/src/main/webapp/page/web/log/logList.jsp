@@ -108,12 +108,10 @@ function exportLog(){
 <body>
 	<div class="con-right" id="conRight">
 		<div class="fl yw-lump">
-		<div class="yw-lump-title">		 
-			<i class="yw-icon icon-partner"></i><span>日志信息  </span>  					
-	<!--      <span class="fr yw-btn bg-blue line-hei22 mr10 mt9 cur"
-			  onclick="window.location.href='exportLogExcel.do'">导出日志</span>  -->
-			  <span class="fr yw-btn bg-blue line-hei22 mr10 mt9 cur" onclick="exportLog();">导出日志</span>
-	    <</div>
+		<div class="yw-lump-title">	 
+		<i class="yw-icon icon-partner"></i><span>日志信息</span>		
+		<!-- <span class="fr yw-btn bg-orange line-hei22 mr10 mt9 cur" onclick="exportLog();">导出日志</span> -->
+	    </div>
 	    </div>	 	 	
 		  
 	
