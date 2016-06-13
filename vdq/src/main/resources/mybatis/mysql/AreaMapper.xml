@@ -10,6 +10,7 @@
     <result column="FLAG" property="flag" jdbcType="INTEGER" />
     <result column="DELETE_TIME" property="deleteTime" jdbcType="TIMESTAMP" />
     <result column="PARENT_NAME" property="parentName" jdbcType="VARCHAR" />
+    <result column="acount" property="childrenCount" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     t.ID,t.NAME, t.CREATE_TIME, t.SERIAL_CODE, t.PARENT_ID, t.FLAG, t.DELETE_TIME
@@ -121,7 +122,7 @@
   </update>
   <sql id="sql_query">
   	from t_area t
-  	where 1 = 1
+  	where t.flag = 0
   	<if test="parentId != null" >
         and t.PARENT_ID = #{parentId,jdbcType=INTEGER}
     </if>
@@ -134,11 +135,11 @@
     		OR t.SERIAL_CODE like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
     	)
     </if>
-    	and t.flag = 0
   </sql>
   <select id = "getAreaList" parameterType = "com.tianyi.yw.model.Area" resultMap = "BaseResultMap">
   	 select <include refid="Base_Column_List"/>
   	  ,(select x.name from t_area as x where x.id = t.parent_id) as PARENT_NAME
+  	  ,(SELECT count(*) from t_area t2 where t2.PARENT_ID = t.id and t2.flag = 0) as acount
   	 <include refid="sql_query"/>
   	 order by t.SERIAL_CODE ASC
   	 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">

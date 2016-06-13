@@ -128,8 +128,17 @@ public class AreaAction  extends BaseAction {
 		}
 		List<Area> list = new ArrayList<Area>();
 		list = areaService.getAreaListByParentId(area);
-		//加载子节点，方式一，无子节点则无展开按钮
 		for(Area a:list){
+			a.setText(a.getName());
+			if(a.getChildrenCount() > 0){
+				a.setState("closed");
+			}else{
+				a.setChildren(new ArrayList<Area>());
+				a.setState("open");
+			}
+		}
+		//加载子节点，方式一，无子节点则无展开按钮
+		/*for(Area a:list){
 			a.setText(a.getName());
 			Area areaCh = new Area();
 			areaCh.setParentId(a.getId());
@@ -141,7 +150,7 @@ public class AreaAction  extends BaseAction {
 				a.setChildren(new ArrayList<Area>());
 				a.setState("open");
 			}
-		}
+		}*/
 		//加载子节点，方式二，无子节点仍有展开按钮，加载速度快
 		/*if(list.size() > 0){
 			for(Area a:list){

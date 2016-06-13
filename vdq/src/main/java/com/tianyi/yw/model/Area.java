@@ -34,6 +34,8 @@ public class Area extends Page {
     private String state;
     
     private Integer oldParentId;
+    
+    private Integer childrenCount;
 
     public String getSearchName() {
 		return searchName;
@@ -146,5 +148,13 @@ public class Area extends Page {
 
 	public void setOldParentId(Integer oldParentId) {
 		this.oldParentId = oldParentId;
+	}
+
+	public Integer getChildrenCount() {
+		return childrenCount;
+	}
+
+	public void setChildrenCount(Integer childrenCount) {
+		this.childrenCount = childrenCount;
 	}
 }
