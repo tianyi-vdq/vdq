@@ -121,24 +121,44 @@ public class AreaAction  extends BaseAction {
 			@RequestParam(value = "pid", required = false) Integer pid,
 			HttpServletRequest request, HttpServletResponse response) {
 		Area area = new Area();
-		Area parentArea = new Area();
+		//Area parentArea = new Area();
 		if (pid != null){
 			area.setParentId(pid);
-			parentArea = areaService.getAreaById(pid);
+			//parentArea = areaService.getAreaById(pid);
 		}else {
 			area.setParentId(new Integer(0));
-			parentArea = areaService.getAreaById(new Integer(550));
+			//parentArea = areaService.getAreaById(new Integer(550));
 		}
 		List<Area> list = new ArrayList<Area>();
 		list = areaService.getAreaListByParentId(area);
-		if(list.size() > 0){
+		for(Area a:list){
+			a.setText(a.getName());
+			a.setState("closed");
+			Area areaCh = new Area();
+			areaCh.setParentId(a.getId());
+			List<Area> list1 = new ArrayList<Area>();
+			list1 = areaService.getAreaListByParentId(areaCh);
+			if(list1.size() > 0){
+				for(Area a1:list1){
+					a1.setText(a1.getName());
+					a1.setState("closed");
+				}
+			}else{
+				a.setChildren(new ArrayList<Area>());
+				a.setState("open");
+			}
+		}
+		/*if(list.size() > 0){
 			for(Area a:list){
 				a.setText(a.getName());
 				a.setState("closed");
 			}
 			parentArea.setChildren(list);
-			parentArea.setState("closed");
-		}
+			parentArea.setState("open");
+		}else{
+			parentArea.setChildren(new ArrayList<Area>());
+			parentArea.setState("open");
+		}*/
 		return list;// json.toString();
 	}
 	/**

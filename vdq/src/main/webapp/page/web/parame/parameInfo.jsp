@@ -42,8 +42,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						$.messager.alert('成功信息', data.message, 'info',function() {
 							window.location.href ="parame/parameList.do";
 						});
-						//$("#i_back").click();
-						
 					} else {
 						$.messager.alert('失败信息', data.message, 'error',function() {});
 						$(obj).attr("onclick","saveParame(this);");

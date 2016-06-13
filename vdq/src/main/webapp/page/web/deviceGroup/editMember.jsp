@@ -33,10 +33,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    buttonClickCallback:PageClick                                      
 			}); */
 			$("#treeList").tree({
-				 url: 'deviceGroup/jsonLoadAreaTreeList.do',
+				 url: 'area/jsonLoadAreaTreeList.do',
 				 checkbox:true,
 				 onBeforeExpand:function(node){
-   				 	$('#treeList').tree('options').url = 'deviceGroup/jsonLoadAreaTreeList.do?pid='+ node.id;
+   				 	$('#treeList').tree('options').url = 'area/jsonLoadAreaTreeList.do?pid='+ node.id;
    				 }
 				 /* onLoadSuccess:function(){
    				    var aId = $.trim($("#hid_areaId").val());
