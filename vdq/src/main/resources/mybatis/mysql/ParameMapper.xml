@@ -24,8 +24,7 @@
     <selectKey resultType="INTEGER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-    insert into t_parame (id, name, key, 
-      value)
+    insert into t_parame (id, `name`, `key`,`value`)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{key,jdbcType=VARCHAR}, 
       #{value,jdbcType=VARCHAR})
   </insert>
