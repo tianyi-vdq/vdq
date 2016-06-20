@@ -26,7 +26,34 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    totalCount:'${DeviceStatus.totalCount}',
 			    buttonClickCallback:PageClick                     /* 表示点击分页数按钮调用的方法 */                  
 			});
-	   });  
+			$("#cmbParentArea").combotree({
+				 url: 'area/jsonLoadAreaTreeList.do',  
+   				 required: false,
+   				 onSelect:function(record){ 
+ 				 	 	$("#areaId").val(record.id); 
+   				 },
+   				 onBeforeExpand:function(node){
+   				 	$('#cmbParentArea').combotree('tree').tree('options').url = 'area/jsonLoadAreaTreeList.do?pid='+ node.id;
+   				 },
+   				 onLoadSuccess:function(){
+   				 	var deviceId = $("#deviceId").val();
+   				 	
+   				 	if(deviceId>0){
+   				 		var pId = $("#areaId").val();
+   				 		$("#cmbParentArea").combotree("setValue",pId);
+   				 	}else{
+						//$("#cmbParentArea").combotree("disable",true);
+	   				 	$("#cmbParentArea").combotree("setText","=请选择所属区域=");
+					}
+   				 }
+			});
+			//loadCompanyList();
+		});
+function getAreaListByParentId(pid){
+	$.ajax({
+ 		url:'area/jsonLoadAreaTreeList.do?pid='+pid
+	});
+} 
 PageClick = function(pageclickednumber) {
 	$("#pager").pager({
 	    pagenumber:pageclickednumber,                 /* 表示启示页 */
@@ -49,8 +76,6 @@ function pagesearch(){
 	}  
 }
 
-
-
 </script>
   </head>  
  <body>
@@ -63,7 +88,28 @@ function pagesearch(){
 				<i class="yw-icon icon-partner"></i><span>设备状态</span>								
 			</div>
 		</div>
-		</form>
+		<div class=pd10>
+		      <div class="fl">
+		      <%-- <input id ="areaId" name ="searchAreaId" type="hidden" value="${DeviceStatus.searchAreaId}"/> --%>
+			  <span>区域选择：</span><input  id ="cmbParentArea" name ="searchAreaId" type="text"  class="easyui-combotree" required="true" style="width:254px;height:28px;" />
+			  </div>
+		<div class="fr">  
+			<span>设备编号：</span><input type="text" id="pointNumber" name="searchPointNumber"   validType="SpecialWord"
+				 class="easyui-validatebox" placeholder="搜索" value="${DeviceStatus.searchPointNumber}" type="hidden"/> 
+			<span>设备状态：</span>
+			<select class="easyui-combobox"  id="statusId"  name="searchStatusId" value="${DeviceStatus.searchStatusId}"
+					style="width:180px;height:32px;" data-options="editable:false">
+		    <option name="searchStatusId" value="" >请选择设备状态</option>	             	
+			<option value="1">异常</option>	
+			<option value="2">警告</option>	
+			<option value="3">正常</option>	
+			<option value="4">失败</option>				        							
+			</select>		
+			 <span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>						
+		</div>			
+          <input type="hidden" id="pageNumber" name="pageNo" value="${DeviceStatus.pageNo}" />
+      </div>
+	</form>
 		
            <div class="fl yw-lump">           
 				<table class="yw-cm-table yw-center yw-bg-hover" id="deviceStatusList">

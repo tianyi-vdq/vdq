@@ -25,8 +25,12 @@ public class Device extends Page {
     private String rtspUrl;
     
     private Integer flag;
-    //自定义
+    
     private String areaName;
+    //自定义
+    private String platformId;
+    
+    private String deviceKey;
     
     private Integer parentId;
     
@@ -152,6 +156,22 @@ public class Device extends Page {
 
 	public void setFlag(Integer flag) {
 		this.flag = flag;
+	}
+
+	public String getPlatformId() {
+		return platformId;
+	}
+
+	public void setPlatformId(String platformId) {
+		this.platformId = platformId;
+	}
+
+	public String getDeviceKey() {
+		return deviceKey;
+	}
+
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 

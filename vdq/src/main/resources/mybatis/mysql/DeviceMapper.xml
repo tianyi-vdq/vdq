@@ -12,13 +12,15 @@
     <result column="ip_address" property="ipAddress" jdbcType="VARCHAR" />
     <result column="area_id" property="areaId" jdbcType="INTEGER" />
     <result column="flag" property="flag" jdbcType="INTEGER" />
-    <result column="AREA_NAME" property="areaName" jdbcType="VARCHAR" />
+    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
     <result column="parent_id" property="parentId" jdbcType="INTEGER" />
     <result column="rtsp_url" property="rtspUrl" jdbcType="VARCHAR" />
+    <result column="platform_id" property="platformId" jdbcType="VARCHAR" />
+    <result column="device_key" property="deviceKey" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     t.id, t.point_id, t.point_number, t.point_name, t.point_naming, t.type, t.address, t.ip_address, 
-    t.area_id,t.rtsp_url,t.flag
+    t.area_id,t.rtsp_url,t.flag,t.platform_id,t.device_key
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -36,12 +38,13 @@
 		</selectKey>
     insert into t_device (id, point_id, point_number, 
       point_name, point_naming, type, 
-      address, ip_address, area_id,rtsp_url,flag
+      address, ip_address, area_id,rtsp_url,flag,platform_id,device_key
       )
     values (#{id,jdbcType=INTEGER}, #{pointId,jdbcType=VARCHAR}, #{pointNumber,jdbcType=VARCHAR}, 
       #{pointName,jdbcType=VARCHAR}, #{pointNaming,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
       #{address,jdbcType=VARCHAR}, #{ipAddress,jdbcType=VARCHAR}, #{areaId,jdbcType=INTEGER},
-      #{rtspUrl,jdbcType=VARCHAR},#{flag,jdbcType=INTEGER}	
+      #{rtspUrl,jdbcType=VARCHAR},#{flag,jdbcType=INTEGER}, #{platformId,jdbcType=VARCHAR},	
+       #{deviceKey,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tianyi.yw.model.Device" >
@@ -80,6 +83,12 @@
       <if test="flag != null">
       	flag,
       </if>
+      <if test="platformId != null">
+      	platform_id,
+      </if>
+      <if test="deviceKey != null">
+      	device_key,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -113,8 +122,15 @@
         #{rtspUrl,jdbcType=VARCHAR},
       </if>
       <if test="flag != null">
-      	flag = #{flag,jdbcType=INTEGER},
+      	#{flag,jdbcType=INTEGER},
       </if>
+      <if test="platformId != null">
+      	#{platformId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceKey != null">
+      	#{deviceKey,jdbcType=VARCHAR},
+      </if>
+      
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tianyi.yw.model.Device" >
@@ -150,6 +166,12 @@
       <if test="flag != null">
       	flag = #{flag,jdbcType=INTEGER},
       </if>
+        <if test="platformId != null" >
+        platform_id = #{platformId,jdbcType=VARCHAR},
+      </if>
+        <if test="deviceKey != null" >
+        device_key = #{deviceKey,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -163,8 +185,10 @@
       address = #{address,jdbcType=VARCHAR},
       ip_address = #{ipAddress,jdbcType=VARCHAR},
       area_id = #{areaId,jdbcType=INTEGER},
-      rtsp_url = #{rtspUrl,jdbcType=VARCHAR}
+      rtsp_url = #{rtspUrl,jdbcType=VARCHAR},
       flag = #{flag,jdbcType=INTEGER},
+      platform_id = #{platformId,jdbcType=VARCHAR},
+      device_key = #{deviceKey,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <sql id="query_sql">
@@ -187,7 +211,7 @@
     </if>
   </sql>
   <select id="getDeviceList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Device">
-  	 select <include refid="Base_Column_List" />,a.name as AREA_NAME  
+  	 select <include refid="Base_Column_List" />,a.name as area_name  
   	 <include refid="query_sql" />
     order by t.id desc
   	 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">

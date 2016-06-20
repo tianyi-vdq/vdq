@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 
 
 
@@ -61,47 +63,28 @@ public class DataUtilAction {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/jsonWriteLog.do")
-	public JsonResult<Log> SaveLog(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(value = "log", required = false) String stringLog) {
+	@RequestMapping(value = "/jsonSaveLog.do", produces = { "text/html;charset=UTF-8" })
+	public JsonResult<Log> SaveLog(HttpServletRequest request, HttpServletResponse response,Log log) {
 		JsonResult<Log> js = new JsonResult<Log>();
 		js.setCode(new Integer(1));
-		js.setMessage("写入日志失败!");
-		String[] arrLog = stringLog.split(",");
-		Log log = new Log();		
-		try {
-			String content = new String(arrLog[0].getBytes("iso8859-1"), "utf-8");
-			log.setContent(content);
-		} catch (UnsupportedEncodingException e1) {
-			
-			e1.printStackTrace();
-		}	
-		log.setTypeId(Integer.parseInt(arrLog[1]));		
-		log.setCreateTimes(arrLog[2]);		
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			log.setCreateTime(sdf.parse(log.getCreateTimes()));
-		} catch (ParseException e) {
-			
-			e.printStackTrace();
-		}
-		if(arrLog.length >= 3)
+		js.setMessage("写入日志失败!");	
+		Log p = new Log();
+		try
 		{
-	    	log.setDescription(arrLog[3]);
-	    	try {			
-		    	String description = new String(arrLog[3].getBytes("iso8859-1"), "utf-8");
-			    log.setContent(description);
-	        	} catch (UnsupportedEncodingException e1) {
-					e1.printStackTrace();
-		    }
+			p.setTypeId(log.getTypeId());
+			p.setContent(new String(log.getContent().getBytes("iso8859-1"), "utf-8"));
+			p.setDescription(new String(log.getDescription().getBytes("iso8859-1"), "utf-8"));
+			p.setCreateTime(new Date());
+		    if(p.getContent() != null && p.getContent() != "" && p.getTypeId() != null && p.getTypeId() != '0')
+		    {
+		    	logService.saveOrUpdateLog(p);
+		    	js.setCode(new Integer(0));
+		    	js.setMessage("保存日志成功！");
+		     }
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
-		if(log.getContent() != null && log.getContent() != ""
-				&& log.getCreateTime() != null && log.getTypeId() != null && log.getTypeId() != '0')
-		{
-			logService.saveOrUpdateLog(log);
-			js.setCode(new Integer(0));
-			js.setMessage("保存日志成功！");
-		}
+			
 		return js; 		
 	}
 	

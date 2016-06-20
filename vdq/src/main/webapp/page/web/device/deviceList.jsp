@@ -190,6 +190,8 @@ function stopOrStartDevice(id,flag){
 					<tr style="background-color:#D6D3D3;font-weight: bold;">
 						<th width="4%" style="display:none">&nbsp;</th>
 						<th>设备ID</th>
+						<th>平台ID</th>
+						<td>设备标志ID</td>
 						<th>设备编号</th>
 						<th>设备名称</th>
 						<th>Naming</th>
@@ -197,13 +199,15 @@ function stopOrStartDevice(id,flag){
 						<th>设备类型</th> 
 						<th>设备地址</th>
 						<th>IP地址</th> 
-						<th>所属区域</th>
+						<th>所属区域</th>						
 						<th>操作</th>
 					</tr>
 					<c:forEach var="item" items="${Devicelist}">
 						<tr>
 							<td align="center" style="display:none">${item.id}</td>
 							<td align="left" onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'" >${item.pointId}</td>
+							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.platformId}</td>
+							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.deviceKey}</td>
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointNumber}</td>
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointName}</td>
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointNaming}</td>
