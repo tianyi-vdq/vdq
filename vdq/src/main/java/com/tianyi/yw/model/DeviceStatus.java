@@ -45,9 +45,11 @@ public class DeviceStatus extends Page {
     
     private String searchPointNumber;
     
-    private Integer areaId;
+    private String pointId;
     
-    private String pointNumber;
+  //  private String pointNumber;
+    
+  //  private Integer areaId;
     
     private Integer searchStatusId;
     
@@ -195,28 +197,12 @@ public class DeviceStatus extends Page {
 		this.createTimes = createTimes;
 	}
 
-	public String getPointNumber() {
-		return pointNumber;
-	}
-
-	public void setPointNumber(String pointNumber) {
-		this.pointNumber = pointNumber;
-	}
-
 	public Integer getSearchStatusId() {
 		return searchStatusId;
 	}
 
 	public void setSearchStatusId(Integer searchStatusId) {
 		this.searchStatusId = searchStatusId;
-	}
-
-	public Integer getAreaId() {
-		return areaId;
-	}
-
-	public void setAreaId(Integer areaId) {
-		this.areaId = areaId;
 	}
 
 	public String getSearchPointNumber() {
@@ -234,5 +220,14 @@ public class DeviceStatus extends Page {
 	public void setSearchAreaId(Integer searchAreaId) {
 		this.searchAreaId = searchAreaId;
 	}
+
+	public String getPointId() {
+		return pointId;
+	}
+
+	public void setPointId(String pointId) {
+		this.pointId = pointId;
+	}
+
 
 }

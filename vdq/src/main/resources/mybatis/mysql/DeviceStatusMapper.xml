@@ -18,8 +18,9 @@
     <result column="light_exception_status" property="lightExceptionStatus" jdbcType="INTEGER" />
     <result column="record_time" property="recordTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="area_id" property="areaId" jdbcType="INTEGER"/>
-    <result column="point_number" property="pointNumber" jdbcType="VARCHAR"/>
+  <!--   <result column="area_id" property="areaId" jdbcType="INTEGER"/>
+    <result column="point_number" property="pointNumber" jdbcType="VARCHAR"/> -->
+    <result column="point_id" property="pointId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, device_id, network_status, stream_status, noise_status, sign_status, color_status, 
@@ -230,8 +231,8 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
    <select id="getDeviceStatusList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.DeviceStatus" >
-    select <include refid="Base_Column_List" />
-			 
+    select <include refid="Base_Column_List" />,
+		(select point_id from t_device q where q.id = device_id) as point_id	
 		<include refid="query_sql"/>
 		 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
           limit #{pageStart}, #{pageSize}

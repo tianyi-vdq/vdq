@@ -298,4 +298,12 @@
   	flag = #{flag,jdbcType = INTEGER}
   	where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectDeviceById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />,
+    a.name as AREA_NAME  
+  	from t_device t left join t_area a on t.area_id = a.id
+ 
+    where t.id = #{id,jdbcType=INTEGER}
+  </select>
 </mapper>

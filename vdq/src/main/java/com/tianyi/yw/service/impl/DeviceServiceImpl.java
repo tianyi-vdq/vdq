@@ -74,7 +74,7 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public Device getPointDeviceById(Integer pointId) {
 		// TODO Auto-generated method stub
-		return deviceMapper.selectByPrimaryKey(pointId);
+		return deviceMapper.selectDeviceById(pointId);
 	}
 
 	@Override
