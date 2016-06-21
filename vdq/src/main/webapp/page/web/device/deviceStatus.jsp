@@ -137,7 +137,7 @@ function pagesearch(){
 							<td>${item.deviceId}</td>                          
 							<td>
 							<c:if test="${item.networkStatus==1}">异常</c:if>
-							<c:if test="${item.networkStatus==2}">警告</c:if>
+							<c:if test="${item.networkStatus==2}"><img alt="警告" src="basePath/source/images/yw-icon1.png"></c:if>
 							<c:if test="${item.networkStatus==3}">正常</c:if>
 							<c:if test="${item.networkStatus==4}">失败</c:if>
 							</td>

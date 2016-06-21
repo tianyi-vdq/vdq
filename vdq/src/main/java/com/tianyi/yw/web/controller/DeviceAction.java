@@ -93,9 +93,9 @@ public class DeviceAction  extends BaseAction{
 			String pointNumber = new String(deviceStatus.getSearchPointNumber().getBytes("iso8859-1"), "utf-8");
 			deviceStatus.setSearchPointNumber(pointNumber);
 		}
-		int statusId = 0;
-		if(deviceStatus.getSearchStatusId() != null)
-			statusId = deviceStatus.getSearchStatusId();
+//		int statusId = 0;
+//		if(deviceStatus.getSearchStatusId() != null)
+//			statusId = deviceStatus.getSearchStatusId();
 		if (deviceStatus.getPageNo() == null)
 			deviceStatus.setPageNo(1);
 		deviceStatus.setPageSize(Constants.DEFAULT_PAGE_SIZE);  
@@ -104,11 +104,11 @@ public class DeviceAction  extends BaseAction{
 		try{			
 			deviceStatuslist =  deviceService.getDeviceStatusList(deviceStatus);
 			totalCount = deviceService.getDeviceStatusCount(deviceStatus);
-			if(statusId != 0)
-			{
-				deviceStatuslist = CheckStatus(statusId,deviceStatuslist);
-				totalCount = deviceStatuslist.size();
-			}
+//			if(statusId != 0)
+//			{
+//				deviceStatuslist = CheckStatus(statusId,deviceStatuslist);
+//				totalCount = deviceStatuslist.size();
+//			}
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");		
 			for(DeviceStatus ds:deviceStatuslist )
 			{				
@@ -123,68 +123,68 @@ public class DeviceAction  extends BaseAction{
 		request.setAttribute("DeviceStatuslist", deviceStatuslist); 
 		return "web/device/deviceStatus";
 	}		
-     /**
-      * 设备状态过滤函数
-      * @param statusId
-      * @param deviceStatuslist
-      * @return
-      */
-	private List<DeviceStatus> CheckStatus(int statusId,List<DeviceStatus> deviceStatuslist)
-	{
-		List<DeviceStatus> lc = new ArrayList<DeviceStatus>();
-		if(statusId > 0 && statusId <= 4)
-		{			
-			for(DeviceStatus p:deviceStatuslist)
-			{
-				int count = 0;
-				if(p.getColorStatus() == statusId){
-					count++;
-				}
-				if(p.getFrameColorcaseStatus() == statusId){
-					count++;
-				}
-				if(p.getFrameDisplacedStatus() == statusId){
-					count++;
-				}
-				if(p.getFrameFrozenStatus() == statusId){
-					count++;
-				}
-				if(p.getFrameFuzzyStatus() == statusId){
-					count++;
-				}
-				if(p.getFrameShadeStatus() == statusId){
-					count++;
-				}
-				if(p.getFrameStripStatus() == statusId){
-					count++;
-				}
-				if(p.getLightExceptionStatus() == statusId){
-					count++;
-				}
-				if(p.getNetworkStatus() == statusId){
-					count++;
-				}
-				if(p.getNoiseStatus() == statusId){
-					count++;
-				}
-				if(p.getSignStatus() == statusId){
-					count++;
-				}
-				if(p.getStreamStatus() == statusId){
-					count++;
-				}
-				if(statusId == 3 && count == 12)
-				{
-					lc.add(p);
-				}
-				if(statusId != 3 && count >0)
-				{
-					lc.add(p);
-				}
-			}
-		}
-		return lc;	
-	}
+//     /**
+//      * 设备状态过滤函数
+//      * @param statusId
+//      * @param deviceStatuslist
+//      * @return
+//      */
+//	private List<DeviceStatus> CheckStatus(int statusId,List<DeviceStatus> deviceStatuslist)
+//	{
+//		List<DeviceStatus> lc = new ArrayList<DeviceStatus>();
+//		if(statusId > 0 && statusId <= 4)
+//		{			
+//			for(DeviceStatus p:deviceStatuslist)
+//			{
+//				int count = 0;
+//				if(p.getColorStatus() == statusId){
+//					count++;
+//				}
+//				if(p.getFrameColorcaseStatus() == statusId){
+//					count++;
+//				}
+//				if(p.getFrameDisplacedStatus() == statusId){
+//					count++;
+//				}
+//				if(p.getFrameFrozenStatus() == statusId){
+//					count++;
+//				}
+//				if(p.getFrameFuzzyStatus() == statusId){
+//					count++;
+//				}
+//				if(p.getFrameShadeStatus() == statusId){
+//					count++;
+//				}
+//				if(p.getFrameStripStatus() == statusId){
+//					count++;
+//				}
+//				if(p.getLightExceptionStatus() == statusId){
+//					count++;
+//				}
+//				if(p.getNetworkStatus() == statusId){
+//					count++;
+//				}
+//				if(p.getNoiseStatus() == statusId){
+//					count++;
+//				}
+//				if(p.getSignStatus() == statusId){
+//					count++;
+//				}
+//				if(p.getStreamStatus() == statusId){
+//					count++;
+//				}
+//				if(statusId == 3 && count == 12)
+//				{
+//					lc.add(p);
+//				}
+//				if(statusId != 3 && count >0)
+//				{
+//					lc.add(p);
+//				}
+//			}
+//		}
+//		return lc;	
+//	}
 	/** 
 	 * 新增,编辑设备
 	 */
