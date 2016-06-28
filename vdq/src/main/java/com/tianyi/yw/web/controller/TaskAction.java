@@ -54,8 +54,7 @@ public class TaskAction extends BaseAction {
 			ParseException {
 		// searchName
 		if (task.getSearchName() != null && task.getSearchName().length() > 0) {
-			String searchName = new String(task.getSearchName().getBytes(
-					"iso8859-1"), "utf-8");
+			String searchName = new String(task.getSearchName().getBytes("iso8859-1"), "utf-8");
 			task.setSearchName(searchName);
 		}
 		if (task.getStartedTimes() != null

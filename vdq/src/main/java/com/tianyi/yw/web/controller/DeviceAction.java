@@ -85,6 +85,13 @@ public class DeviceAction  extends BaseAction{
 	public String deviceStatusList(
 			DeviceStatus deviceStatus,
 			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{ 	
+
+		if(deviceStatus.getSearchPointNumber() != null && deviceStatus.getSearchPointNumber().length() > 0)
+		{
+			String pointNumber = new String(deviceStatus.getSearchPointNumber().getBytes("iso8859-1"), "utf-8");
+			deviceStatus.setSearchPointNumber(pointNumber);
+		}
+
 		if (deviceStatus.getPageNo() == null)
 			deviceStatus.setPageNo(1);
 		deviceStatus.setPageSize(Constants.DEFAULT_PAGE_SIZE);  
@@ -93,6 +100,7 @@ public class DeviceAction  extends BaseAction{
 		try{			
 			deviceStatuslist =  deviceService.getDeviceStatusList(deviceStatus);
 			totalCount = deviceService.getDeviceStatusCount(deviceStatus);
+
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");		
 			for(DeviceStatus ds:deviceStatuslist )
 			{				
@@ -107,7 +115,7 @@ public class DeviceAction  extends BaseAction{
 		request.setAttribute("DeviceStatuslist", deviceStatuslist); 
 		return "web/device/deviceStatus";
 	}		
-	
+
 	/** 
 	 * 新增,编辑设备
 	 */
@@ -135,6 +143,8 @@ public class DeviceAction  extends BaseAction{
 				//根据设备编号和id去数据库匹配，如编辑，则可以直接保存；如新增，则需匹配设备编号是否重复
 				List<Device> lc = deviceService.getExistDevicePoint(d);
 				if (lc.size() == 0) {
+					String deviceKey = device.getPlatformId() + "*" + device.getPointId();
+					device.setDeviceKey(deviceKey);
 					deviceService.saveOrUpdateDevicepoint(device);
 					js.setCode(new Integer(0));
 					js.setMessage("保存成功!");

@@ -18,6 +18,9 @@
     <result column="light_exception_status" property="lightExceptionStatus" jdbcType="INTEGER" />
     <result column="record_time" property="recordTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  <!--   <result column="area_id" property="areaId" jdbcType="INTEGER"/>
+    <result column="point_number" property="pointNumber" jdbcType="VARCHAR"/> -->
+    <result column="point_id" property="pointId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, device_id, network_status, stream_status, noise_status, sign_status, color_status, 
@@ -228,15 +231,86 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
    <select id="getDeviceStatusList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.DeviceStatus" >
-    select <include refid="Base_Column_List" /> 
-
-		from t_device_status   
+    select <include refid="Base_Column_List" />,
+		(select point_id from t_device q where q.id = device_id) as point_id	
+		<include refid="query_sql"/>
 		 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
-        limit #{pageStart}, #{pageSize}
+          limit #{pageStart}, #{pageSize}
   		</if>
   </select> 
+  <sql id="query_sql">
+      from t_device_status  
+		where 
+		1=1
+	 	<if test="searchAreaId != null and searchAreaId != ''">
+		and 
+		(select t3.parent_id from t_area t3 where 
+	    (select t1.area_id  from t_device t1
+		where device_id = t1.id) = t3.id) = #{searchAreaId,jdbcType=INTEGER}
+		</if>	 
+		<if test="searchPointNumber != null and searchPointNumber != ''">
+		and 
+		(select t.point_number  from t_device t
+		where device_id = t.id) = #{searchPointNumber,jdbcType=VARCHAR}
+		</if>	
+      <if test="searchStatusId == 3">
+      and(  
+      network_status = #{searchStatusId,jdbcType=INTEGER}
+      and
+      stream_status = #{searchStatusId,jdbcType=INTEGER}
+      and
+      noise_status = #{searchStatusId,jdbcType=INTEGER}
+      and
+      sign_status = #{searchStatusId,jdbcType=INTEGER}
+      and
+      color_status = #{searchStatusId,jdbcType=INTEGER}
+      and
+      frame_frozen_status = #{searchStatusId,jdbcType=INTEGER}
+      and
+      frame_shade_status = #{searchStatusId,jdbcType=INTEGER}
+      and
+      frame_fuzzy_status = #{searchStatusId,jdbcType=INTEGER}
+      and
+      frame_displaced_status = #{searchStatusId,jdbcType=INTEGER}
+      and
+      frame_strip_status = #{searchStatusId,jdbcType=INTEGER}
+      and
+      frame_colorcase_status = #{searchStatusId,jdbcType=INTEGER}
+      and
+      light_exception_status = #{searchStatusId,jdbcType=INTEGER}
+      )
+     </if>
+    <if test="searchStatusId != 3 and searchStatusId != null and searchStatusId != 0">
+       and(  
+      network_status = #{searchStatusId,jdbcType=INTEGER}
+      or
+      stream_status = #{searchStatusId,jdbcType=INTEGER}
+      or
+      noise_status = #{searchStatusId,jdbcType=INTEGER}
+      or
+      sign_status = #{searchStatusId,jdbcType=INTEGER}
+      or
+      color_status = #{searchStatusId,jdbcType=INTEGER}
+      or
+      frame_frozen_status = #{searchStatusId,jdbcType=INTEGER}
+      or
+      frame_shade_status = #{searchStatusId,jdbcType=INTEGER}
+      or
+      frame_fuzzy_status = #{searchStatusId,jdbcType=INTEGER}
+      or
+      frame_displaced_status = #{searchStatusId,jdbcType=INTEGER}
+      or
+      frame_strip_status = #{searchStatusId,jdbcType=INTEGER}
+      or
+      frame_colorcase_status = #{searchStatusId,jdbcType=INTEGER}
+      or
+      light_exception_status = #{searchStatusId,jdbcType=INTEGER}
+      )
+  </if>
+  </sql>
     <select id="getDeviceStatusCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.DeviceStatus">
   	 select count(*)
-  	 from t_device_status 
+  	 <include refid="query_sql"/>
   </select>
+  
 </mapper>

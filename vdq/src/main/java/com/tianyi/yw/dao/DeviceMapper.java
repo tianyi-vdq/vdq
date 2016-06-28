@@ -3,7 +3,6 @@ package com.tianyi.yw.dao;
 import java.util.List;
 
 import com.tianyi.yw.model.Device;
-import com.tianyi.yw.model.DeviceGroup;
 @MyBatisRepository
 public interface DeviceMapper {
     int deleteByPrimaryKey(Integer id);
@@ -12,6 +11,8 @@ public interface DeviceMapper {
 
     int insertSelective(Device record);
 
+    Device selectDeviceById(Integer id);
+    
     Device selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(Device record);
