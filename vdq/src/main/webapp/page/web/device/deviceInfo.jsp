@@ -31,7 +31,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
  				 	 	$("#areaId").val(record.id); 
    				 },
    				 onBeforeExpand:function(node){
-   				 	$('#cmbParentArea').combotree('tree').tree('options').url = 'area/jsonLoadAreaTreeList.do?pid='+ node.id;
+   				 	$("#cmbParentArea").combotree('tree').tree('options').url = 'area/jsonLoadAreaTreeList.do?pid='+ node.id;
    				 },
    				 onLoadSuccess:function(){
    				 	var deviceId = $("#deviceId").val();
@@ -160,7 +160,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<td align="right">所属区域:</td>
 					<td>
 					
-					 <input id ="areaId" name = "areaId" type="hidden" value="${Device.areaId}"/>
+					<input id ="areaId" name = "areaId" type="hidden" value="${Device.areaId}"/>
 					<input  id ="cmbParentArea" name="areaName" doc="pointInfo"  type="text"  class="easyui-combotree" required="true" style="width:254px;height:28px;" />
 					 
 					<span style="color:red">*</span> 
