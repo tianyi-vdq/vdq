@@ -203,6 +203,33 @@ function deleteAreaById(id){
 	    }  
 	}); 
 }
+function excelChange(file){
+	  if(!(/(?:xls)$/i.test(file.value)) && !(/(?:xlsx)$/i.test(file.value)) ) {
+	        $.messager.alert('错误', "只允许上传xl或xlsx的文档", 'error'); 
+	        if(window.ActiveXObject) {//for IE
+	            file.select();//select the file ,and clear selection
+	            document.selection.clear();
+	        } else if(window.opera) {//for opera
+	            file.type="text";file.type="file";
+	        } else file.value="";//for FF,Chrome,Safari
+	    } else {	
+			showProcess(true, '温馨提示', '正在提交数据...'); 
+	   		fileForms.submit();
+	    	/* $('#fileForms').form('submit',{
+				success : function(data) {
+					data = $.parseJSON(data);
+					if (data.code == 0) {
+						$.messager.alert('保存信息', data.message, 'info',function(){
+							search();
+						});
+						
+					} else {
+						$.messager.alert('错误信息', data.message, 'error');
+					}  
+				}
+			});	  */
+	    }
+}
 </script>
 </head>
 
@@ -212,12 +239,19 @@ function deleteAreaById(id){
 		<div class="fl yw-lump">
 			<div class="yw-lump-title">
 				<i class="yw-icon icon-partner"></i><span>区域列表</span><input type="hidden" value="${area.id}" id="hid_areaId" />
+				<span class="fr yw-btn bg-orange line-hei22 mr10 mt9 cur">导入区域
+					<div class="temp">
+					<form id="fileForms" name="fileForms" action="${pageContext.request.contextPath}/fileUpload/uploadAreaExcel.do"  enctype="multipart/form-data" method="post" style="margin:0;padding:0;">
+				       	<input type="file" name="file" id="jfile" class="yw-upload-file" onChange="excelChange(this);">
+					</form>
+					</div>
+				</span>	
 			</div>
 		</div>
 		<div class="fl yw-lump mt10">
 			<form id="userAreaForm" name="userAreaForm"
 				action="areaList.do" method="get">
-				<div class="pd10-28">
+				<div class="pd10">
 					<div class="fl"> 
 						<span class="ml26">区域信息</span>
 						<input type="text" name="searchName"   validType="SpecialWord" class="easyui-validatebox" 

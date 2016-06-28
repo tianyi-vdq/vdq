@@ -34,5 +34,9 @@ public interface DeviceMapper {
 
 	void update(Device d);
 
+	List<Device> getDeviceListByFlag(Device d);
+
+	int getDeviceCountByFlag(Device d);
+
 	
 }

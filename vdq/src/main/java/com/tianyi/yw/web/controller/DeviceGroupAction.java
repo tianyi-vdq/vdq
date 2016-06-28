@@ -177,8 +177,9 @@ public class DeviceGroupAction extends BaseAction{
 	 */
 	@RequestMapping(value = "/memberList.do", method=RequestMethod.GET)
 	public String memberList(
-			Device group,
+			Device device,
 			@RequestParam(value="groupId", required = false)Integer groupId,
+			@RequestParam(value="pageNo", required = false)Integer pageNo,
 			HttpServletRequest request, HttpServletResponse response) 
 					throws UnsupportedEncodingException{
 		try{
@@ -190,24 +191,38 @@ public class DeviceGroupAction extends BaseAction{
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		if(group.getGroupId() != null){
-			group.setGroupId(group.getGroupId());
+		if(device.getGroupId() != null){
+			device.setGroupId(device.getGroupId());
 		}
-		if(group.getPageNo() == null){
-			group.setPageNo(1);
+		if(device.getPageNo() == null){
+			device.setPageNo(1);
 		}
-		group.setPageSize(Constants.DEFAULT_PAGE_SIZE);
+		device.setPageSize(Constants.DEFAULT_PAGE_SIZE);
 		List<Device> devicelist = new ArrayList<Device>();
+		List<Device> deviceAllList = new ArrayList<Device>();
+		Device d = new Device();
+		if(pageNo == null){
+			d.setPageNo(1);
+		}else{
+			d.setPageNo(pageNo);
+		}
+		d.setPageSize(Constants.DEFAULT_PAGE_SIZE);
 		int total = 0;
+		int count = 0;
 		try {
-			devicelist = deviceService.getDeviceListByGroupId(group);
-			total = deviceService.getTotalCountByGroupId(group);
+			devicelist = deviceService.getDeviceListByGroupId(device);
+			total = deviceService.getTotalCountByGroupId(device);
+			deviceAllList = deviceService.getDeviceListByFlag(d);
+			count = deviceService.getDeviceCountByFlag(d);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		group.setTotalCount(total);
-		request.setAttribute("device", group);
+		device.setTotalCount(total);
+		d.setTotalCount(count);
+		request.setAttribute("device", device);
 		request.setAttribute("Devicelist", devicelist);
+		request.setAttribute("Device", d);
+		request.setAttribute("DeviceAlllist", deviceAllList);
 		return "web/deviceGroup/memberInfo";
 	}
 	
@@ -427,5 +442,67 @@ public class DeviceGroupAction extends BaseAction{
 		}
 		return js;
 
+	}
+	@ResponseBody
+	@RequestMapping(value = "/jsonLoadExistDeviceList.do")
+	public JsonResult<Device> jsonLoadExistDeviceList(
+			@RequestParam(value = "groupId", required = false) Integer groupId,
+			@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+		JsonResult<Device> js = new JsonResult<Device>();
+		js.setCode(1);
+		js.setMessage("加载失败!");
+		try {
+			if(groupId == null || pageNumber == null){
+				js.setMessage("参数传递异常!");
+				return js;
+			}
+			Device d = new Device();
+			List<Device> ld = new ArrayList<Device>();
+			int total = 0;
+			d.setPageNo(pageNumber);
+			d.setPageSize(Constants.DEFAULT_PAGE_SIZE);
+			d.setGroupId(groupId);
+			ld = deviceService.getDeviceListByGroupId(d);
+			total = deviceService.getTotalCountByGroupId(d);
+			d.setTotalCount(total);
+			js.setCode(0);
+			js.setObj(d);
+			js.setList(ld);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return js;
+	}
+	@ResponseBody
+	@RequestMapping(value = "/jsonLoadAllDeviceList.do")
+	public JsonResult<Device> jsonLoadAllDeviceList(
+			@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+		JsonResult<Device> js = new JsonResult<Device>();
+		js.setCode(1);
+		js.setMessage("加载失败!");
+		try {
+			if(pageNumber == null){
+				js.setMessage("参数传递异常!");
+				return js;
+			}
+			Device d = new Device();
+			List<Device> ld = new ArrayList<Device>();
+			int total = 0;
+			d.setPageNo(pageNumber);
+			d.setPageSize(Constants.DEFAULT_PAGE_SIZE);
+			ld = deviceService.getDeviceListByFlag(d);
+			total = deviceService.getDeviceCountByFlag(d);
+			d.setTotalCount(total);
+			js.setCode(0);
+			js.setObj(d);
+			js.setList(ld);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return js;
 	}
 }

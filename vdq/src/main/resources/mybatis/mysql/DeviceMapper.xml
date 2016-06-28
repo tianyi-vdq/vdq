@@ -274,4 +274,18 @@
   	flag = #{flag,jdbcType = INTEGER}
   	where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="getDeviceListByFlag" parameterType="com.tianyi.yw.model.Device" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />,a.name as AREA_NAME  
+  	 <include refid="query_sql" />
+  	 	and t.flag = 0
+    	order by t.id desc
+  	 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
+        limit #{pageStart}, #{pageSize}
+    </if>
+  </select>
+  <select id="getDeviceCountByFlag" parameterType="com.tianyi.yw.model.Device" resultType="java.lang.Integer">
+  	select count(*)
+  	<include refid="query_sql" />
+  	 and t.flag = 0
+  </select>
 </mapper>

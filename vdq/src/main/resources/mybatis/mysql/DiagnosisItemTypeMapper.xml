@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.tianyi.yw.dao.DiagnosisItemTypeMapper" >
+<!-- Diagnosis集合映射 -->
+<resultMap id="DiagnosisRst" type="com.tianyi.yw.model.DiagnosisItemType">
+	<id property="id" column="id" javaType="int"/>
+	<result property="value1" column="value1" javaType="int"/>
+	<result property="value2" column="value2" javaType="int"/>
+	<!--映射属性TaskItemType  -->
+	<association property="itemTypeId" column="item_type_id" javaType="com.tianyi.yw.model.TaskItemType"
+	select="getValueInfoByID"/>
+</resultMap>
+
+<!--TaskItemType集合映射  -->
+<resultMap id="TaskTypeRst" type="com.tianyi.yw.model.TaskItemType">
+	<id property="id" column="id" javaType="int"/>
+	<result property="name" column="name" javaType="java.lang.String"/>
+	<result property="description" column="description" javaType="java.lang.String"/>
+</resultMap>
+
+<!-- 查询Diagnosis诊断标准的信息 -->
+<select id="getDiagnosisList"  resultMap="DiagnosisRst">
+	select * from t_item_type_value
+</select>
+
+<!-- 通过id查询任务类型的信息 -->
+<select id="getValueInfoByID"  resultMap="TaskTypeRst">
+	select * from t_task_item_type where id=#{item_type_id};
+</select>
+
+<!--修改诊断标准的值  -->
+<update id="updateValue" parameterType="com.tianyi.yw.model.DiagnosisItemType">
+	update t_item_type_value set value1=#{value1},value2=#{value2} where id=#{id};
+</update>
+
+</mapper>

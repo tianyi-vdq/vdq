@@ -161,12 +161,32 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<span>设备编号:</span><input id="deviceNumber" type="text"/><br>
 					<input type="button" value="查询" onclick="getDeviceList();"/>
 				</div>
-			</div>
+			</div>  
 			<div class="yw-lump wid-atuo ml260 mt10">
 				<div class="yw-cm-title">
 					<span class="ml26">编辑成员</span><input id="groupId" type="hidden" value="${group.id}"/>
 				</div>
-				<table class="yw-cm-table yw-center yw-bg-hover" id="deviceMemberList">
+				<table class="yw-cm-table yw-center yw-bg-hover" style="width:49%;float:left;" id="deviceMemberList">
+				<tr style="background-color:#D6D3D3;font-weight: bold;">
+							<th width="4%" style="display:none">&nbsp;</th>
+							<th>设备ID</th>
+							<th>设备编号</th>
+							<th>设备名称</th>
+							<th>Naming</th>
+							<th>RTSP</th>
+							<th>IP地址</th>
+						</tr>
+				</table>
+				<table class="yw-cm-table yw-center yw-bg-hover" style="width:49%;float:right;" id="deviceMemberList">
+				<tr style="background-color:#D6D3D3;font-weight: bold;">
+							<th width="4%" style="display:none">&nbsp;</th>
+							<th>设备ID</th>
+							<th>设备编号</th>
+							<th>设备名称</th>
+							<th>Naming</th>
+							<th>RTSP</th>
+							<th>IP地址</th>
+						</tr>
 				</table>
 				<div class="page" id="pager"></div>
 			</div>

@@ -171,6 +171,25 @@ public class DeviceServiceImpl implements DeviceService {
 		return deviceGroupMapper.getExistGroupByDeviceId(deviceId);
 	}
 
+	@Override
+	public List<Device> getDeviceList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Device> getDeviceListByFlag(Device d) {
+		// TODO Auto-generated method stub
+		return deviceMapper.getDeviceListByFlag(d);
+	}
+
+	@Override
+	public int getDeviceCountByFlag(Device d) {
+		// TODO Auto-generated method stub
+		return deviceMapper.getDeviceCountByFlag(d);
+	}
+
+
 
 
 }
