@@ -27,6 +27,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		 			$("#itemType"+arr).attr("checked","checked");
 		 		});
 		 	}
+		 	var flag = $("#flag").val();
+		 	if(flag == 1){
+		 		/* $("#taskTable").attr("readonly",true); */
+		 		$("#taskName").attr("disabled",true);
+		 		$("#runIntervals").attr("disabled",true);
+		 		$("#runTimes").attr("disabled",true);
+		 		$("#runCount").attr("disabled",true);
+		 		/* $("#digType").onclick = function(){return false;} */
+		 	}
 		 });
 function saveTask(obj){
 	if ($('#taskInfoForm').form('validate')) {
@@ -85,23 +94,22 @@ function saveTask(obj){
 			
 				<form id="taskInfoForm" name="taskInfoForm" action="task/jsonSaveOrUpdateTask.do" method="post">
 					<div id="tab1" class="yw-tab">
-					<table class="yw-cm-table font16">
+					<table class="yw-cm-table font16" id="taskTable">
 						<tr>
 							<td width="8%" align="right">任务名称：</td>
 							<td><input id="taskName" name="name" type="text" onblur="valueTrim(this);"  doc="taskInfo" value="${Task.name}" class="easyui-validatebox" required="true"  validType="Length[1,50]" style="width:254px;height:28px;"/>
 								<%-- <input name="name" type="hidden" doc="taskInfo" value="${task.name}"/> --%>
 								<input type="hidden" id="hid_taskId" name="id" doc="taskInfo" value="${Task.id}"/>
+								<input type="hidden" id="flag" value="${Task.flag}"/>
 								<span style="color:red">*</span>
 							</td>
 						</tr> 
-							
 						<tr>
-							<td width="10%" align="right">启动时间：<td>
-							<input id="startTimes" name="startTimes" data-options="editable:false"  onblur="valueTrim(this);"  doc="taskInfo" type="text" value="${Task.startTimes}" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>
+						<td width="10%" align="right">启动时间：</td>
+						<td><input id="startTimes" name="startTimes" data-options="editable:false"  onblur="valueTrim(this);"  doc="taskInfo" type="text" value="${Task.startTimes}" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>
         	                 <%-- <input name="startTimes"   doc="taskInfo" type="hidden" value="${task.startTime}"/> --%>
         	                 <span style="color:red">*</span> 
-								
-							</td>
+						</td>
 						</tr>
 						<tr> 
 							<td align="right">执行间隔： </td>
@@ -123,7 +131,7 @@ function saveTask(obj){
                         	</td>
                          </tr> 
                          <tr>
-							<td align="right">是否立即执行：</td>
+							<td align="right">是否执行：</td>
 							<td>
 								 	 <c:if test="${Task.flag == 1 }">
 								 	 	<label><input type="radio" name="flag" value="1" checked="checked" />是</label> 
@@ -138,12 +146,12 @@ function saveTask(obj){
                          <tr>
 							<td align="right">诊断项目：</td>
                          	<td>
-								<p class="yw-window-p">
+								<div class="yw-window-p" id="digType">
         							<input type="hidden" id="hid_itemTypeId" value="${Task.itemTypeId }" />
 	                         		<c:forEach var="item"  items="${TaskItemTypelist}" >
 			                    		<label><input id="itemType${item.id}"  type="checkbox" name="itemTypeId"  value="${item.id}" />${item.name}</label> 
 			                    	</c:forEach>
-		                    	</p>
+		                    	</div>
                          	</td> 
                          </tr>           
 					</table>  

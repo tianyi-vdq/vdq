@@ -27,4 +27,6 @@ public interface AreaMapper {
 
 	void updateAreaById(Area a);
 
+	List<Area> getAllAreaList();
+
 }

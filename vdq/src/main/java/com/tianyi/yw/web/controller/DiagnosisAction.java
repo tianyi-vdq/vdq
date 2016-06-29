@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tianyi.yw.common.JsonResult;
 import com.tianyi.yw.model.DiagnosisItemType;
 import com.tianyi.yw.service.DignosisService;
 
@@ -71,29 +72,38 @@ public class DiagnosisAction extends BaseAction {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/saveValue.do", method=RequestMethod.POST)
-	public String saveValues(
+	@RequestMapping(value = "/jsonSaveValue.do", method=RequestMethod.POST)
+	public JsonResult<DiagnosisItemType> saveValues(
 			@RequestParam(value = "values", required = false) String values,
 			HttpServletRequest request,HttpServletResponse response){
-
-		//将字符传切割成为数组
-		String s = values.substring(0, values.lastIndexOf(","));
-		System.out.println(s+"--");
-		String[] valuesArray = s.split(",");
-		//将数组拆分，分别装入到集合中，list1代表数据库中value1的集合，list2代码数据库中value2的集合
-		List<Integer> list1 = new ArrayList<Integer>();
-		List<Integer> list2 = new ArrayList<Integer>();
-		DiagnosisItemType diagnosisItemType = new DiagnosisItemType();
-		for(int i = 0; i < valuesArray.length; i++){
-			String[] str = valuesArray[i].split(";");
-			list1.add(Integer.parseInt(str[0]));
-			list2.add(Integer.parseInt(str[1]));
-			diagnosisItemType.setValue1(list1.get(i));
-			diagnosisItemType.setValue2(list2.get(i));
-			diagnosisItemType.setId(i+1);
-			dignosisService.updateValue(diagnosisItemType);
+		JsonResult<DiagnosisItemType> js = new JsonResult<DiagnosisItemType>();
+		js.setMessage("保存失败!");
+		js.setCode(1);
+		try {
+			//将字符传切割成为数组
+			String s = values.substring(0, values.lastIndexOf(","));
+			System.out.println(s+"--");
+			String[] valuesArray = s.split(",");
+			//将数组拆分，分别装入到集合中，list1代表数据库中value1的集合，list2代码数据库中value2的集合
+			List<Integer> list1 = new ArrayList<Integer>();
+			List<Integer> list2 = new ArrayList<Integer>();
+			DiagnosisItemType diagnosisItemType = new DiagnosisItemType();
+			for(int i = 0; i < valuesArray.length; i++){
+				String[] str = valuesArray[i].split(";");
+				list1.add(Integer.parseInt(str[0]));
+				list2.add(Integer.parseInt(str[1]));
+				diagnosisItemType.setValue1(list1.get(i));
+				diagnosisItemType.setValue2(list2.get(i));
+				diagnosisItemType.setId(i+1);
+				dignosisService.updateValue(diagnosisItemType);
+			}
+			js.setMessage("保存成功!");
+			js.setCode(0);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
-		return "web/diagnosis/diagnosisList";
+		return js;
 	}
 
 }

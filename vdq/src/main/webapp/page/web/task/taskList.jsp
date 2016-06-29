@@ -110,9 +110,7 @@ function sltSchEtime(date){
 		  //  $.messager.alert('任务开始启动!');
 			$.ajax({
 				url : "jsonloadTaskRun.do?id="+id,
-
 				type : "post",  
-
 		    	dataType : "json",								
 				success : function(data) { 									
 		  			if(data.code == 0){ 

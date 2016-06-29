@@ -175,6 +175,10 @@ public class AreaAction  extends BaseAction {
 		js.setCode(new Integer(1));
 		js.setMessage("保存失败！");
 		try {
+			if(area.getParentId() == null || "".equals(area.getParentId())){
+				js.setMessage("请选择所属区域!");
+				return js;
+			}
 			if (area.getId() == null || area.getId() == 0) {
 				area.setId(0);
 				String serialCode = getAreaSerialCode(area.getParentId());

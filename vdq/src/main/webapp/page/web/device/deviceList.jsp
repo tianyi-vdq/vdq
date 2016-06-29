@@ -191,7 +191,7 @@ function stopOrStartDevice(id,flag){
 						<th width="4%" style="display:none">&nbsp;</th>
 						<th>设备ID</th>
 						<th>平台ID</th>
-						<td>设备标志ID</td>
+						<th>设备标志ID</th>
 						<th>设备编号</th>
 						<th>设备名称</th>
 						<th>Naming</th>
@@ -218,10 +218,10 @@ function stopOrStartDevice(id,flag){
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.areaName}</td>
 							<td>
 							<c:if test="${item.flag == 0}">
-							<span class="yw-btn bg-orange cur" onclick="stopOrStartDevice(${item.id},${item.flag});">停用设备</span>
+								<a href="javascript:void(0);" onclick="stopOrStartDevice(${item.id},${item.flag});">停用设备</a>
 							</c:if>
 							<c:if test="${item.flag == 1}">
-							 <span class="yw-btn bg-gray cur" onclick="stopOrStartDevice(${item.id},${item.flag});">启用设备</span>
+								<a href="javascript:void(0);" onclick="stopOrStartDevice(${item.id},${item.flag});">启用设备</a>
 							</c:if>
 							</td>
 						</tr>

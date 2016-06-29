@@ -91,7 +91,7 @@ public class DeviceAction  extends BaseAction{
 			String pointNumber = new String(deviceStatus.getSearchPointNumber().getBytes("iso8859-1"), "utf-8");
 			deviceStatus.setSearchPointNumber(pointNumber);
 		}
-
+		
 		if (deviceStatus.getPageNo() == null)
 			deviceStatus.setPageNo(1);
 		deviceStatus.setPageSize(Constants.DEFAULT_PAGE_SIZE);  
@@ -131,7 +131,13 @@ public class DeviceAction  extends BaseAction{
 			//如为新增，则给id置0
 			if (device.getId() == null || device.getId() == 0) {
 				device.setId(0);
+				device.setFlag(0);
 			}
+			if (device.getAreaId() == null){
+				js.setMessage("请选择设备所属区域!");
+				return js;
+			}
+					
 			//判断设备编号
 			if (device.getPointNumber() != null) {
 				Device d = new Device();

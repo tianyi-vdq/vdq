@@ -22,6 +22,8 @@ public interface AreaService {
 
 	void deleteAreaById(Area a);
 
+	List<Area> getAllAreaList();
+
 
 
 }

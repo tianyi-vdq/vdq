@@ -1,4 +1,3 @@
- 
 <%@ page language="java" import="java.util.*" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
@@ -26,7 +25,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script
 	src="${pageContext.request.contextPath}/source/js/slider/ion.rangeSlider.js"></script>
 	<link
-	href="${pageContext.request.contextPath}/source/js/slider/css/ion.rangeSlider.skinFlat.css"
+	href="${pageContext.request.contextPath}/source/js/slider/css/ion.rangeSlider.skinNice.css"
 	rel="stylesheet" />	<link
 	href="${pageContext.request.contextPath}/source/js/slider/css/normalize.min.css"
 	rel="stylesheet" /><link
@@ -70,22 +69,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	  		 	str += valueStr+",";
 	  			 }
 	  		  $.ajax({
-					url : "diagnosis/saveValue.do?values="+str,
+					url : "diagnosis/jsonSaveValue.do?values="+str,
 					type : "post",
-					dataType : "json"
-				}); 
-			if(str){
-				 $(function () {  
-			        $.messager.alert("保存信息", "保存成功！","info");  
-	
-			    });  
-			}else{
-			 $(function () {  
-		        $.messager.alert("保存信息", "保存失败！","error");  
-		    }); 	
+					dataType : "json",
+					success : function(data) { 
+		  			if(data.code == 0){ 
+		  				 $.messager.alert('保存信息',data.message,'info',function(){
+	        				history.go(0);
+	        			});
+		  			}else{
+						$.messager.alert('错误信息',data.message,'error');
+		  			} 
+				}
+			}); 
 		}
-	}
-		
 	</script>
   </head>
   
@@ -101,9 +98,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="yw-bi-rows">
 				<div class="yw-bi-tabs mt5" id="ywTabs">
 					<span class="yw-bi-now">诊断参数设置</span>
-					<span>左段：异常</span>
-					<span class="yw-btn bg-red mr26">中段：告警</span>
-					<span>右段：正常</span>
+				</div> 
+				<div class="yw-bi-tab mt5" id="ywTabs">
+					<input class="yw-btn bg-red mr26" type="button" id="button"  value="保存" name="button" onclick="saveDiagnosis(this);" style="float:right;" />
 				</div> 
 				<div>
 					
@@ -116,15 +113,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<form id="diagnosisForm" name="diagnosisForm" action="#" style="padding-top:20px;" method="POST">
  					<c:forEach var="item" items="${namelist}">
  						<div style="width:100%;text-align:left;">
-	 						<div style="width:15%;float:left;text-align:right;margin-right:25px;">
+	 						<div style="width:20%;float:left;text-align:right;margin-right:25px;">
 	 							<label>${item}:</label>	
 	 						</div>
-	 					 	<div style="width:80%;float:left;text-align:left">
+	 					 	<div style="width:60%;float:left;text-align:left">
 	 					 		<input type="text" id="range_${item}"/>
 	 					 	</div>
  					 	</div>
  					</c:forEach>
- 					<input class="yw-btn bg-red mr26" type="button" id="button"  value="保存" name="button" onclick="saveDiagnosis(this);" style="margin-left:80%;" />
   				</form>
  					
 			</div>

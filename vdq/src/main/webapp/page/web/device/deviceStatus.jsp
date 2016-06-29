@@ -26,27 +26,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    totalCount:'${DeviceStatus.totalCount}',
 			    buttonClickCallback:PageClick                     /* 表示点击分页数按钮调用的方法 */                  
 			});
-			$("#cmbParentArea").combotree({
-				 url: 'area/jsonLoadAreaTreeList.do',  
-   				 required: false,
-   				 onSelect:function(record){ 
- 				 	 	$("#areaId").val(record.id); 
-   				 },
-   				 onBeforeExpand:function(node){
-   				 	$('#cmbParentArea').combotree('tree').tree('options').url = 'area/jsonLoadAreaTreeList.do?pid='+ node.id;
-   				 },
-   				 onLoadSuccess:function(){
-   				 	var deviceId = $("#deviceId").val();
-   				 	
-   				 	if(deviceId>0){
-   				 		var pId = $("#areaId").val();
-   				 		$("#cmbParentArea").combotree("setValue",pId);
-   				 	}else{
-						//$("#cmbParentArea").combotree("disable",true);
-	   				 	$("#cmbParentArea").combotree("setText","=请选择所属区域=");
-					}
-   				 }
-			});
 			//loadCompanyList();
 		});
 function getAreaListByParentId(pid){
@@ -80,18 +59,18 @@ function pagesearch(){
   </head>  
  <body>
    <div class="con-right" id="conRight">
-   
-       <form id="DeviceStatusForm" name="DeviceStatusForm"
-				action="device/deviceStatus.do" method="get">
 		<div class="fl yw-lump">
 			<div class="yw-lump-title">
 				<i class="yw-icon icon-partner"></i><span>设备状态</span>								
 			</div>
 		</div>
-		<div class=pd10>
+		<div class="fl yw-lump mt10">
+		<form id="DeviceStatusForm" name="DeviceStatusForm"
+				action="device/deviceStatus.do" method="get">
+		<div class="pd10">
 		      <div class="fl">
 		      <%-- <input id ="areaId" name ="searchAreaId" type="hidden" value="${DeviceStatus.searchAreaId}"/> --%>
-			  <span>区域选择：</span><input  id ="cmbParentArea" name ="searchAreaId" type="text"  class="easyui-combotree" required="true" style="width:254px;height:28px;" />			 		
+			  <!-- <span>区域选择：</span><input  id ="cmbParentArea" name ="searchAreaId" type="text"  class="easyui-combotree" required="true" style="width:254px;height:28px;" /> -->			 		
 		      <span>设备编号：</span><input type="text" id="pointNumber" name="searchPointNumber"   validType="SpecialWord"
 				 class="easyui-validatebox" placeholder="搜索" value="${DeviceStatus.searchPointNumber}" type="hidden"/> 
 			  <span>设备状态：</span>
@@ -103,18 +82,21 @@ function pagesearch(){
 			<option value="3">正常</option>	
 			<option value="4">失败</option>				        							
 			</select>		
-			 <span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>						
+			 <span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>
 		</div>			
+			 <div class="fr"></div>
+			 <div class="cl"></div>						
           <input type="hidden" id="pageNumber" name="pageNo" value="${DeviceStatus.pageNo}" />
       </div>
-	</form>
+		</form>
+      </div>
 		
    <div class="fl yw-lump">           
    <table class="yw-cm-table yw-center yw-bg-hover" id="deviceStatusList">
 		<tr style="background-color:#D6D3D3;font-weight: bold;">
 			<th width="4%" style="display:none">&nbsp;</th>
 			<th>设备ID</th>
-			<th width="6%">网络连接状态</th>
+			<th width="8%">网络连接状态</th>
 			<th>拉流</th>
 			<th>雪花噪音</th>
 			<th>信号状态</th> 
@@ -126,8 +108,6 @@ function pagesearch(){
 			<th>画面彩条</th>
 			<th>画面偏色</th> 
 			<th>亮度异常</th>
-			<th width="10%">记录时间</th> 
-			<th width="10%">创建时间</th>
 		</tr>
 		<c:forEach var="item" items="${DeviceStatuslist}">
 		<tr>
@@ -205,8 +185,6 @@ function pagesearch(){
 			<c:if test="${item.lightExceptionStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.lightExceptionStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			</td>
-			<td>${item.recordTimes}</td> 
-			<td>${item.createTimes}</td>
 		</tr>
 		</c:forEach>
 	</table>

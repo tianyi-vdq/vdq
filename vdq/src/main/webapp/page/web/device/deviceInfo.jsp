@@ -107,6 +107,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<td><input  name="pointId" doc="pointInfo" onblur="valueTrim(this);"    type="text" value="${Device.pointId}" class="easyui-validatebox" required="true" validType="Length[1,10]" style="width:254px;height:28px;" />
 					<span style="color:red">*</span>
 					<input id="deviceId" name="id" type="hidden" value="${Device.id}" />
+					<input name="flag" doc="pointInfo"  type="hidden" value="${Device.flag}"/>
 					</td>
 					 
 					 <td align="right">平台id：</td>
@@ -129,14 +130,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					
 				</tr>
 				<tr>
-					
 					<td align="right">设备Naming值：</td>
 					<td><input  name="pointNaming" doc="pointInfo"  onblur="valueTrim(this);"   type="text" value="${Device.pointNaming}" class="easyui-validatebox" required="true" validType="Length[1,30]" style="width:254px;height:28px;" />
 					<span style="color:red">*</span>
 					</td>
-				
-					
-				
 					<td align="right">设备类型：</td>
 					<td><input  name="type" doc="pointInfo"  onblur="valueTrim(this);"   type="text" value="${Device.type}" class="easyui-validatebox" required="true" validType="Length[1,50]" style="width:254px;height:28px;" />
 					<span style="color:red">*</span>
@@ -147,8 +144,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<td><input  name="address" doc="pointInfo"  type="text" value="${Device.address}" class="easyui-validatebox" required="true" validType="Length[1,50]" style="width:254px;height:28px;" />
 					<span style="color:red">*</span>
 					</td>
-				
-				
 					<td align="right">设备IP地址:</td>
 					<td><input  name="ipAddress" doc="pointInfo"  type="text" value="${Device.ipAddress}" class="easyui-validatebox" required="true" validType="IP" style="width:254px;height:28px;" />
 					<span style="color:red">*</span> 
@@ -156,10 +151,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				
 				</tr>
 				<tr>
-					
 					<td align="right">所属区域:</td>
 					<td>
-					
 					<input id ="areaId" name = "areaId" type="hidden" value="${Device.areaId}"/>
 					<input  id ="cmbParentArea" name="areaName" doc="pointInfo"  type="text"  class="easyui-combotree" required="true" style="width:254px;height:28px;" />
 					 
@@ -170,14 +163,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<td><input  name="rtspUrl" doc="pointInfo"  type="text" value="${Device.rtspUrl}" class="easyui-validatebox" required="true" validType="Length[1,150]" style="width:254px;height:28px;" />
 					<span style="color:red">*</span> 
 					</td>
-				
 				</tr>
-					
-					<td align="right">flag:</td>
-					<td><input  name="flag" doc="pointInfo"  type="text" value="${Device.flag}" class="easyui-validatebox" required="true" validType="Length[1,150]" style="width:254px;height:28px;" />
-					<span style="color:red">*</span>  
-					</td>
-				
 			</table> 
 		</div>  
 	</form>

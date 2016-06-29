@@ -67,4 +67,10 @@ public class AreaServiceImpl implements AreaService {
 		areaMapper.updateAreaById(a);
 	}
 
+	@Override
+	public List<Area> getAllAreaList() {
+		// TODO Auto-generated method stub
+		return areaMapper.getAllAreaList();
+	}
+
 }

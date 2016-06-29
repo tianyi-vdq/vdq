@@ -23,16 +23,16 @@
     <result column="point_id" property="pointId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, device_id, network_status, stream_status, noise_status, sign_status, color_status, 
-    frame_frozen_status, frame_shade_status, frame_fuzzy_status, frame_displaced_status, 
-    frame_strip_status, frame_colorcase_status, light_exception_status, record_time, 
-    create_time
+    ds.id, ds.device_id, ds.network_status, ds.stream_status, ds.noise_status, ds.sign_status, ds.color_status, 
+    ds.frame_frozen_status, ds.frame_shade_status, ds.frame_fuzzy_status, ds.frame_displaced_status, 
+    ds.frame_strip_status, ds.frame_colorcase_status, ds.light_exception_status, ds.record_time, 
+    ds.create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_device_status
-    where id = #{id,jdbcType=INTEGER}
+    from t_device_status ds
+    where ds.id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_device_status
@@ -232,14 +232,15 @@
   </update>
    <select id="getDeviceStatusList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.DeviceStatus" >
     select <include refid="Base_Column_List" />,
-		(select point_id from t_device q where q.id = device_id) as point_id	
+		d.point_id as point_id	
 		<include refid="query_sql"/>
 		 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
           limit #{pageStart}, #{pageSize}
   		</if>
   </select> 
   <sql id="query_sql">
-      from t_device_status  
+      	from t_device_status ds
+      	left join t_device d on d.id = ds.device_id   
 		where 
 		1=1
 	 	<if test="searchAreaId != null and searchAreaId != ''">
@@ -249,62 +250,61 @@
 		where device_id = t1.id) = t3.id) = #{searchAreaId,jdbcType=INTEGER}
 		</if>	 
 		<if test="searchPointNumber != null and searchPointNumber != ''">
-		and 
-		(select t.point_number  from t_device t
-		where device_id = t.id) = #{searchPointNumber,jdbcType=VARCHAR}
+		and
+		d.point_id like CONCAT('%',#{searchPointNumber,jdbcType=VARCHAR},'%')
 		</if>	
       <if test="searchStatusId == 3">
       and(  
-      network_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.network_status = #{searchStatusId,jdbcType=INTEGER}
       and
-      stream_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.stream_status = #{searchStatusId,jdbcType=INTEGER}
       and
-      noise_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.noise_status = #{searchStatusId,jdbcType=INTEGER}
       and
-      sign_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.sign_status = #{searchStatusId,jdbcType=INTEGER}
       and
-      color_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.color_status = #{searchStatusId,jdbcType=INTEGER}
       and
-      frame_frozen_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.frame_frozen_status = #{searchStatusId,jdbcType=INTEGER}
       and
-      frame_shade_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.frame_shade_status = #{searchStatusId,jdbcType=INTEGER}
       and
-      frame_fuzzy_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.frame_fuzzy_status = #{searchStatusId,jdbcType=INTEGER}
       and
-      frame_displaced_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.frame_displaced_status = #{searchStatusId,jdbcType=INTEGER}
       and
-      frame_strip_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.frame_strip_status = #{searchStatusId,jdbcType=INTEGER}
       and
-      frame_colorcase_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.frame_colorcase_status = #{searchStatusId,jdbcType=INTEGER}
       and
-      light_exception_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.light_exception_status = #{searchStatusId,jdbcType=INTEGER}
       )
      </if>
     <if test="searchStatusId != 3 and searchStatusId != null and searchStatusId != 0">
        and(  
-      network_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.network_status = #{searchStatusId,jdbcType=INTEGER}
       or
-      stream_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.stream_status = #{searchStatusId,jdbcType=INTEGER}
       or
-      noise_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.noise_status = #{searchStatusId,jdbcType=INTEGER}
       or
-      sign_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.sign_status = #{searchStatusId,jdbcType=INTEGER}
       or
-      color_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.color_status = #{searchStatusId,jdbcType=INTEGER}
       or
-      frame_frozen_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.frame_frozen_status = #{searchStatusId,jdbcType=INTEGER}
       or
-      frame_shade_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.frame_shade_status = #{searchStatusId,jdbcType=INTEGER}
       or
-      frame_fuzzy_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.frame_fuzzy_status = #{searchStatusId,jdbcType=INTEGER}
       or
-      frame_displaced_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.frame_displaced_status = #{searchStatusId,jdbcType=INTEGER}
       or
-      frame_strip_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.frame_strip_status = #{searchStatusId,jdbcType=INTEGER}
       or
-      frame_colorcase_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.frame_colorcase_status = #{searchStatusId,jdbcType=INTEGER}
       or
-      light_exception_status = #{searchStatusId,jdbcType=INTEGER}
+      ds.light_exception_status = #{searchStatusId,jdbcType=INTEGER}
       )
   </if>
   </sql>

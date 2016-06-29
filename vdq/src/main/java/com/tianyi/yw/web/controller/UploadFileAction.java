@@ -522,6 +522,8 @@ public class UploadFileAction extends BaseAction {
 	private List<Device> getXSSFResult(Workbook wb) {
 		// TODO Auto-generated method stub
 		List<Device> result = new ArrayList<Device>();
+		List<Area> areaList = new ArrayList<Area>();
+		areaList = areaService.getAllAreaList();
 		for (int sheetIndex = 0; sheetIndex < wb.getNumberOfSheets(); sheetIndex++) {
 			XSSFSheet st = (XSSFSheet) wb.getSheetAt(sheetIndex);
 			// 第一行为标题，不取
@@ -561,15 +563,12 @@ public class UploadFileAction extends BaseAction {
 				}
 				XSSFCell cell7 = row.getCell(7);
 				if (cell7 != null || "".equals(cell7)) {
-					try {
-						cell7.setCellType(Cell.CELL_TYPE_STRING);
-						String s = cell7.getStringCellValue();
-						Integer i = Integer.valueOf(s);
-						point.setAreaId(i);
-						Area area = areaService.getAreaById(i);
-						point.setAreaName(area.getName());
-					} catch (Exception ex) {
-						ex.printStackTrace();
+					for(Area a:areaList){
+						if(a.getName().equals(cell7.getStringCellValue())){
+							point.setAreaId(a.getId());
+							point.setAreaName(a.getName());
+							break;
+						}
 					}
 				}
 				XSSFCell cell8 = row.getCell(8);
@@ -596,6 +595,8 @@ public class UploadFileAction extends BaseAction {
 	private List<Device> getHSSFResult(Workbook wb) {
 		// TODO Auto-generated method stub
 		List<Device> result = new ArrayList<Device>();
+		List<Area> areaList = new ArrayList<Area>();
+		areaList = areaService.getAllAreaList();
 		for (int sheetIndex = 0; sheetIndex < wb.getNumberOfSheets(); sheetIndex++) {
 			HSSFSheet st = (HSSFSheet) wb.getSheetAt(sheetIndex);
 			// 第一行为标题，不取
@@ -635,15 +636,12 @@ public class UploadFileAction extends BaseAction {
 				}
 				HSSFCell cell7 = row.getCell(7);
 				if (cell7 != null || "".equals(cell7)) {
-					try {
-						cell7.setCellType(Cell.CELL_TYPE_STRING);
-						String s = cell7.getStringCellValue();
-						Integer i = Integer.valueOf(s);
-						point.setAreaId(i);
-						Area area = areaService.getAreaById(i);
-						point.setAreaName(area.getName());
-					} catch (Exception ex) {
-						ex.printStackTrace();
+					for(Area a:areaList){
+						if(a.getName().equals(cell7.getStringCellValue())){
+							point.setAreaId(a.getId());
+							point.setAreaName(a.getName());
+							break;
+						}
 					}
 				}
 				HSSFCell cell8 = row.getCell(8);

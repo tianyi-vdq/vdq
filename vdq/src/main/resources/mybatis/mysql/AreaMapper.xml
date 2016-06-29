@@ -178,4 +178,9 @@
 		</set>	  	
   		where  ID = #{id,jdbcType=INTEGER}
   </update>
+  <select id="getAllAreaList" resultMap = "BaseResultMap">
+  	select
+  	<include refid="Base_Column_List"/>
+    from t_area t
+  </select>
 </mapper>
