@@ -206,6 +206,9 @@
      <if test="pointNumber != null" >
         and  t.POINT_NUMBER = #{pointNumber,jdbcType=VARCHAR}
     </if>
+     <if test="platformId != null" >
+        and  t.platform_id = #{platformId,jdbcType=VARCHAR}
+    </if>
     <if test="id != null" >
         and t.id != #{id,jdbcType=VARCHAR}
     </if>

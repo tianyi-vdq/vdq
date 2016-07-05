@@ -139,9 +139,10 @@ public class DeviceAction  extends BaseAction{
 			}
 					
 			//判断设备编号
-			if (device.getPointNumber() != null) {
+			if (device.getPointNumber() != null && device.getPlatformId() != null) {
 				Device d = new Device();
 				d.setPointNumber(device.getPointNumber());
+				d.setPlatformId(device.getPlatformId());
 				//如为编辑，则给新建device对象赋传来的设备id值
 				if (device.getId() > 0) {
 					d.setId(device.getId());
