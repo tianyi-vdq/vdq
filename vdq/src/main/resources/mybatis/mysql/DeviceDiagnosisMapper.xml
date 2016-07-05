@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tianyi.yw.dao.DeviceDiagnosisMapper" >
+  <resultMap id="BaseResultMap" type="com.tianyi.yw.model.DeviceDiagnosis" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="device_id" property="deviceId" jdbcType="INTEGER" />
+    <result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+    <result column="device_rtsp" property="deviceRtsp" jdbcType="VARCHAR" />
+    <result column="check_time" property="checkTime" jdbcType="DATE" />
+    <result column="end_time" property="endTime" jdbcType="DATE" />
+    <result column="check_times" property="checkTimes" jdbcType="INTEGER" />
+    <result column="check_result" property="checkResult" jdbcType="INTEGER" />
+    <result column="check_server_id" property="checkServerId" jdbcType="INTEGER" />
+    <result column="check_server" property="checkServer" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, device_id, device_name, device_rtsp, check_time, end_time, check_times, check_result, 
+    check_server_id, check_server
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_device_diagnosis
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_device_diagnosis
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tianyi.yw.model.DeviceDiagnosis" >
+    insert into t_device_diagnosis (id, device_id, device_name, 
+      device_rtsp, check_time, end_time, 
+      check_times, check_result, check_server_id, 
+      check_server)
+    values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=INTEGER}, #{deviceName,jdbcType=VARCHAR}, 
+      #{deviceRtsp,jdbcType=VARCHAR}, #{checkTime,jdbcType=DATE}, #{endTime,jdbcType=DATE}, 
+      #{checkTimes,jdbcType=INTEGER}, #{checkResult,jdbcType=INTEGER}, #{checkServerId,jdbcType=INTEGER}, 
+      #{checkServer,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tianyi.yw.model.DeviceDiagnosis" >
+    insert into t_device_diagnosis
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="deviceId != null" >
+        device_id,
+      </if>
+      <if test="deviceName != null" >
+        device_name,
+      </if>
+      <if test="deviceRtsp != null" >
+        device_rtsp,
+      </if>
+      <if test="checkTime != null" >
+        check_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="checkTimes != null" >
+        check_times,
+      </if>
+      <if test="checkResult != null" >
+        check_result,
+      </if>
+      <if test="checkServerId != null" >
+        check_server_id,
+      </if>
+      <if test="checkServer != null" >
+        check_server,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="deviceId != null" >
+        #{deviceId,jdbcType=INTEGER},
+      </if>
+      <if test="deviceName != null" >
+        #{deviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceRtsp != null" >
+        #{deviceRtsp,jdbcType=VARCHAR},
+      </if>
+      <if test="checkTime != null" >
+        #{checkTime,jdbcType=DATE},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=DATE},
+      </if>
+      <if test="checkTimes != null" >
+        #{checkTimes,jdbcType=INTEGER},
+      </if>
+      <if test="checkResult != null" >
+        #{checkResult,jdbcType=INTEGER},
+      </if>
+      <if test="checkServerId != null" >
+        #{checkServerId,jdbcType=INTEGER},
+      </if>
+      <if test="checkServer != null" >
+        #{checkServer,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tianyi.yw.model.DeviceDiagnosis" >
+    update t_device_diagnosis
+    <set >
+      <if test="deviceId != null" >
+        device_id = #{deviceId,jdbcType=INTEGER},
+      </if>
+      <if test="deviceName != null" >
+        device_name = #{deviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceRtsp != null" >
+        device_rtsp = #{deviceRtsp,jdbcType=VARCHAR},
+      </if>
+      <if test="checkTime != null" >
+        check_time = #{checkTime,jdbcType=DATE},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=DATE},
+      </if>
+      <if test="checkTimes != null" >
+        check_times = #{checkTimes,jdbcType=INTEGER},
+      </if>
+      <if test="checkResult != null" >
+        check_result = #{checkResult,jdbcType=INTEGER},
+      </if>
+      <if test="checkServerId != null" >
+        check_server_id = #{checkServerId,jdbcType=INTEGER},
+      </if>
+      <if test="checkServer != null" >
+        check_server = #{checkServer,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tianyi.yw.model.DeviceDiagnosis" >
+    update t_device_diagnosis
+    set device_id = #{deviceId,jdbcType=INTEGER},
+      device_name = #{deviceName,jdbcType=VARCHAR},
+      device_rtsp = #{deviceRtsp,jdbcType=VARCHAR},
+      check_time = #{checkTime,jdbcType=DATE},
+      end_time = #{endTime,jdbcType=DATE},
+      check_times = #{checkTimes,jdbcType=INTEGER},
+      check_result = #{checkResult,jdbcType=INTEGER},
+      check_server_id = #{checkServerId,jdbcType=INTEGER},
+      check_server = #{checkServer,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getList" parameterType="com.tianyi.yw.model.DeviceDiagnosis" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>
+  	from t_device_diagnosis
+  </select>
+</mapper>
