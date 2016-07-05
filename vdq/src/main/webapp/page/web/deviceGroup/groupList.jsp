@@ -196,7 +196,7 @@
 						<th>设备地址</th>
 						<th>IP地址</th> 
 						<th>所属区域</th> 
-						<th>操作</th> 
+						<th>操作</th>    
 					</tr>
 					<c:forEach var="item" items="${Devicelist}">
 						<tr>
@@ -210,8 +210,7 @@
 							<td>${item.address}</td>
 							<td>${item.ipAddress}</td>
 							<td>${item.areaName}</td>
-							<td><span class="yw-btn bg-orange cur"
-								onclick="deleteMemberById(${item.id},${item.groupId});">×</span></td>
+							<td><a href="javascript:void(0);" onclick="deleteMemberById(${item.id},${item.groupId});">删除</a></td>
 						</tr>
 					</c:forEach>
 				</table>

@@ -119,17 +119,17 @@ function saveTask(obj){
                          	</td>
                          	 </tr>
 						<tr>
-							<td align="right">运行时间：</td>
+							<td align="right">执行次数：</td>
 							<td><input id="runTimes" name="runTimes" doc="taskInfo" onblur="valueTrim(this);" type="text" value="${Task.runTimes}" class="easyui-validatebox"  required="true"   validType="number" style="width:254px;height:28px;"/>
                            <%--  <input name="runTimes" doc="taskInfo" type="hidden" value="${task.runTimes}"/> --%>
                         	<span style="color:red">*</span> </td>
 						</tr>
-						<tr>
+						<%-- <tr>
 							<td align="right">运行次数：</td>
 							<td><input id="runCount" name="runCount" onblur="valueTrim(this);" doc="taskInfo" type="text" value="${Task.runCount}" class="easyui-validatebox"  required="true"   validType="number" style="width:254px;height:28px;"/>
                             <span style="color:red">*</span>
                         	</td>
-                         </tr> 
+                         </tr>  --%>
                          <tr>
 							<td align="right">是否执行：</td>
 							<td>

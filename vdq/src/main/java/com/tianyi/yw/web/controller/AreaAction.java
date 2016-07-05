@@ -130,8 +130,8 @@ public class AreaAction  extends BaseAction {
 		list = areaService.getAreaListByParentId(area);
 		for(Area a:list){
 			a.setText(a.getName());
-			if(a.getChildrenCount() > 0){
-				a.setState("closed");
+			if(a.getChildrenCount() > 0){ 
+				a.setState("closed"); 
 			}else{
 				a.setChildren(new ArrayList<Area>());
 				a.setState("open");

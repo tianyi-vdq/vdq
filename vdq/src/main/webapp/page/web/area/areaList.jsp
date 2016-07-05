@@ -40,11 +40,17 @@
    				 },
    				 onLoadSuccess:function(){
 					showProcess(false); 
+			 
+   				    var root = $("#treeList").tree("getRoot");
+   				 	if(root!= null){
+   				 		$("#treeList").tree("expand",root.target);
+   				 	}  
    				    var aId = $.trim($("#hid_areaId").val());
    				 	if(aId.length>0){
    				 		var node = $("#treeList").tree("find",aId); 
 						$('#treeList').tree("select", node.target);
-   				 	} 
+   				 	}  
+   				  
    				 }
 			}); 
 			//loadCompanyList();

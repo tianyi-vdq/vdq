@@ -126,6 +126,47 @@ function sltSchEtime(date){
 	    }  
 	}); 
 }   
+function deleteTask(id){
+	$.messager.confirm("删除确认","确认删除该任务?",function(r){  
+		    if (r){   
+			$.ajax({
+				url : "jsondeleteTaskById.do?id="+id,
+				type : "post",  
+		    	dataType : "json",								
+				success : function(data) { 									
+		  			if(data.code == 0){ 
+		  				$.messager.alert('操作信息',data.message,'info',function(){ 
+		  					search();  
+		      			});
+		  			}else{		  			    
+						$.messager.alert('错误信息','删除失败！','error');
+		  			}  
+			    } 
+			});
+	    }  
+	}); 
+}
+function StopTask(id){
+	$.messager.confirm("终止确认","确认立即终止该任务?",function(r){  
+			    if (r){   
+				$.ajax({
+					url : "jsonloadTaskStop.do?id="+id,
+					type : "post",  
+			    	dataType : "json",								
+					success : function(data) { 									
+			  			if(data.code == 0){ 
+			  				$.messager.alert('操作信息',data.message,'info',function(){ 
+			  					search(); 
+			  					//window.location.href="taskList.do";
+			      		});
+			  			}else{		  			    
+							$.messager.alert('错误信息','任务终止失败！','error');
+			  			}  
+				    } 
+				});
+		    }  
+		}); 
+}
 </script>
 </head>
 <body>
@@ -167,13 +208,13 @@ function sltSchEtime(date){
 				<table class="yw-cm-table yw-center yw-bg-hover" id="taskList">
 					<tr style="background-color:#D6D3D3;font-weight: bold;">
 						<th width="4%" style="display:none">&nbsp;</th>
-						<th width="8%" >任务名称</th> 
+						<th width="12%" >任务名称</th> 
 						<th width="10%" >启动时间</th> 
-						<th width="8%" >执行间隔</th>
-						<th width="8%" >执行次数</th>
-						<th width="8%" >诊断并发路数</th> 
-				 		<th>诊断项目</th>  
-						<th width="8%">是否立即执行</th>					
+						<th width="10%" >执行间隔</th>
+						<th width="10%" >执行次数</th>
+						<!-- <th width="8%" >诊断并发路数</th>  -->
+				 		<th style="text-align: left" >诊断项目</th>  
+						<th width="8%">操作</th>					
 					<!--  	<th width="8%" >删除任务</th> -->
 					</tr>
 					<c:forEach var="item" items="${Tasklist}">
@@ -183,15 +224,23 @@ function sltSchEtime(date){
 							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.startTimes}</td> 
 							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.runIntervals}</td> 
 							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.runTimes}</td> 
-							<td align="right" onclick="window.location.href='taskI nfo.do?id=${item.id}'" >${item.runCount}</td>  						  
+						<%-- 	<td align="right" onclick="window.location.href='taskI nfo.do?id=${item.id}'" >${item.runCount}</td>   --%>						  
 							<td style="text-align: left" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.itemTypeName}</td>  							  
 							<td align="left">							
 							<c:if test="${item.flag == 0 && Task.flagCount == 0}">
 						<%-- 	<input id="runTaskId" name="runTaskId" value="${item.id}" type="hidden" />		 --%>					
-							<span class="yw-btn bg-orange cur" onclick="runTask(${item.id});">立即执行</span>							
+								<a style="color:blue"  onclick="runTask(${item.id});">立即执行</a>							
+								<a style="color:blue;margin-left:15px;"  onclick="runTask(${item.id});">删除</a>											
 							</c:if>
 
-                            <c:if test="${item.flag == 1 && Task.flagCount == 1}">正在执行中...</c:if> 
+                            <c:if test="${item.flag == 1 && Task.flagCount == 1}">
+                            	<a style="color:blue" onclick="StopTask(${item.id});">停止</a>			 
+                            </c:if> 
+
+                            <c:if test="${item.flag == 0 && Task.flagCount == 1}">						
+								<a style="color:blue"  onclick="window.location.href='taskInfo.do?id=${item.id}'">详情</a>							
+								<a style="color:blue;margin-left:15px;"  onclick="deleteTask(${item.id});">删除</a>				 
+                            </c:if> 
 							</td>
 					 	 <%--    <td><span class="yw-btn bg-orange cur" onclick="deleteTask(${item.id});">×</span></td>  --%>
 						</tr>

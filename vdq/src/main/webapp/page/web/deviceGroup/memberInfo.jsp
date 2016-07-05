@@ -37,14 +37,13 @@ $(document).ready(function(){
 				 checkbox:true,
 				 onBeforeExpand:function(node){
    				 	$('#treeList').tree('options').url = 'area/jsonLoadAreaTreeList.do?pid='+ node.id;
-   				 }
-				 /* onLoadSuccess:function(){
-   				    var aId = $.trim($("#hid_areaId").val());
-   				 	if(aId.length>0){
-   				 		var node = $("#treeList").tree("find",aId); 
-						$('#treeList').tree("select", node.target);
+   				 },
+				 onLoadSuccess:function(){
+   				    var root = $("#treeList").tree("getRoot");
+   				 	if(root!= null){
+   				 		$("#treeList").tree("expand",root.target);
    				 	}  
-   				 } */
+   				 }
 			}); 
 	});
 	PageClick = function(pageclickednumber) {
@@ -243,27 +242,32 @@ $(document).ready(function(){
 			</form>
 		</div>
 		<div class="fl">
-			<div class="fl yw-lump wid250 mt10">
+			<div class="fl yw-lump wid15-percent mt10">
 				<div class="yw-cm-title">
 					<span class="ml26">查询条件</span>
 				</div>
-				<div class="yw-tree-list" style="height: 639px;">
+				<div class="yw-tree-list" style="height: 639px; width:100%">
 					<span>区域：</span><ul id="treeList" ></ul>
-					<span>设备名称:</span><input id="deviceName" type="text"/><br>
-					<span>设备编号:</span><input id="deviceNumber" type="text"/><br>
-					<input type="button" value="查询" onclick="getDeviceListByConditions();"/>
+					<span>设备名称:</span><input id="deviceName" class="easyui-validatebox" type="text" style="width:80%"/><br>
+					<span>设备编号:</span><input id="deviceNumber" class="easyui-validatebox"  type="text" style="width:80%"/><br>
+					<span class="yw-btn bg-red mr26 mt20" onclick="getDeviceListByConditions();">查询</span> 
 				</div>
 			</div>
-			<div class="yw-lump wid-atuo ml260 mt10">
+			<div class="fl yw-lump wid83-percent mt10 ml20"> 
 				<table id="allDeviceList" class="yw-cm-table yw-center yw-bg-hover" style="width:49%;float:left;">
+					<tr style="background-color:#D6D3D3;font-weight: bold;"> 
+						<td colspan="6" style="text-align:left;  border-right:1px #E4E9EF solid;" > 
+							<span>区域点位列表</span> 
+						</td>
+					</tr>
 					<tr style="background-color:#D6D3D3;font-weight: bold;">
-						<th width="4%" style="display:none"></th>
+						<th width="4%" style="display:none"></th>	
 						<th>操作</th>
 						<th>设备ID</th>
 						<th>设备编号</th>
 						<th>设备名称</th>
 						<th>IP地址</th> 
-						<th>所属区域</th> 
+						<th style="border-right:1px #E4E9EF solid;">所属区域</th> 
 					</tr>
 					<c:forEach var="item" items="${DeviceAlllist}">
 						<tr>
@@ -273,19 +277,27 @@ $(document).ready(function(){
 							<td>${item.pointNumber}</td>
 							<td>${item.pointName}</td>
 							<td>${item.ipAddress}</td>
-							<td>${item.areaName}</td>
+							<td style="border-right:1px #E4E9EF solid;">${item.areaName}</td>
 						</tr>
 					</c:forEach>
+					<tr>
+						<td colspan="5"> 
+							<input type="hidden" id="pageNum" name="pageNum"/>	
+							<div class="page" id="pager1"></div>
+						</td>
+					</tr>
+					
 				</table>
-				<input type="hidden" id="pageNum" name="pageNum"/>	
-				<div class="page" id="pager1"></div>
-			</div>
-			<div class="yw-lump wid-atuo ml260 mt10">
-				<table id = "existDeviceList" class="yw-cm-table yw-center yw-bg-hover" style="width:49%;float:right;">
+				<table id = "existDeviceList" class="yw-cm-table yw-center yw-bg-hover" style="width:50%;float:left;margin-left:5px;">
+					<tr style="background-color:#D6D3D3;font-weight: bold;">
+						<td colspan="5" style="text-align:left;border-left:1px #E4E9EF solid;"> 
+							<span>分组成员</span> 
+						</td>
+					</tr>
 					<tr style="background-color:#D6D3D3;font-weight: bold;">
 						<th width="4%" style="display:none"></th>
 						<th width="4%" style="display:none"></th>
-						<th>设备ID</th>
+						<th style="border-left:1px #E4E9EF solid;">设备ID</th>
 						<th>设备编号</th>
 						<th>设备名称</th>
 						<th>IP地址</th> 
@@ -295,18 +307,22 @@ $(document).ready(function(){
 						<tr>
 							<td width="4%" align="center" style="display:none">${item.id}</td>
 							<td width="4%" align="center" style="display:none">${group.id}</td>
-							<td align="left">${item.pointId}</td>
+							<td style="border-left:1px #E4E9EF solid;" align="left">${item.pointId}</td>
 							<td>${item.pointNumber}</td>
 							<td>${item.pointName}</td>
 							<td>${item.ipAddress}</td>
 							<td>${item.areaName}</td>
 						</tr>
 					</c:forEach>
+						<tr style="height:35px;">
+							<td colspan="5">
+								<input type="hidden" id="pageNumber" name="pageNo"
+									value="${device.pageNo}" />
+								<div class="page" id="pager"></div>
+							</td>
+						</tr>
 				</table>
-				<input type="hidden" id="pageNumber" name="pageNo"
-					value="${device.pageNo}" />
-				<div class="page" id="pager"></div>
-			</div>
+			</div> 
 		</div>
 	</div>	
 </body>

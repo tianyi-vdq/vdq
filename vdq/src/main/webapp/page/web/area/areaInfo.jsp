@@ -77,7 +77,7 @@
 			   				 	 }   
 		   				 	 }
    				 },
-   				 onLoadSuccess:function(){
+   				 onLoadSuccess:function(){ 
 					//$("#cmbParentArea").combotree("disable",true);
 					var parentId = $("#parentId").val();
 					var parentName = $("#parentName").val();

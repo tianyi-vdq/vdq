@@ -102,4 +102,34 @@
 
     <bean class="com.tianyi.yw.web.spring.SpringUtils"/>
     <import resource="classpath:spring/spring-config-shiro.xml"/>
+    
+    
+    <bean id="myScheduler"
+        class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="myTriggersA"></ref> 
+            </list>
+        </property>
+        <property name="autoStartup" value="true"></property>
+    </bean>
+     <bean id="myTriggersA"
+        class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="myJobDetailA">
+        </property>
+        <property name="cronExpression">
+            <value>0/30 * * * * ?</value>
+        </property>
+    </bean>
+    
+     <bean id="myJobDetailA"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="myJobA">
+        </property>
+        <property name="targetMethod" value="work"></property>
+        <property name="concurrent" value="false" />
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+    </bean>
+    
+    <bean id="myJobA" class="com.tianyi.yw.QuartzJob.MyJobA"> </bean>
 </beans>

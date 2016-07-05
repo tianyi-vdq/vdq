@@ -38,6 +38,7 @@
 .mb20{margin-bottom:20px;}
 
 .pl26{padding-left:26px;}
+.pd5{padding:5px;}
 .pd10{padding:10px;}
 .pd18{padding:18px;}
 .pd2-5{padding:2px 5px;}
@@ -58,10 +59,13 @@
 .wid250{width:250px !important;}
 .wid258{width:258px !important;}
 .wid300{width:300px !important;}
+.wid350{width:350px !important;}
+.wid15-percent{width:15% !important;}
 .wid20-percent{width:20% !important;}
 .wid60-percent{width:60% !important;}
 .wid70-percent{width:70% !important;}
 .wid80-percent{width:80% !important;}
+.wid83-percent{width:83% !important;}
 .line-hei22{line-height:22px !important;}
 .line-hei30{line-height:30px !important;}
 .line-hei32{line-height:32px !important;}

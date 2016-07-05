@@ -232,5 +232,61 @@ public class TaskAction extends BaseAction {
 		}
 		return js;
 	}
+	
 
+	 /**
+	 * 任务停止
+	 * 
+	 * @param task
+	 * @param request
+	 * @param response
+	 * {@value id}
+	 * @return js
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/jsonloadTaskStop.do", method = RequestMethod.POST, produces = { "text/html;charset=UTF-8" })
+	public JsonResult<Task> jsonloadTaskStop(
+			@RequestParam(value = "id", required = false) Integer id,
+			HttpServletRequest request, HttpServletResponse response) {
+		JsonResult<Task> js = new JsonResult<Task>();
+		js.setCode(new Integer(1));
+		js.setMessage("任务终止失败!");
+		try {
+			Task task = taskService.getTaskById(id);
+			task.setFlag(0);
+			taskService.saveOrUpdateTask(task);
+			js.setCode(new Integer(0));
+			js.setMessage("任务终止成功!");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return js;
+	}
+	 /**
+	 * 删除执行
+	 * 
+	 * @param task
+	 * @param request
+	 * @param response
+	 * {@value id}
+	 * @return js
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/jsondeleteTaskById.do", method = RequestMethod.POST, produces = { "text/html;charset=UTF-8" })
+	public JsonResult<Task> jsondeleteTaskById(
+			@RequestParam(value = "id", required = true) Integer id,
+			HttpServletRequest request, HttpServletResponse response) {
+		JsonResult<Task> js = new JsonResult<Task>();
+		js.setCode(new Integer(1));
+		js.setMessage("删除失败!");
+		try { 
+			taskService.deleteTaskById(id);
+			js.setCode(new Integer(0));
+			js.setMessage("删除成功!");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return js;
+	}
+	
 }
