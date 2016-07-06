@@ -3,19 +3,19 @@ package com.tianyi.yw.dao;
 import java.util.List;
 
 import com.tianyi.yw.model.DeviceDiagnosis;
-
+@MyBatisRepository
 public interface DeviceDiagnosisMapper {
-    int deleteByPrimaryKey(Integer id);
+    void deleteByPrimaryKey(Integer id);
 
-    int insert(DeviceDiagnosis record);
+    void insert(DeviceDiagnosis record);
 
-    int insertSelective(DeviceDiagnosis record);
+    void insertSelective(DeviceDiagnosis record);
 
     DeviceDiagnosis selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(DeviceDiagnosis record);
+    void updateByPrimaryKeySelective(DeviceDiagnosis record);
 
-    int updateByPrimaryKey(DeviceDiagnosis record);
+    void updateByPrimaryKey(DeviceDiagnosis record);
 
 	List<DeviceDiagnosis> getList(DeviceDiagnosis deviceDiagnosis);
 }

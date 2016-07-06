@@ -3,19 +3,19 @@ package com.tianyi.yw.dao;
 import java.util.List;
 
 import com.tianyi.yw.model.Server;
-
+@MyBatisRepository
 public interface ServerMapper {
-    int deleteByPrimaryKey(Integer id);
+	void deleteByPrimaryKey(Integer id);
 
-    int insert(Server record);
+	void insert(Server record);
 
-    int insertSelective(Server record);
+	void insertSelective(Server record);
 
     Server selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(Server record);
+    void updateByPrimaryKeySelective(Server record);
 
-    int updateByPrimaryKey(Server record);
+    void updateByPrimaryKey(Server record);
 
 	List<Server> getList(Server server);
 }
