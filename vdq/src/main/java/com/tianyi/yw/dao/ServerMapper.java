@@ -18,4 +18,6 @@ public interface ServerMapper {
     void updateByPrimaryKey(Server record);
 
 	List<Server> getList(Server server);
+	
+	 Server selectByIp(Server server);
 }

@@ -16,15 +16,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
+
+
+
 import com.tianyi.yw.common.JsonResult;
 import com.tianyi.yw.model.Device;
 import com.tianyi.yw.model.DeviceDiagnosis;
 import com.tianyi.yw.model.Log;
 import com.tianyi.yw.model.Parame;
+import com.tianyi.yw.model.Server;
 import com.tianyi.yw.model.Task;
 import com.tianyi.yw.service.DeviceService;
+import com.tianyi.yw.service.DignosisService;
 import com.tianyi.yw.service.LogService;
 import com.tianyi.yw.service.ParamService;
+import com.tianyi.yw.service.ServerService;
 import com.tianyi.yw.service.TaskService;
 
 @Scope("prototype")
@@ -38,11 +44,17 @@ public class DataUtilAction {
 	@Resource(name = "logService")
 	private LogService logService;
 	
+	@Resource
+	private DignosisService diagnosisService;
 
 	@Resource
 	private DeviceService deviceService;
+	
 	@Resource
 	private ParamService parameService;
+	
+	@Resource
+	private ServerService serverService;
 	
 	/** 
 	 * 日志写入接口
@@ -149,16 +161,85 @@ public class DataUtilAction {
 		return js;
 	} 
 	
-	
+	/**
+	 * 服务器分配
+	 * @param count
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@ResponseBody
-	@RequestMapping(value = "/jsonLoadDeviceDiagnosisList.do", produces = { "text/html;charset=UTF-8" })
-	public JsonResult<DeviceDiagnosis>  DeviceDiagnosisList(
+	@RequestMapping(value = "/jsonLoadDiagnosisList.do", produces = { "text/html;charset=UTF-8" })
+	public JsonResult<DeviceDiagnosis>  DiagnosisList(
 			@RequestParam(value = "count", required = false) Integer count,
 			HttpServletRequest request,HttpServletResponse response) {
+		DeviceDiagnosis dg = new DeviceDiagnosis();
+		Server server = new Server();
 		JsonResult<DeviceDiagnosis> js = new JsonResult<DeviceDiagnosis>();
-		js.setCode(new Integer(1));
-		js.setMessage("加载参数列表失败!");
-		
+		List<DeviceDiagnosis> dglist = new ArrayList<DeviceDiagnosis>();
+		js.setCode(1);
+		js.setMessage("加载数据失败!");
+		//dg.setCountSize(8);
+		if(count == null)
+			count = 10;
+		if(count != null && count < 10){
+			try{
+				dg.setCountSize(10-count);
+				dglist = diagnosisService.getList(dg);
+				String ip = getIpAddress(request);
+				if(dglist.size() != 0){
+					for(DeviceDiagnosis d:dglist){
+						d.setCheckTime(new Date());
+						if(ip != null){
+							server.setIpaddress(ip);
+							server = serverService.selectByIp(server);
+							if(server.getId() != null){
+								d.setCheckServerId(server.getId());
+							}else{
+								js.setMessage("无权访问!");
+								return js;
+							}
+							
+							diagnosisService.updatebyselective(d);
+						}else{
+							js.setMessage("ip获取失败!");
+							return js;
+						}						
+					}
+					js.setCode(0);
+					js.setMessage("加载数据成功!");
+					js.setList(dglist);
+				}
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}			
+		}
 		return js;
-	} 
+	}
+	
+	  /**
+	   * request获取ip
+	   * @param request
+	   * @return
+	   */
+	  public static String getIpAddress(HttpServletRequest request) { 
+		    String ip = request.getHeader("x-forwarded-for"); 
+		    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+		      ip = request.getHeader("Proxy-Client-IP"); 
+		    } 
+		    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+		      ip = request.getHeader("WL-Proxy-Client-IP"); 
+		    } 
+		    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+		      ip = request.getHeader("HTTP_CLIENT_IP"); 
+		    } 
+		    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+		      ip = request.getHeader("HTTP_X_FORWARDED_FOR"); 
+		    } 
+		    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+		      ip = request.getRemoteAddr(); 
+		    } 
+		    return ip; 
+		  } 
+
 }

@@ -24,6 +24,8 @@ public class DeviceDiagnosis {
     private String checkServer;
     
     private Integer taskId;
+    
+    private Integer countSize;
 
     public Integer getId() {
         return id;
@@ -111,5 +113,13 @@ public class DeviceDiagnosis {
 
 	public void setTaskId(Integer taskId) {
 		this.taskId = taskId;
+	}
+
+	public Integer getCountSize() {
+		return countSize;
+	}
+
+	public void setCountSize(Integer countSize) {
+		this.countSize = countSize;
 	}
 }

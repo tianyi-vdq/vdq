@@ -106,4 +106,10 @@
   	from t_server
   	where status = 1 and flag = 1
   </select>
+  <select id="selectByIp" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Server" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_server
+    where  ipaddress = #{ipaddress,jdbcType=VARCHAR}
+  </select>
 </mapper>
