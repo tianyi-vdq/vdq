@@ -18,4 +18,9 @@ public interface DignosisService {
 	
 	DeviceDiagnosis selectByPrimaryKey(int deviceDiagnosisId);
 
+	com.tianyi.yw.model.DeviceDiagnosis getExistDiagnosis(
+			com.tianyi.yw.model.DeviceDiagnosis dg);
+
+	DiagnosisItemType getExistDiagnosisType(Integer itemTypeId);
+
 }

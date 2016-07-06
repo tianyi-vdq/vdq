@@ -24,6 +24,12 @@
 	select * from t_item_type_value
 </select>
 
+<!-- 查询Diagnosis诊断标准的信息 by typeId-->
+<select id="getExistDiagnosisType" parameterType="java.lang.Integer" resultMap="DiagnosisRst">
+	select * from t_item_type_value
+	where item_type_id = #{itemTypeId}
+</select>
+
 <!-- 通过id查询任务类型的信息 -->
 <select id="getValueInfoByID"  resultMap="TaskTypeRst">
 	select * from t_task_item_type where id=#{item_type_id};

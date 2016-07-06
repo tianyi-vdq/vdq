@@ -57,4 +57,16 @@ public class DignosisServiceImpl implements DignosisService {
 		return deviceDiagnosisMapper.selectByPrimaryKey(deviceDiagnosisId);
 	}
 
+	@Override
+	public DeviceDiagnosis getExistDiagnosis(DeviceDiagnosis dg) {
+		// TODO Auto-generated method stub
+		return deviceDiagnosisMapper.getExistDiagnosis(dg);
+	}
+
+	@Override
+	public DiagnosisItemType getExistDiagnosisType(Integer itemTypeId) {
+		// TODO Auto-generated method stub
+		return diagnosisItemTypeMapper.getExistDiagnosisType(itemTypeId);
+	}
+
 }

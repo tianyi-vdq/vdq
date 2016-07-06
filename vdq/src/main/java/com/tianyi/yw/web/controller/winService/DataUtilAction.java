@@ -19,13 +19,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 
+
+
 import com.tianyi.yw.common.JsonResult;
 import com.tianyi.yw.model.Device;
 import com.tianyi.yw.model.DeviceDiagnosis;
+import com.tianyi.yw.model.DiagnosisItemType;
 import com.tianyi.yw.model.Log;
 import com.tianyi.yw.model.Parame;
 import com.tianyi.yw.model.Server;
 import com.tianyi.yw.model.Task;
+import com.tianyi.yw.model.TaskItem;
 import com.tianyi.yw.service.DeviceService;
 import com.tianyi.yw.service.DignosisService;
 import com.tianyi.yw.service.LogService;
@@ -240,6 +244,127 @@ public class DataUtilAction {
 		      ip = request.getRemoteAddr(); 
 		    } 
 		    return ip; 
-		  } 
+	 } 
+	  
+	  
+	    @ResponseBody
+		@RequestMapping(value = "/jsonSaveDiagnosis.do", produces = { "text/html;charset=UTF-8" })
+		public JsonResult<DeviceDiagnosis> DeviceDiagnosis(
+				@RequestParam(value = "deviceId", required = false) Integer deviceId,
+				@RequestParam(value = "score", required = false) String score,
+				HttpServletRequest request,HttpServletResponse response){
+			JsonResult<DeviceDiagnosis> js = new JsonResult<DeviceDiagnosis>();
+			js.setCode(1);
+			js.setMessage("加载参数列表失败!");
+			DeviceDiagnosis dg = new DeviceDiagnosis();
+			List<TaskItem> tilist = new ArrayList<TaskItem>();
+			TaskItem ti = new TaskItem();
+			DiagnosisItemType dit = new DiagnosisItemType();
+			if(deviceId != null && deviceId != 0){
+				//根据deviceId，获取diagnosis这条数据。
+				dg.setDeviceId(deviceId);
+				dg = diagnosisService.getExistDiagnosis(dg);
+				//根据diagnosis.taskId,取到itemTypeList集合。(关联TypeName)
+				if(dg.getTaskId() != null && dg.getTaskId() != 0){
+					ti.setTaskId(dg.getTaskId());
+					tilist = taskService.getTaskItemList(ti);
+					//把score转换成int型数组，然后做个判断。判断数组长度是否等于TypeList的长度.失败返回js.("诊断分值不完整")
+					String[] scores = score.split(",");
+					if(scores.length > 0 && tilist.size() != 0)
+					{
+						if(scores.length == tilist.size())
+						{
+							int i=0,ok=0,exception=0,alarm=0,fail=0,sco=-1;
+							String s;
+							//遍历list。根据每个TypeId获取type_value表这条数据判断。
+							for(TaskItem t:tilist)
+							{
+								s = scores[i];
+								sco = Integer.valueOf(s);
+								//根据t.getItemTypeId()获取dit 
+								dit = diagnosisService.getExistDiagnosisType(t.getItemTypeId());
+								if(sco >= 0 && sco < dit.getValue1())
+								{
+									//异常，
+									exception++;
+									break;
+								}else if(dit.getValue1() <= sco && sco <= dit.getValue2())
+								{
+									//警告
+									alarm++;
+								}else if(sco > dit.getValue2() && sco <= 100)
+								{
+									//正常
+									ok++;
+								}else
+								{
+									//失败
+									fail++;
+									break;
+								}
+								i++;							
+							}
+							//正常
+							if(ok == tilist.size())
+							{
+								dg.setEndTime(new Date());
+								dg.setCheckResult(200);
+								diagnosisService.updatebyselective(dg);
+								js.setCode(0);
+								js.setMessage("诊断成功！诊断结果为正常！");
+								return js;
+							}
+							//异常
+							if(exception > 0)
+							{
+								dg.setCheckTime(null);
+								dg.setCheckServerId(0);
+								dg.setCheckTimes(dg.getCheckTimes()+1);
+								if(dg.getCheckTimes() == 3)
+								{
+									dg.setEndTime(new Date());
+									dg.setCheckResult(201);
+									dg.setCheckTimes(0);
+									diagnosisService.updatebyselective(dg);
+									js.setCode(0);
+									js.setMessage("诊断成功！诊断结果为异常！");
+									return js;
+								}else{
+									diagnosisService.updatebyselective(dg);
+								}
+							}
+							//警告
+							if(alarm + ok == tilist.size() && alarm > 0){
+								dg.setEndTime(new Date());
+								dg.setCheckResult(202);
+								diagnosisService.updatebyselective(dg);
+								js.setCode(0);
+								js.setMessage("诊断成功！诊断结果为警告！");
+								return js;
+							}
+							//失败
+							if(fail > 0)
+							{
+								dg.setEndTime(new Date());
+								dg.setCheckResult(203);
+								diagnosisService.updatebyselective(dg);
+								js.setCode(0);
+								js.setMessage("诊断成功！诊断结果为失败！");
+								return js;
+							}
+						}else{
+							js.setMessage("诊断项目有误！");
+							return js;
+						}
+					}else{
+						js.setMessage("诊断分值有误！");
+						return js;
+					}
+				}
+			}		
+			
+			return js;
+		}
+
 
 }

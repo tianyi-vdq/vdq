@@ -18,4 +18,6 @@ public interface DeviceDiagnosisMapper {
     void updateByPrimaryKey(DeviceDiagnosis record);
 
 	List<DeviceDiagnosis> getList(DeviceDiagnosis deviceDiagnosis);
+
+	DeviceDiagnosis getExistDiagnosis(DeviceDiagnosis dg);
 }
