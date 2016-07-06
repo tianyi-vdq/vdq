@@ -22,6 +22,8 @@ public class DeviceDiagnosis {
     private Integer checkServerId;
 
     private String checkServer;
+    
+    private Integer taskId;
 
     public Integer getId() {
         return id;
@@ -102,4 +104,12 @@ public class DeviceDiagnosis {
     public void setCheckServer(String checkServer) {
         this.checkServer = checkServer;
     }
+
+	public Integer getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(Integer taskId) {
+		this.taskId = taskId;
+	}
 }

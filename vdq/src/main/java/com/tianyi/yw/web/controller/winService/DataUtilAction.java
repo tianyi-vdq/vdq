@@ -1,9 +1,6 @@
 package com.tianyi.yw.web.controller.winService;
 
  
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,17 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
-
-
-
-
-
-
-
-
-
 import com.tianyi.yw.common.JsonResult;
 import com.tianyi.yw.model.Device;
+import com.tianyi.yw.model.DeviceDiagnosis;
 import com.tianyi.yw.model.Log;
 import com.tianyi.yw.model.Parame;
 import com.tianyi.yw.model.Task;
@@ -157,6 +146,19 @@ public class DataUtilAction {
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
+		return js;
+	} 
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/jsonLoadDeviceDiagnosisList.do", produces = { "text/html;charset=UTF-8" })
+	public JsonResult<DeviceDiagnosis>  DeviceDiagnosisList(
+			@RequestParam(value = "count", required = false) Integer count,
+			HttpServletRequest request,HttpServletResponse response) {
+		JsonResult<DeviceDiagnosis> js = new JsonResult<DeviceDiagnosis>();
+		js.setCode(new Integer(1));
+		js.setMessage("加载参数列表失败!");
+		
 		return js;
 	} 
 }

@@ -12,10 +12,11 @@
     <result column="check_result" property="checkResult" jdbcType="INTEGER" />
     <result column="check_server_id" property="checkServerId" jdbcType="INTEGER" />
     <result column="check_server" property="checkServer" jdbcType="VARCHAR" />
+    <result column="task_id" property="taskId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, device_id, device_name, device_rtsp, check_time, end_time, check_times, check_result, 
-    check_server_id, check_server
+    check_server_id, check_server,task_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -31,11 +32,11 @@
     insert into t_device_diagnosis (id, device_id, device_name, 
       device_rtsp, check_time, end_time, 
       check_times, check_result, check_server_id, 
-      check_server)
+      check_server,task_id)
     values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=INTEGER}, #{deviceName,jdbcType=VARCHAR}, 
       #{deviceRtsp,jdbcType=VARCHAR}, #{checkTime,jdbcType=DATE}, #{endTime,jdbcType=DATE}, 
       #{checkTimes,jdbcType=INTEGER}, #{checkResult,jdbcType=INTEGER}, #{checkServerId,jdbcType=INTEGER}, 
-      #{checkServer,jdbcType=VARCHAR})
+      #{checkServer,jdbcType=VARCHAR}, #{taskId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tianyi.yw.model.DeviceDiagnosis" >
     insert into t_device_diagnosis
@@ -70,6 +71,9 @@
       <if test="checkServer != null" >
         check_server,
       </if>
+       <if test="taskId != null" >
+        task_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -101,6 +105,9 @@
       </if>
       <if test="checkServer != null" >
         #{checkServer,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -134,6 +141,9 @@
       <if test="checkServer != null" >
         check_server = #{checkServer,jdbcType=VARCHAR},
       </if>
+      <if test="taskId != null" >
+        task_id = #{taskId,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -147,7 +157,8 @@
       check_times = #{checkTimes,jdbcType=INTEGER},
       check_result = #{checkResult,jdbcType=INTEGER},
       check_server_id = #{checkServerId,jdbcType=INTEGER},
-      check_server = #{checkServer,jdbcType=VARCHAR}
+      check_server = #{checkServer,jdbcType=VARCHAR},
+      task_id = #{taskId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="getList" parameterType="com.tianyi.yw.model.DeviceDiagnosis" resultMap="BaseResultMap">
