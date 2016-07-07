@@ -182,9 +182,6 @@ public class DataUtilAction {
 		return js;
 	}
 	
-	
-	  
-	
 	  
 	  /**
 	   * 根据任务id，获取结果诊断项

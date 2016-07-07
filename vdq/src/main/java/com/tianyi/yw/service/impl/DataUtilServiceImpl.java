@@ -316,7 +316,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 							{
 								dg.setEndTime(new Date());
 								dg.setCheckResult(2);
-								//dg.setCheckTimes(0);
+								dg.setCheckTimes(0);
 								//更新临时表相关数据
 						       	diagnosisService.updatebyselective(dg);
 								ds.setCreateTime(new Date());
@@ -343,7 +343,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 							{
 								dg.setEndTime(new Date());
 								dg.setCheckResult(3);
-								//dg.setCheckTimes(0);
+								dg.setCheckTimes(0);
 								//更新临时表相关数据
 						       	diagnosisService.updatebyselective(dg);								
 								ds.setCreateTime(new Date());
@@ -373,14 +373,9 @@ public class DataUtilServiceImpl implements DataUtilService {
 							{
 								dg.setEndTime(new Date());
 								dg.setCheckResult(4);
-								//dg.setCheckTimes(0);
+								dg.setCheckTimes(0);
 								//更新临时表相关数据
-								try{
-							    	diagnosisService.updatebyselective(dg);
-								}catch(Exception ex){
-									logService.writeLog(logType, "更新临时表数据失败！");
-									ex.printStackTrace();				
-								}
+						    	diagnosisService.updatebyselective(dg);							
 								ds.setCreateTime(new Date());
 								ds.setId(0);
 								//存入设备状态
@@ -398,7 +393,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 							}
 					}
 				}else{
-					js.setMessage("诊断分值有误！");
+					js.setMessage("参数诊断分值有误！");
 					return js;
 				}
 			}
