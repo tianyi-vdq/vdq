@@ -20,5 +20,7 @@ public interface TaskItemMapper {
     List<TaskItem> getTaskItemList(TaskItem taskItem);
 
 	void deleteItemByTaskId(Integer id);
+
+	List<TaskItem> getTaskItemListById(TaskItem taskItem);
     
 }
