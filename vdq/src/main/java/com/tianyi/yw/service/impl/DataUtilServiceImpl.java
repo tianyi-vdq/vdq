@@ -1,8 +1,12 @@
 package com.tianyi.yw.service.impl;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -62,6 +66,9 @@ public class DataUtilServiceImpl implements DataUtilService {
 		List<DeviceDiagnosis> dglist = new ArrayList<DeviceDiagnosis>();
 		js.setCode(1);
 		js.setMessage("加载数据失败!");
+		Lock lock = new ReentrantLock();
+		lock.lock();
+		try{
 		//dg.setCountSize(8);
 		//不足10条，补足10条
 		if(count < 10){
@@ -70,13 +77,16 @@ public class DataUtilServiceImpl implements DataUtilService {
 				dglist = diagnosisService.getList(dg);
 				//获取请求端ip
 				String ip = getIpAddress(request);
+				int port = request.getRemotePort();
 				if(dglist.size() != 0){
 					//判断请求ip是否为空、是否有权限
 					if(ip != null){								
 						if(ip.equals("0:0:0:0:0:0:0:1")){
-							server.setIpaddress("127.0.0.1");							
+							server.setIpaddress("127.0.0.1");
+							server.setPort(8080);
 						}else{
 							server.setIpaddress(ip);
+							server.setPort(port);
 						}
 						server = serverService.selectByIp(server);
 						if(server.getId() == null){													
@@ -101,6 +111,9 @@ public class DataUtilServiceImpl implements DataUtilService {
 				ex.printStackTrace();
 			}			
 		}
+		}finally {    
+		        lock.unlock();// 释放锁    
+       } 
 		return js;
 	}
 
@@ -140,49 +153,62 @@ public class DataUtilServiceImpl implements DataUtilService {
 	public void DiagnosisList1(int count,
 			HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
-//主动请求count
 		DeviceDiagnosis dg = new DeviceDiagnosis();
 		Server server = new Server();
-		JsonResult<DeviceDiagnosis> js = new JsonResult<DeviceDiagnosis>();
-		List<DeviceDiagnosis> dglist = new ArrayList<DeviceDiagnosis>();
-		js.setCode(1);
-		js.setMessage("加载数据失败!");
-		//dg.setCountSize(8);
+		String method = "/vdq/dataUtil/getDiagnosisList.do";
+		List<DeviceDiagnosis> list = new ArrayList<DeviceDiagnosis>();
+		Lock lock = new ReentrantLock();
+		lock.lock();
+		try{
 		//不足10条，补足10条
 		if(count < 10){
 			try{
 				dg.setCountSize(10-count);
-				dglist = diagnosisService.getList(dg);
+				list = diagnosisService.getList(dg);
 				//获取请求端ip
 				String ip = getIpAddress(request);
-				if(dglist.size() != 0){
-					for(DeviceDiagnosis d:dglist){
-						d.setCheckTime(new Date());
-						//判断请求ip是否为空、是否有权限
-						if(ip != null){
-							server.setIpaddress(ip);
-							server = serverService.selectByIp(server);
-							if(server.getId() != null){
-								d.setCheckServerId(server.getId());
-							}else{
-								js.setMessage("无权访问!");
-								
-							}							
-							diagnosisService.updatebyselective(d);
+				int port = request.getRemotePort();
+				if(list.size() != 0){
+					//判断请求ip是否为空、是否有权限
+					if(ip != null)
+					{								
+						if(ip.equals("0:0:0:0:0:0:0:1"))
+						{
+							server.setIpaddress("127.0.0.1");
+							server.setPort(8080);
 						}else{
-							js.setMessage("ip获取失败!");
-							
+							server.setIpaddress(ip);
+							server.setPort(port);
 						}						
+				        server = serverService.selectByIp(server);
+				        if(server != null){
+				        	 String basepath = "http://"+server.getIpaddress()+":"+server.getPort();
+				        	 String urlname = basepath + method + "?DeviceDiagnosisList=" + list;
+				             try {
+				                URL url = new URL(urlname);    // 把字符串转换为URL请求地址
+				                HttpURLConnection connection = (HttpURLConnection) url.openConnection();// 打开连接
+				                connection.connect();// 连接会话
+				             } catch (Exception e) {
+				                 e.printStackTrace();
+				                logService.writeLog(1, "任务发送服务器出错！",e.getMessage()); 
+				             }
+				        }
+					    for(DeviceDiagnosis d:list)
+					    {
+					    	d.setCheckTime(new Date());
+					    	d.setCheckServerId(server.getId());	
+					    	diagnosisService.updatebyselective(d);
+				    	}					   
 					}
-					js.setCode(0);
-					js.setMessage("加载数据成功!");
-					js.setList(dglist);
 				}
 			}catch(Exception ex){
 				logService.writeLog(5, "服务器分配任务出错！", ex.getMessage());
 				ex.printStackTrace();
 			}			
 		}
+		}finally {    
+	        lock.unlock();// 释放锁    
+        } 
 	}
 	
 	/**

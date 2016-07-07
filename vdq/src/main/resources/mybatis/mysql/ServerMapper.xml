@@ -110,6 +110,12 @@
     select 
     <include refid="Base_Column_List" />
     from t_server
-    where  ipaddress = #{ipaddress,jdbcType=VARCHAR}
+    where 1=1
+    <if test="ipaddress != null">
+     and  ipaddress = #{ipaddress,jdbcType=VARCHAR}
+    </if>
+     <if test="port != null">
+     and  port = #{port,jdbcType=INTEGER}
+    </if>    
   </select>
 </mapper>

@@ -1,6 +1,5 @@
 package com.tianyi.yw.web.controller.winService;
 
- 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,13 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tianyi.yw.common.JsonResult;
 import com.tianyi.yw.model.Device;
 import com.tianyi.yw.model.DeviceDiagnosis;
-import com.tianyi.yw.model.DeviceStatus;
-import com.tianyi.yw.model.DiagnosisItemType;
 import com.tianyi.yw.model.Log;
 import com.tianyi.yw.model.Parame;
 import com.tianyi.yw.model.Task;
 import com.tianyi.yw.model.TaskItem;
-import com.tianyi.yw.model.TaskItemType;
 import com.tianyi.yw.service.DataUtilService;
 import com.tianyi.yw.service.DeviceService;
 import com.tianyi.yw.service.DignosisService;
