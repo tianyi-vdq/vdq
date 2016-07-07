@@ -79,7 +79,7 @@
   <select id="getTaskItemList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.TaskItem" >
     select
     <include refid="Base_Column_List" />,
-    (select t.name from t_task_item_type t where t.id = task_id) as typeName
+    (select t.name from t_task_item_type t where t.id = item_type_id) as itemTypeName
    <include refid="query_sql"/>   
   </select>
   
@@ -95,4 +95,27 @@
       	item_type_id = #{itemTypeId,jdbcType=INTEGER}
      </if>
   </sql>
+ 
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

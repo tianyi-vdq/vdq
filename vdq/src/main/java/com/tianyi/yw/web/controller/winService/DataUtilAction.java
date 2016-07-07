@@ -191,6 +191,38 @@ public class DataUtilAction {
 	
 	  
 	  /**
+	   * 根据任务id，获取结果诊断项
+	   * @param taskId
+	   * @param request
+	   * @param response
+	   * @return
+	   */
+	  @ResponseBody
+	  @RequestMapping(value = "jsonLoadTaskItemType.do", produces = { "text/html;charset=UTF-8" })
+	  public JsonResult<TaskItem> getTaskItemType(
+			  @RequestParam(value = "id", required = false) Integer taskId,
+			  HttpServletRequest request, HttpServletResponse response){
+		  JsonResult<TaskItem> js = new JsonResult<TaskItem>();
+		  js.setCode(1);
+		  js.setMessage("获取结果诊断项失败！");
+		  TaskItem ti = new TaskItem();
+		  List<TaskItem> tilist = new ArrayList<TaskItem>();
+		  if(taskId != null && taskId != 0){
+			  ti.setTaskId(taskId);
+			  tilist=taskService.getTaskItemList(ti);
+			  js.setList(tilist);
+			  js.setCode(0);
+			  js.setMessage("获取诊断项成功！");
+			  return js;
+		  }else{
+			  js.setCode(1);
+			  js.setMessage("获取结果诊断项失败！");
+			  return js;
+		  }
+	  }
+	  
+	  
+	  /**
 	   * 判断诊断结果，存入设备状态
 	   * @param deviceId
 	   * @param score
@@ -214,4 +246,35 @@ public class DataUtilAction {
 			return js;
 		}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
