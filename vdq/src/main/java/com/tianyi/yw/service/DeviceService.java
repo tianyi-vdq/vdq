@@ -59,5 +59,8 @@ public interface DeviceService {
 
 	int getDeviceCountByFlag(Device d);
 
+	void saveOrUpdateDeviceStatus(DeviceStatus ds);
+
+
 
 }
