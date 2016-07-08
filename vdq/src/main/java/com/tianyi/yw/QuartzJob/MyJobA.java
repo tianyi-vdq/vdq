@@ -99,7 +99,7 @@ public class MyJobA {
 					while(count>0){
 						count --;
 						Date now = new Date();
-						if(now.equals(temp.getStartTime()) || now.after(temp.getStartTime())){
+						if(now.equals(temp.getStartTime())){
 							System.out.println("执行任务");
 							int result = dignosisService.getCheckResultList();
 							System.out.println(result);
@@ -112,7 +112,7 @@ public class MyJobA {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-						}/*else if(now.after(temp.getStartTime())){
+						}else if(now.after(temp.getStartTime())){
 							System.out.println("任务时候已过");
 							if(temp.getRunIntervals() == 0 || temp.getRunIntervals() == null){
 								temp.setFlag(0);
@@ -126,7 +126,7 @@ public class MyJobA {
 									e.printStackTrace();
 								}
 							}
-						}*/else if(now.before(temp.getStartTime())){
+						}else if(now.before(temp.getStartTime())){
 							System.out.println("任务时候未到，请等待");
 							try {
 								thread.sleep(30*1000);
