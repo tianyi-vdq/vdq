@@ -106,4 +106,24 @@
   	from t_server
   	where status = 1 and flag = 1
   </select>
+  <select id="selectByIp" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Server" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_server
+    where status = 1 and flag = 1
+    <if test="ipaddress != null">
+     and  ipaddress = #{ipaddress,jdbcType=VARCHAR}
+    </if>
+     <if test="port != null">
+     and  port = #{port,jdbcType=INTEGER}
+    </if>    
+  </select>
+  <select id="getAllListByIP" parameterType="com.tianyi.yw.model.Server" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+  	from t_server 	
+  	 where 1=1
+    <if test="ipaddress != null">
+     and  ipaddress = #{ipaddress,jdbcType=VARCHAR}
+    </if>
+  </select>
 </mapper>

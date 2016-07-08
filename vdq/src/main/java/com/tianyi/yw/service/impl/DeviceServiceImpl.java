@@ -189,6 +189,16 @@ public class DeviceServiceImpl implements DeviceService {
 		return deviceMapper.getDeviceCountByFlag(d);
 	}
 
+	@Override
+	public void saveOrUpdateDeviceStatus(DeviceStatus ds) {
+		// TODO Auto-generated method stub
+		if(ds.getId()>0){
+			deviceStatusMapper.updateByPrimaryKeySelective(ds);
+		}else{
+			deviceStatusMapper.insert(ds);
+		}
+	}
+
 
 
 

@@ -114,7 +114,12 @@ public class TaskServiceImpl implements TaskService {
 	{
 		taskMapper.deleteByPrimaryKey(id);
 	}
-	
-	
+
+	@Override
+	public List<TaskItem> getTaskItemListById(TaskItem taskItem) {
+		// TODO Auto-generated method stub
+		return taskItemMapper.getTaskItemListById(taskItem);
+	}
+
 }
 

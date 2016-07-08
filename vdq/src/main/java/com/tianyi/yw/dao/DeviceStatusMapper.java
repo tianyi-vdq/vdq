@@ -20,4 +20,5 @@ public interface DeviceStatusMapper {
     int updateByPrimaryKey(DeviceStatus record);
     
     List<DeviceStatus> getDeviceStatusList(DeviceStatus deviceStatus);
+
 }

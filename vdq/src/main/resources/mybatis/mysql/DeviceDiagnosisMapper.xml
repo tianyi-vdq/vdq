@@ -164,6 +164,18 @@
   <select id="getList" parameterType="com.tianyi.yw.model.DeviceDiagnosis" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"/>
   	from t_device_diagnosis
+  	where check_server_id = 0
+  	 <if test="countSize != null and countSize > -1">
+        limit 0, #{countSize}
+  	</if>
+  </select>
+  <select id="getExistDiagnosis" parameterType="com.tianyi.yw.model.DeviceDiagnosis" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>
+  	from t_device_diagnosis
+  	where 1=1
+  	<if test="deviceId != null">
+        and device_id = #{deviceId,jdbcType=INTEGER}
+  	</if>
   </select>
   <delete id="clear">
   	delete from t_device_diagnosis

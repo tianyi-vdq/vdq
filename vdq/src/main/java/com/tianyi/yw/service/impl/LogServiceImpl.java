@@ -1,5 +1,6 @@
 package com.tianyi.yw.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -60,6 +61,28 @@ public class LogServiceImpl implements LogService {
 	{
 		return logTypeMapper.selectByPrimaryKey(id);
 	}
+
+	@Override
+	public void writeLog(int type, String content) {
+		// TODO Auto-generated method stub
+		Log log = new Log();
+		log.setTypeId(type);
+		log.setContent(content);
+		log.setCreateTime(new Date());
+		logMapper.insertSelective(log);		
+	}
+
+	@Override
+	public void writeLog(int type, String content, String description) {
+		// TODO Auto-generated method stub
+		Log log = new Log();
+		log.setTypeId(type);
+		log.setContent(content);
+		log.setDescription(description);
+		log.setCreateTime(new Date());
+		logMapper.insertSelective(log);	
+	}
+
 }
 
 

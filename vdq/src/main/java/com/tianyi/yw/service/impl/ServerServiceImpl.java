@@ -38,4 +38,16 @@ public class ServerServiceImpl implements ServerService {
 		return serverMapper.selectByPrimaryKey(serverId);
 	}
 
+	@Override
+	public Server selectByIp(Server server) {
+		// TODO Auto-generated method stub
+		return serverMapper.selectByIp(server);
+	}
+
+	@Override
+	public List<Server> getAllListByIP(Server server) {
+		// TODO Auto-generated method stub
+		return serverMapper.getAllListByIP(server);
+	}
+
 }

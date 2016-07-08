@@ -29,4 +29,6 @@ public interface TaskService {
 	void saveOrUpdateTaskItem(TaskItem taskIem);
 
 	int getRunTaskCount(Task task);
+
+	List<TaskItem> getTaskItemListById(TaskItem taskItem);
 }

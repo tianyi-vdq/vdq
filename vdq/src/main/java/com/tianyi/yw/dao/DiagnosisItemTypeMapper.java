@@ -21,4 +21,6 @@ public interface DiagnosisItemTypeMapper {
 	List<DiagnosisItemType> getDiagnosisList();
 	//更改诊断标准值
 	 int updateValue(DiagnosisItemType diagnosisItemType);
+
+	DiagnosisItemType getExistDiagnosisType(Integer itemTypeId);
 }
