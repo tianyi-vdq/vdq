@@ -20,4 +20,6 @@ public interface ServerMapper {
 	List<Server> getList(Server server);
 	
 	 Server selectByIp(Server server);
+	 
+	 List<Server> getAllListByIP(Server server);
 }

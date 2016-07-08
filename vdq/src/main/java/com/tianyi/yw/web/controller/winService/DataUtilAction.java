@@ -238,6 +238,21 @@ public class DataUtilAction {
 			}
 			return js;
 		}
+	    
+	    /** 
+		 * IP状态监测接口
+		 * @param request
+		 * @param response
+		 * @param ip
+		 * @return
+		 */
+		@ResponseBody
+		@RequestMapping(value = "/checkIP.do")
+		public void checkIP(  @RequestParam(value = "ip", required = false) String ip,
+				HttpServletRequest request, HttpServletResponse response) {
+			dataUtilService.CheckIP(ip, request, response);
+		}
+		
 }
 
 

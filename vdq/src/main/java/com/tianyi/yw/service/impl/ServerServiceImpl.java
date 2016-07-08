@@ -44,4 +44,10 @@ public class ServerServiceImpl implements ServerService {
 		return serverMapper.selectByIp(server);
 	}
 
+	@Override
+	public List<Server> getAllListByIP(Server server) {
+		// TODO Auto-generated method stub
+		return serverMapper.getAllListByIP(server);
+	}
+
 }

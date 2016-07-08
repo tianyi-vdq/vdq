@@ -444,4 +444,28 @@ public class DataUtilServiceImpl implements DataUtilService {
 		  }
 		return ds;	  
 	  }
+
+	  /**
+	   * ip监测
+	   */
+	@Override
+	public void CheckIP(String ip, HttpServletRequest request,
+			HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		Server server = new Server();
+		List<Server> serverlist = new ArrayList<Server>();
+		if(ip != null)
+		{											
+			server.setIpaddress(ip);	
+			serverlist = serverService.getAllListByIP(server);
+			if(serverlist != null)
+				for(Server s:serverlist)
+					if(s.getFlag() == 0 || s.getStatus() == 0)
+					{
+						s.setStatus(1);
+						s.setFlag(1);
+					    serverService.updatebyselective(s);
+					}												
+		}
+	}
 }

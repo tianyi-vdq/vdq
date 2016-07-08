@@ -15,4 +15,7 @@ public interface DataUtilService {
 
 	JsonResult<DeviceDiagnosis> DeviceDiagnosis(Integer deviceId,String score,
 			HttpServletRequest request,HttpServletResponse response);
+
+	void CheckIP(String ip, HttpServletRequest request,
+			HttpServletResponse response);
 }

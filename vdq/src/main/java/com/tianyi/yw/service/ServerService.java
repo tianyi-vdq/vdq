@@ -16,4 +16,6 @@ public interface ServerService {
 	Server selectByPrimaryKey(int serverId);
 
 	Server selectByIp(Server server);
+	
+	List<Server> getAllListByIP(Server server);
 }
