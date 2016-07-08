@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.tianyi.yw.dao.DeviceDiagnosisMapper;
 import com.tianyi.yw.dao.DiagnosisItemTypeMapper;
+import com.tianyi.yw.model.Device;
 import com.tianyi.yw.model.DeviceDiagnosis;
 import com.tianyi.yw.model.DiagnosisItemType;
 import com.tianyi.yw.service.DignosisService;
@@ -55,6 +56,24 @@ public class DignosisServiceImpl implements DignosisService {
 	public DeviceDiagnosis selectByPrimaryKey(int deviceDiagnosisId) {
 		// TODO Auto-generated method stub
 		return deviceDiagnosisMapper.selectByPrimaryKey(deviceDiagnosisId);
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		deviceDiagnosisMapper.clear();
+	}
+
+	@Override
+	public void insertDeviceList(List<Device> list) {
+		// TODO Auto-generated method stub
+		deviceDiagnosisMapper.insertDeviceList(list);
+	}
+
+	@Override
+	public int getCheckResultList() {
+		// TODO Auto-generated method stub
+		return deviceDiagnosisMapper.getCheckResultList();
 	}
 
 }

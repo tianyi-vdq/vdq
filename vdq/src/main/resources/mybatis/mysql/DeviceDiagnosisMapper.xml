@@ -165,4 +165,20 @@
   	select <include refid="Base_Column_List"/>
   	from t_device_diagnosis
   </select>
+  <delete id="clear">
+  	delete from t_device_diagnosis
+  </delete>
+  <insert id="insertDeviceList" parameterType="java.util.List">
+  	insert into t_device_diagnosis
+  	(device_id, device_name, device_rtsp,task_id,check_times,check_server_id)
+  	values
+  	 <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.id},#{item.pointName},#{item.rtspUrl},#{item.taskId},#{item.checkTimes},#{item.serverId})  
+    </foreach>  
+  </insert>
+  <select id="getCheckResultList" resultType="java.lang.Integer">
+  	select count(id)
+  	from t_device_diagnosis
+  	where check_result is null
+  </select>
 </mapper>

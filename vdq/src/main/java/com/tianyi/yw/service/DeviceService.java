@@ -53,11 +53,11 @@ public interface DeviceService {
 
 	List<DeviceGroup> getExistGroupByDeviceId(DeviceGroupItem dg);
 
-	List<Device> getDeviceList();
-
 	List<Device> getDeviceListByFlag(Device d);
 
 	int getDeviceCountByFlag(Device d);
+
+	List<Device> getAllDeviceList();
 
 
 }

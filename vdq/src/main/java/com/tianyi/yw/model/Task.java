@@ -45,6 +45,8 @@ public class Task extends Page {
     
     private String itemTypeId;
     
+    private Boolean status;
+    
 	public Integer getId() {
         return id;
     }
@@ -180,6 +182,14 @@ public class Task extends Page {
 
 	public void setFlagCount(Integer flagCount) {
 		this.flagCount = flagCount;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
  
 }

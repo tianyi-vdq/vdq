@@ -38,6 +38,12 @@ public class Device extends Page {
     
     private String[] Ids;
     
+    private Integer taskId;
+    
+    private Integer checkTimes;
+    
+    private Integer serverId;
+    
     public Integer getId() {
         return id;
     }
@@ -173,6 +179,31 @@ public class Device extends Page {
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
 	}
+
+	public Integer getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(Integer taskId) {
+		this.taskId = taskId;
+	}
+
+	public Integer getCheckTimes() {
+		return checkTimes;
+	}
+
+	public void setCheckTimes(Integer checkTimes) {
+		this.checkTimes = checkTimes;
+	}
+
+	public Integer getServerId() {
+		return serverId;
+	}
+
+	public void setServerId(Integer serverId) {
+		this.serverId = serverId;
+	}
+
 
 
 }

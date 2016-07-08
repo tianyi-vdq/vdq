@@ -322,4 +322,10 @@
   	from t_device t left join t_area a on t.area_id = a.id
     where t.id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="getAllDeviceList" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List" />
+  	from t_device t
+  	where t.flag = 0
+  </select>  
 </mapper>

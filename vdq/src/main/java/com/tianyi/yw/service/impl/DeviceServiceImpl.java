@@ -172,9 +172,9 @@ public class DeviceServiceImpl implements DeviceService {
 	}
 
 	@Override
-	public List<Device> getDeviceList() {
+	public List<Device> getAllDeviceList() {
 		// TODO Auto-generated method stub
-		return null;
+		return deviceMapper.getAllDeviceList();
 	}
 
 	@Override
