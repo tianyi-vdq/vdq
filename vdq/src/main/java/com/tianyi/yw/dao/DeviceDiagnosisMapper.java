@@ -29,4 +29,6 @@ public interface DeviceDiagnosisMapper {
 	int getCheckResultList();
 	
 	DeviceDiagnosis getExistDiagnosis(DeviceDiagnosis dg);
+
+	DeviceDiagnosis selectByDeviceId(int id);
 }

@@ -54,72 +54,7 @@ public class DataUtilAction {
 	
 	@Resource
 	private ServerService serverService;
-	
-	/** 
-	 * 日志写入接口
-	 * @param request
-	 * @param response
-	 * @param stringLog
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/jsonSaveLog.do", produces = { "text/html;charset=UTF-8" })
-	public JsonResult<Log> SaveLog(HttpServletRequest request, HttpServletResponse response,Log log) {
-		JsonResult<Log> js = new JsonResult<Log>();
-		js.setCode(new Integer(1));
-		js.setMessage("写入日志失败!");	
-		Log p = new Log();
-		try
-		{
-			p.setTypeId(log.getTypeId());
-			p.setContent(new String(log.getContent().getBytes("iso8859-1"), "utf-8"));
-			p.setDescription(new String(log.getDescription().getBytes("iso8859-1"), "utf-8"));
-			p.setCreateTime(new Date());
-		    if(p.getContent() != null && p.getContent() != "" && p.getTypeId() != null && p.getTypeId() != '0')
-		    {
-		    	logService.saveOrUpdateLog(p);
-		    	js.setCode(new Integer(0));
-		    	js.setMessage("保存日志成功！");
-		     }
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-			
-		return js; 		
-	}
-	
-	
-	
-	
-	/**
-	 * 任务列表接口
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/jsonLoadTaskList.do", produces = { "text/html;charset=UTF-8" })
-	public JsonResult<Task> TaskList(
-			HttpServletRequest request, HttpServletResponse response) {
-		JsonResult<Task> js = new JsonResult<Task>();
-		js.setCode(new Integer(1));
-		js.setMessage("加载任务列表失败!");
-	
-		try {
-			List<Task> tasklist = new ArrayList<Task>();
-			Task p = new Task();
-			tasklist = taskService.getTaskList(p);
-			js.setList(tasklist);
-			js.setCode(0);
-			js.setMessage("加载任务列表成功!");				
-			} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return js;
-	}
-	
- 
-	
+	    
 	
 	@ResponseBody
 	@RequestMapping(value = "/jsonLoadDeviceList.do", produces = { "text/html;charset=UTF-8" })
@@ -128,38 +63,20 @@ public class DataUtilAction {
 		JsonResult<Device> js = new JsonResult<Device>();
 		js.setCode(new Integer(1));
 		js.setMessage("加载设备列表失败!");
-		List<Device> ls = new ArrayList<Device>();
-		Device d = new Device();
 		try{
+			List<Device> ls = new ArrayList<Device>();
+			Device d = new Device(); 
 			ls = deviceService.getDeviceList(d);
 			js.setList(ls);
 			js.setCode(0);
-			js.setMessage("加载设备列表成功！");
+			js.setMessage("加载设备列表成功！"); 
 		}catch(Exception ex){
 			ex.printStackTrace();
+			logService.writeLog(1, "加载设备列表失败!", ex.getMessage());
 		}
 		return js;
 	}
-	@ResponseBody
-	@RequestMapping(value = "/jsonLoadParameList.do", produces = { "text/html;charset=UTF-8" })
-	public JsonResult<Parame>  parameList(HttpServletRequest request,
-			HttpServletResponse response) {
-		JsonResult<Parame> js = new JsonResult<Parame>();
-		js.setCode(new Integer(1));
-		js.setMessage("加载参数列表失败!");
-		List<Parame> ls = new ArrayList<Parame>();
-		Parame p = new Parame();
-		try{
-			ls = parameService.getParameList(p);
-			js.setList(ls);
-			js.setCode(0);
-			js.setMessage("加载参数列表成功！");
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
-		return js;
-	} 
-	
+	 
 	/**
 	 * 服务器分配
 	 * @param count
@@ -173,11 +90,21 @@ public class DataUtilAction {
 			@RequestParam(value = "count", required = false) Integer count,
 			HttpServletRequest request,HttpServletResponse response) {
 		JsonResult<DeviceDiagnosis> js = new JsonResult<DeviceDiagnosis>();
-		if(count != null){
-			js = dataUtilService.DiagnosisList(count,request,response);
-		}else{
-			js.setCode(1);
-			js.setMessage("未获取到参数！");
+		js.setCode(1);
+		js.setMessage("未获取到参数！");
+		try{
+			if(count != null){
+				js = dataUtilService.DiagnosisList(count,request,response);
+				js.setCode(0);
+				js.setMessage("获取诊断点位设备成功！");
+			}else{
+				js.setCode(1);
+				js.setMessage("未获取到参数！");
+			}
+		}catch(Exception ex){ 
+			ex.printStackTrace();
+			logService.writeLog(1, "获取诊断点位设备失败！", ex.getMessage());
+			js.setMessage("未获取到参数！详细："+ex.getMessage());
 		}
 		return js;
 	}
@@ -198,20 +125,26 @@ public class DataUtilAction {
 		  JsonResult<TaskItem> js = new JsonResult<TaskItem>();
 		  js.setCode(1);
 		  js.setMessage("获取结果诊断项失败！");
-		  TaskItem ti = new TaskItem();
-		  List<TaskItem> tilist = new ArrayList<TaskItem>();
-		  if(taskId != null && taskId != 0){
-			  ti.setTaskId(taskId);
-			  tilist=taskService.getTaskItemList(ti);
-			  js.setList(tilist);
-			  js.setCode(0);
-			  js.setMessage("获取诊断项成功！");
-			  return js;
-		  }else{
+		  try{
+			  TaskItem ti = new TaskItem();
+			  List<TaskItem> tilist = new ArrayList<TaskItem>();
+			  if(taskId != null && taskId != 0){
+				  ti.setTaskId(taskId);
+				  tilist=taskService.getTaskItemList(ti);
+				  js.setList(tilist);
+				  js.setCode(0);
+				  js.setMessage("获取诊断项成功！"); 
+			  }else{
+				  js.setCode(1);
+				  js.setMessage("获取结果诊断项失败！");
+			  }
+		  }catch(Exception ex){
+			  ex.printStackTrace();
 			  js.setCode(1);
 			  js.setMessage("获取结果诊断项失败！");
-			  return js;
+			  logService.writeLog(1, "获取结果诊断项失败！", ex.getMessage());
 		  }
+		  return js;
 	  }
 	  
 	  
@@ -225,18 +158,21 @@ public class DataUtilAction {
 	   */
 	    @ResponseBody
 		@RequestMapping(value = "/jsonSaveDiagnosis.do", produces = { "text/html;charset=UTF-8" })
-		public JsonResult<DeviceDiagnosis> DeviceDiagnosis(
-				@RequestParam(value = "deviceId", required = false) Integer deviceId,
-				@RequestParam(value = "score", required = false) String score,
-				HttpServletRequest request,HttpServletResponse response){
-			JsonResult<DeviceDiagnosis> js = new JsonResult<DeviceDiagnosis>();
-			if(deviceId != null && score != null){
-				js = dataUtilService.DeviceDiagnosis(deviceId, score, request, response);
-			}else{
-				js.setMessage("参数获取失败！");
-				js.setCode(1);
-			}
-			return js;
+		public void DeviceDiagnosis(
+				@RequestParam(value = "id", required = false) int deviceId,
+				@RequestParam(value = "itemId", required = false) int taskItemId,
+				@RequestParam(value = "score", required = false) int score,
+				HttpServletRequest request,HttpServletResponse response){ 
+			try{
+				if(deviceId >0 && score >0 && taskItemId >0){
+					dataUtilService.DeviceDiagnosis(deviceId,taskItemId, score, request, response); 
+				}else{
+					logService.writeLog(1, "保存数据失败", "返回数据异常，不能保存诊断结果！");
+				}
+			}catch(Exception ex){
+				ex.printStackTrace(); 
+				logService.writeLog(1, "保存数据失败", ex.getMessage());
+			} 
 		}
 	    
 	    /** 

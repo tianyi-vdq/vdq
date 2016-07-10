@@ -41,5 +41,7 @@ public interface DeviceMapper {
 
 	List<Device> getAllDeviceList();
 
+	void deleteTable();
+
 	
 }

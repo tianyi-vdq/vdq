@@ -24,9 +24,19 @@
     from t_device_diagnosis
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByDeviceId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_device_diagnosis
+    where device_id = #{id,jdbcType=INTEGER}
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_device_diagnosis
     where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteTable">
+  	delete from t_device_diagnosis
   </delete>
   <insert id="insert" parameterType="com.tianyi.yw.model.DeviceDiagnosis" >
     insert into t_device_diagnosis (id, device_id, device_name, 

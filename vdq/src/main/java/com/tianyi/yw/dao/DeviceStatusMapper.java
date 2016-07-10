@@ -21,4 +21,6 @@ public interface DeviceStatusMapper {
     
     List<DeviceStatus> getDeviceStatusList(DeviceStatus deviceStatus);
 
+	DeviceStatus selectByDeviceId(int id);
+
 }
