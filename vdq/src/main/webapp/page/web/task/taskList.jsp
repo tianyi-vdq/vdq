@@ -253,7 +253,7 @@ function StopTask(id){
 						<%-- 	<input id="runTaskId" name="runTaskId" value="${item.id}" type="hidden" />		 --%>					
 								<a style="color:blue"  onclick="runTask(${item.id});">后台运行</a>							
 								<a style="color:blue;margin-left:15px;"  onclick="runTaskNow(${item.id});">立即执行</a>							
-								<a style="color:blue;margin-left:15px;"  onclick="runTask(${item.id});">删除</a>											
+								<a style="color:blue;margin-left:15px;"  onclick="deleteTask(${item.id});">删除</a>											
 							</c:if>
 
                             <c:if test="${item.flag == 1 && Task.flagCount == 1}">

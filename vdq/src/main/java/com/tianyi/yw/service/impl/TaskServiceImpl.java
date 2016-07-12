@@ -10,9 +10,11 @@ import com.tianyi.yw.common.utils.StringUtil;
 import com.tianyi.yw.dao.TaskItemMapper;
 import com.tianyi.yw.dao.TaskItemTypeMapper;
 import com.tianyi.yw.dao.TaskMapper;
+import com.tianyi.yw.dao.TaskTimeMapper;
 import com.tianyi.yw.model.Task;
 import com.tianyi.yw.model.TaskItem;
 import com.tianyi.yw.model.TaskItemType;
+import com.tianyi.yw.model.TaskTime;
 import com.tianyi.yw.service.TaskService;
 
 @Service("taskService")
@@ -26,6 +28,9 @@ public class TaskServiceImpl implements TaskService {
 	
 	@Resource
 	private TaskItemTypeMapper taskItemTypeMapper;
+	
+	@Resource
+	private TaskTimeMapper taskTimeMapper;
 	
 	@Override
 	public List<Task> getTaskList(Task task) {
@@ -119,6 +124,12 @@ public class TaskServiceImpl implements TaskService {
 	public List<TaskItem> getTaskItemListById(TaskItem taskItem) {
 		// TODO Auto-generated method stub
 		return taskItemMapper.getTaskItemListById(taskItem);
+	}
+
+	@Override
+	public List<TaskTime> getAllTaskTimeList(Integer taskId) {
+		// TODO Auto-generated method stub
+		return taskTimeMapper.getAllTaskTimeList(taskId);
 	}
 
 }

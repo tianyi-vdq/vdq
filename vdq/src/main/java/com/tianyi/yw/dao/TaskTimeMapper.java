@@ -1,7 +1,10 @@
 package com.tianyi.yw.dao;
 
+import java.util.List;
+
 import com.tianyi.yw.model.TaskTime;
 
+@MyBatisRepository
 public interface TaskTimeMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +17,6 @@ public interface TaskTimeMapper {
     int updateByPrimaryKeySelective(TaskTime record);
 
     int updateByPrimaryKey(TaskTime record);
+
+	List<TaskTime> getAllTaskTimeList(Integer taskId);
 }

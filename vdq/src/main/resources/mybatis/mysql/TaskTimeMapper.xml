@@ -68,4 +68,9 @@
       start_time = #{startTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="getAllTaskTimeList"  parameterType="java.lang.Integer" resultMap="BaseResultMap" >
+  	select <include refid="Base_Column_List" />
+  	from t_task_time
+  	where task_id = #{taskId,jdbcType=INTEGER}
+  </select>
 </mapper>

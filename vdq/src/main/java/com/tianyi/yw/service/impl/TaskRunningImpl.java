@@ -59,14 +59,16 @@ public class TaskRunningImpl implements TaskRunning {
 							result = dignosisMapper.getCheckResultList();
 							// System.out.println(result);
 							if (result == 0) {
-								Task t = taskMapper.getTaskById(taskId);
-								t.setFlag(0);
-								taskMapper.updateByPrimaryKeySelective(t);
+								//可能存在其他任务开始时间
+								//Task t = taskMapper.getTaskById(taskId);
+								//t.setFlag(0);
+								//taskMapper.updateByPrimaryKeySelective(t);
+								//任务执行成功，清空临时表
+								dignosisMapper.clear();
 								isOver= false;
 							}
 						}
 						isOk = false;
-//					}
 				}
 			}
 		} catch (Exception ex) {
