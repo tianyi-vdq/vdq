@@ -169,6 +169,7 @@ public class TaskAction extends BaseAction {
 				List<Task> lc = taskService.getExistTask(p);
 				if (lc.size() == 0) {
 					task.setCreateTime(new Date());
+					
 					taskService.saveOrUpdateTask(task); 
 					js.setCode(new Integer(0));
 					if(message != null)
@@ -209,12 +210,34 @@ public class TaskAction extends BaseAction {
 		TaskItemType taskItemType = new TaskItemType();
 		List<TaskItemType> taskItemTypelist = new ArrayList<TaskItemType>();
 		Task task = new Task();
+		TaskTime taskTime = new TaskTime();
+		List<TaskTime> taskTimelist = new ArrayList<TaskTime>();
 		task.setId(id);
+		taskTime.setTaskId(id);
 		if(task.getId()>0){
+			int timeCount = 0;
 			task = taskService.getTaskById(task.getId());
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			//设置所有执行时间String，启动时间
 			if(task != null){
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				task.setStartTimes(sdf.format(task.getStartTime()));
+				taskTimelist = taskService.getTaskTimeList(taskTime);
+				timeCount = taskService.getTaskTimeCount(taskTime);
+				task.setRunTimes(timeCount);
+				String at = null;
+				if(taskTimelist.size() != 0){
+					for(TaskTime t:taskTimelist){										
+						if(!task.getStartTime().before(t.getStartTime()))
+							task.setStartTime(t.getStartTime());
+						if(at == null){
+							at = sdf.format(t.getStartTime());
+						}else{
+							at += "," + sdf.format(t.getStartTime());
+						}
+					}
+					task.setAllTimes(at);
+					task.setStartTimes(sdf.format(task.getStartTime()));	
+				}
+								
 			}
 		}  
 		taskItemTypelist = taskService.getTaskItemTypeList(taskItemType);

@@ -14,6 +14,8 @@ public class Task extends Page {
     
     private String startTimes;
     
+    private String allTimes;
+    
 	private Date startedTime;
     
     private String startedTimes;
@@ -190,6 +192,14 @@ public class Task extends Page {
 
 	public void setStatus(Boolean status) {
 		this.status = status;
+	}
+
+	public String getAllTimes() {
+		return allTimes;
+	}
+
+	public void setAllTimes(String allTimes) {
+		this.allTimes = allTimes;
 	}
  
 }

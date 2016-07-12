@@ -2,7 +2,9 @@ package com.tianyi.yw.model;
 
 import java.util.Date;
 
-public class TaskTime {
+import com.tianyi.yw.common.utils.Page;
+
+public class TaskTime  extends Page{
     private Integer id;
 
     private Integer taskId;

@@ -19,10 +19,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	-->
 	<script type="text/javascript">
 		$(document).ready(function(){
-		 	var taskId = $("#hid_taskId").val();
+		 	var taskId = $("#hid_taskId").val();		 	
 		 	if(taskId>0){
 		 		var itemTypeId = $("#hid_itemTypeId").val();
-		 		var array = itemTypeId.split(",");
+		 		var allTime = $("#hid_allTimes").val();
+		 		var runTimes = $("#hid_runTimes").val();
+		 		var time = allTime.split(",");
+		 		var array = itemTypeId.split(",");		 		
+		 		$.each(time,function(index,arr){
+		 			addMoreTime(obj[0],arr);
+		 		});
 		 		$.each(array,function(index,arr){
 		 			$("#itemType"+arr).attr("checked","checked");
 		 		});
@@ -68,6 +74,29 @@ function saveTask(obj){
 	}
 
 }   
+//新增更多执行时间
+	var count = 0;
+	function addMoreTime(obj,value){
+		count++;
+		var str = 
+            '<tr>'+
+		'<td width="10%" align="right">启动时间：</td>'+
+		'<td><input id="startTimes'+count+'" name="aTimes'+count+'" data-options="editable:false"  onblur="valueTrim(this);"  doc="taskInfo" type="text" value="'+value+'" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>'+
+	     ' <span style="color:red">*</span>'+
+	      '<span id="btnAddStartTime'+count+'" doc="taskInfo" class="yw-btn bg-blue ml60 cur" title="添加新的执行时间" onClick="addMoreTime(this,'');">+添加执行时间</span>'+
+		'<span doc="btn_action" class="yw-btn bg-red ml26 cur" onclick="deleteTime('+count+');">删除</span>'+
+		'</td></tr>'
+				
+		/* if(value!=""){
+			 str += ' disabled="true" ';
+		}  */
+		
+		/* if(value!=""){
+			 str += ' disabled="true" ';
+		} */
+		str += ' onfocus="openWin('+count+');"  name="areaUserName" class="easyui-validatebox"  style="width:554px;height:28px;" readonly="readonly"  /><span style="color:red">*</span>'+
+			'<span doc="btn_action" class="yw-btn bg-red ml26 cur" onclick="deleteArea('+count+');">删除</span>'+
+		 '</p>';
 	</script>
   </head> 
   <body>
@@ -104,11 +133,34 @@ function saveTask(obj){
 								<span style="color:red">*</span>
 							</td>
 						</tr> 
-						<tr>
+						
+						
+						
+						
+					<%-- 	<div id="tab2" class="yw-bi-rows">
+						<div class="yw-bi-tabs mt5">
+							<span class="yw-bi-now">项目区域设置</span>
+						</div> 
+					</div>
+					<div id="tab3" class="yw-tab">  
+						<p class="hide">
+							<input id="hid_areaId" value="${project.areaId}"/> 
+							<input id="hid_areaName" value="${project.areaName}"/> 
+						</p>
+						 <p class="yw-window-p mt30">
+						 	<span id="btnAddArea" doc="btn_add_action" class="yw-btn bg-blue ml60 cur" title="添加新的维护区域" onClick="addMoreArea(this,'');">+添加维护区域</span>
+						 	
+						 <div class="cl"></div>
+						 </p>
+					</div> --%>
+					
+					<tr>
 						<td width="10%" align="right">启动时间：</td>
-						<td><input id="startTimes" name="startTimes" data-options="editable:false"  onblur="valueTrim(this);"  doc="taskInfo" type="text" value="${Task.startTimes}" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>
-        	                 <%-- <input name="startTimes"   doc="taskInfo" type="hidden" value="${task.startTime}"/> --%>
+						<td><input id="startTimes" name="aTimes" data-options="editable:false"  onblur="valueTrim(this);"  doc="taskInfo" type="text" value="${Task.startTimes}" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>
+        	                 <input id="hid_runTimes" name="runTimes" doc="taskInfo"  type="hidden" value="${Task.runTimes}" />
+        	                 <input id="hid_allTimes"name="allTimes"   doc="taskInfo" type="hidden" value="${Task.allTimes}"/> 
         	                 <span style="color:red">*</span> 
+        	                 <span id="btnAddStartTime" doc="taskInfo" class="yw-btn bg-blue ml60 cur" title="添加新的执行时间" onClick="addMoreTime(this,'');">+添加执行时间</span>
 						</td>
 						</tr>						
 						<%-- <tr>

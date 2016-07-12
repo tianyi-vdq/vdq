@@ -5,6 +5,7 @@ import java.util.List;
 import com.tianyi.yw.model.Task;
 import com.tianyi.yw.model.TaskItem;
 import com.tianyi.yw.model.TaskItemType;
+import com.tianyi.yw.model.TaskTime;
 
 public interface TaskService {
 
@@ -31,4 +32,8 @@ public interface TaskService {
 	int getRunTaskCount(Task task);
 
 	List<TaskItem> getTaskItemListById(TaskItem taskItem);
+
+	List<TaskTime> getTaskTimeList(TaskTime taskTime);
+	
+	int getTaskTimeCount(TaskTime taskTime);
 }

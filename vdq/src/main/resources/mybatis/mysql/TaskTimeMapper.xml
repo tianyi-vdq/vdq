@@ -68,4 +68,21 @@
       start_time = #{startTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="getTaskTimeList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.TaskTime" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_task_time
+    where 1=1
+    <if test="taskId != null" >
+       and task_id = #{taskId,jdbcType=INTEGER}
+      </if>
+  </select>
+   <select id="getTaskTimeCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.TaskTime">
+  	 select count(*)
+  	  from t_task_time
+  	  where 1=1
+  	   <if test="taskId != null" >
+       and task_id = #{taskId,jdbcType=INTEGER}
+      </if>
+  </select>
 </mapper>

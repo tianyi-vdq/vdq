@@ -1,5 +1,7 @@
 package com.tianyi.yw.dao;
 
+import java.util.List;
+
 import com.tianyi.yw.model.TaskTime;
 
 public interface TaskTimeMapper {
@@ -14,4 +16,9 @@ public interface TaskTimeMapper {
     int updateByPrimaryKeySelective(TaskTime record);
 
     int updateByPrimaryKey(TaskTime record);
+
+	List<TaskTime> getTaskTimeList(TaskTime taskTime);
+	
+	int getTaskTimeCount(TaskTime record);
+
 }
