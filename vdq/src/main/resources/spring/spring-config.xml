@@ -37,7 +37,6 @@
         <property name="username" value="root"/>
       <property name="password" value="8a5c94af1d"/>
      <!--  <property name="password" value="123456"/> -->
-
         <!-- 配置初始化大小、最小、最大 -->
         <property name="initialSize" value="10"/>
         <property name="minIdle" value="10"/>
