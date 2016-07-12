@@ -34,16 +34,16 @@ public class TaskRunningImpl implements TaskRunning {
 	@Override
 	public void TaskRun(Integer taskId) {
 		// TODO Auto-generated method stub
+		boolean isOk = true;
 		try {
 			Task task = taskMapper.selectByPrimaryKey(taskId);
 			if (task != null) {
-				boolean isOk = true;
 				while (isOk) {
-					int count = task.getRunTimes();
-					while (count > 0) {
-						count--;
+//					int count = task.getRunTimes();
+//					while (count > 0) {
+//						count--;
 						List<Device> deviceList = new ArrayList<Device>();
-						deviceMapper.deleteTable();
+						dignosisMapper.clear();
 						deviceList = deviceMapper.getAllDeviceList();
 						// 遍历，给device对象追加任务id,设置默认服务器id,初始化检测次数
 						for (Device device : deviceList) {
@@ -53,15 +53,24 @@ public class TaskRunningImpl implements TaskRunning {
 						}
 						// 批量插入数据到临时表
 						dignosisMapper.insertDeviceList(deviceList);
-						int result = dignosisMapper.getCheckResultList();
-						// System.out.println(result);
-						while (result == 0) {
-							break;
+						int result = 0;
+						boolean isOver= true;
+						while(isOver){
+							result = dignosisMapper.getCheckResultList();
+							// System.out.println(result);
+							if (result == 0) {
+								Task t = taskMapper.getTaskById(taskId);
+								t.setFlag(0);
+								taskMapper.updateByPrimaryKeySelective(t);
+								isOver= false;
+							}
 						}
-					}
+						isOk = false;
+//					}
 				}
 			}
 		} catch (Exception ex) {
+			isOk = false;
 			ex.printStackTrace();
 			Log log = new Log();
 			log.setId(0);

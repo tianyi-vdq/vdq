@@ -2,6 +2,7 @@ package com.tianyi.yw.service.impl;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 
 import com.tianyi.yw.common.JsonResult;
+import com.tianyi.yw.common.utils.Constants;
 import com.tianyi.yw.dao.DeviceDiagnosisMapper;
 import com.tianyi.yw.dao.DeviceMapper;
 import com.tianyi.yw.dao.DeviceStatusMapper;
@@ -82,37 +84,45 @@ public class DataUtilServiceImpl implements DataUtilService {
 		try {
 			// dg.setCountSize(8);
 			// 不足10条，补足10条
-			if (count < 10) {
+			if (count < Constants.DEFAULT_QUEUE_SIZE) {
 				try {
-					dg.setCountSize(10 - count);
+					dg.setCountSize(Constants.DEFAULT_QUEUE_SIZE - count);
 					dglist = diagnosisService.getList(dg);
 					// 获取请求端ip
 					String ip = getIpAddress(request);
-					int port = request.getRemotePort();
+//					int port = request.getRemotePort();
 					if (dglist.size() != 0) {
-						// 判断请求ip是否为空、是否有权限
-						if (ip != null) {
-							if (ip.equals("0:0:0:0:0:0:0:1")) {
-								server.setIpaddress("127.0.0.1");
-								server.setPort(8080);
-							} else {
-								server.setIpaddress(ip);
-								server.setPort(port);
-							}
+//						// 判断请求ip是否为空、是否有权限
+//						if (ip != null) {
+//							if (ip.equals("0:0:0:0:0:0:0:1")) {
+//								server.setIpaddress("127.0.0.1");
+//								server.setPort(8080);
+//							} else {
+//								server.setIpaddress(ip);
+//								server.setPort(port);
+//							}
+							server.setIpaddress(ip);
 							server = serverService.selectByIp(server);
-							if (server.getId() == null) {
-								js.setMessage("无权访问!");
-								return js;
-							}
-						} else {
-							js.setMessage("ip获取失败!");
-							return js;
-						}
+//							if (server.getId() == null) {
+//								js.setMessage("无权访问!");
+//								return js;
+//							}
+//						} else {
+//							js.setMessage("ip获取失败!");
+//							return js;
+//						}
+//						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 						for (DeviceDiagnosis d : dglist) {
+//							 String dd =sdf.format(new Date());
+//							d.setCheckTime(sdf.parse(dd));
 							d.setCheckTime(new Date());
 							d.setCheckServerId(server.getId());
+							d.setCheckServer(ip);
 							diagnosisService.updatebyselective(d);
 						}
+						for (DeviceDiagnosis d : dglist) { 
+							d.setCheckTime(null); 
+						} 
 						js.setCode(0);
 						js.setMessage("加载数据成功!");
 						js.setList(dglist);
@@ -242,52 +252,97 @@ public class DataUtilServiceImpl implements DataUtilService {
 		js.setCode(1);
 		js.setMessage("诊断失败!");
 		int logType = 5;
-		try {
-			DeviceDiagnosis deviceDis = dignosisMapper.selectByDeviceId(deviceId);
-			DeviceStatus ds = deviceStatusMapper.selectByDeviceId(deviceId);
-			if (score == 0) {
-				if(ds!= null){ 
-					ds.setNetworkStatus(4);
-				}
-				deviceStatusMapper.updateByPrimaryKeySelective(ds);
-			} else if (score > 80) {
-				if (deviceDis != null) {
+		try { 
+			DeviceDiagnosis deviceDis = dignosisMapper.selectByDeviceId(deviceId); 
+			if(score == Constants.CHECK_RESULT_NORMAL){
+				deviceDis.setCheckResult(score);
+				deviceDis.setEndTime(new Date());
+				dignosisMapper.updateByPrimaryKeySelective(deviceDis);
+				updateDeviceStatus(deviceId,score,taskItemId);
+			}else{
+				int checkTimes = deviceDis.getCheckTimes();
+				if(checkTimes<3){
+					deviceDis.setCheckTimes(checkTimes+1);
+					deviceDis.setCheckResult(null);
+					deviceDis.setCheckServer(null);
+					deviceDis.setCheckServerId(0);
+					deviceDis.setCheckTime(new Date());
+					dignosisMapper.updateByPrimaryKeySelective(deviceDis);
+				}else{
+					deviceDis.setCheckTimes(3);
 					deviceDis.setCheckResult(score);
 					deviceDis.setEndTime(new Date());
-					deviceDis.setCheckTimes(1);
 					dignosisMapper.updateByPrimaryKeySelective(deviceDis);
+					updateDeviceStatus(deviceId,score,taskItemId);
 				}
-				if (ds != null) {
-					if (taskItemId == 1) {
-						ds.setNetworkStatus(1);
-					} else if (taskItemId == 2) {
-						ds.setNetworkStatus(1);
-					} else if (taskItemId == 3) {
-						ds.setNetworkStatus(1);
-					} else if (taskItemId == 4) {
-						ds.setNetworkStatus(1);
-					} else if (taskItemId == 5) {
-						ds.setNetworkStatus(1);
-					} else if (taskItemId == 6) {
-						ds.setNetworkStatus(1);
-					} else if (taskItemId == 7) {
-						ds.setNetworkStatus(1);
-					} else if (taskItemId == 8) {
-						ds.setNetworkStatus(1);
-					} else if (taskItemId == 9) {
-						ds.setNetworkStatus(1);
-					} else if (taskItemId == 10) {
-						ds.setNetworkStatus(1);
-					} else if (taskItemId == 11) {
-						ds.setNetworkStatus(1);
-					}
-				}
-			} else {
-				logService.writeLog(logType, "诊断分值为0！");
-			}
+			} 
 		} catch (Exception ex) {
 			logService.writeLog(logType, "诊断分值后台服务度出错！", ex.getMessage());
 			ex.printStackTrace();
+		}
+	}
+
+	private void updateDeviceStatus(int deviceId, int score, int taskItemId) {
+		// TODO Auto-generated method stub
+		DeviceStatus ds = new DeviceStatus();
+		ds = deviceStatusMapper.selectByDeviceId(deviceId);
+		if(ds != null){
+			if (taskItemId == 1) {
+				ds.setNetworkStatus(score);
+			} else if (taskItemId == 2) {
+				ds.setStreamStatus(score);
+			} else if (taskItemId == 3) {
+				ds.setNoiseStatus(score);
+			} else if (taskItemId == 4) {
+				ds.setSignStatus(score);
+			} else if (taskItemId == 5) {
+				ds.setColorStatus(score);
+			} else if (taskItemId == 6) {
+				ds.setFrameFrozenStatus(score);
+			} else if (taskItemId == 7) {
+				ds.setFrameShadeStatus(score);
+			} else if (taskItemId == 8) {
+				ds.setFrameFuzzyStatus(score);
+			} else if (taskItemId == 9) {
+				ds.setFrameDisplacedStatus(score);
+			} else if (taskItemId == 10) {
+				ds.setFrameColorcaseStatus(score);
+			} else if (taskItemId == 11) {
+				ds.setLightExceptionStatus(score);
+			}
+			ds.setRecordTime(new Date());
+			ds.setCreateTime(new Date());
+			deviceStatusMapper.updateByPrimaryKeySelective(ds);
+		}else{
+			ds = new DeviceStatus();
+			ds.setId(0);
+			ds.setDeviceId(deviceId); 
+			ds.setRecordTime(new Date());
+			ds.setCreateTime(new Date());
+			if (taskItemId == 1) {
+				ds.setNetworkStatus(score);
+			} else if (taskItemId == 2) {
+				ds.setStreamStatus(score);
+			} else if (taskItemId == 3) {
+				ds.setNoiseStatus(score);
+			} else if (taskItemId == 4) {
+				ds.setSignStatus(score);
+			} else if (taskItemId == 5) {
+				ds.setColorStatus(score);
+			} else if (taskItemId == 6) {
+				ds.setFrameFrozenStatus(score);
+			} else if (taskItemId == 7) {
+				ds.setFrameShadeStatus(score);
+			} else if (taskItemId == 8) {
+				ds.setFrameFuzzyStatus(score);
+			} else if (taskItemId == 9) {
+				ds.setFrameDisplacedStatus(score);
+			} else if (taskItemId == 10) {
+				ds.setFrameColorcaseStatus(score);
+			} else if (taskItemId == 11) {
+				ds.setLightExceptionStatus(score);
+			}
+			deviceStatusMapper.insert(ds);
 		}
 	}
 
@@ -299,17 +354,15 @@ public class DataUtilServiceImpl implements DataUtilService {
 			HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		Server server = new Server();
-		List<Server> serverlist = new ArrayList<Server>();
-		if (ip != null) {
-			server.setIpaddress(ip);
-			serverlist = serverService.getAllListByIP(server);
-			if (serverlist != null)
-				for (Server s : serverlist)
-					if (s.getFlag() == 0 || s.getStatus() == 0) {
-						s.setStatus(1);
-						s.setFlag(1);
-						serverService.updatebyselective(s);
-					}
+		List<Server> serverlist = new ArrayList<Server>(); 
+		server.setIpaddress(ip);
+		serverlist = serverService.getAllListByIP(server);
+		if (serverlist != null){
+			for (Server s : serverlist) {
+				s.setStatus(1);
+				s.setFlag(1);
+				serverService.updatebyselective(s);
+			} 
 		}
 	}
 }

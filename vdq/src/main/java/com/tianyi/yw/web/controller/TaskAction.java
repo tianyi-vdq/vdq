@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.tianyi.yw.model.Task;
 import com.tianyi.yw.model.TaskItem;
 import com.tianyi.yw.model.TaskItemType;
+import com.tianyi.yw.service.DignosisService;
 import com.tianyi.yw.service.TaskService;
 
 import java.util.ArrayList;
@@ -37,6 +38,8 @@ public class TaskAction extends BaseAction {
 	@Resource(name = "taskService")
 	private TaskService taskService;
 
+	@Resource(name = "dignosisService")
+	private DignosisService dignosisService;
 	/**
 	 * 任务列表
 	 * 
@@ -255,6 +258,7 @@ public class TaskAction extends BaseAction {
 			Task task = taskService.getTaskById(id);
 			task.setFlag(0);
 			taskService.saveOrUpdateTask(task);
+			dignosisService.clear();
 			js.setCode(new Integer(0));
 			js.setMessage("任务终止成功!");
 		} catch (Exception e) {

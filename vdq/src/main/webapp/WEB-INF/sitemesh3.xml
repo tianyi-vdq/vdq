@@ -13,5 +13,6 @@
      <mapping path="**/jsonDelete**" exclue="true" />
      <mapping path="**/jsonUpdate**" exclue="true" />
      <mapping path="**/jsonSaveOrUpdate**" exclue="true" />
+     <mapping path="**/dataUtil/**" exclue="true" />
 </sitemesh>
     

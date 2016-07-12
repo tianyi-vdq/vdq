@@ -27,6 +27,7 @@ public class Constants {
 	public static final int IMAGE_RESIZE_HEIGHT = 150;
 
 	public static final int DEFAULT_PAGE_SIZE = 10;
+	public static final int DEFAULT_QUEUE_SIZE = 10;
 	/**
 	 * api鎺ュ彛杩斿洖鐘讹拷?鍏叡鐮佽〃 start
 	 */
@@ -46,7 +47,11 @@ public class Constants {
 	 */
 	public static final Integer STATUS_ENABLE = 0;
 	public static final Integer STATUS_DISABLE = 1;
-	
+
+	public static final Integer CHECK_RESULT_NORMAL = 3;
+	public static final Integer CHECK_RESULT_EXCEPTION = 1;
+	public static final Integer CHECK_RESULT_FAIL = 4;
+	public static final Integer CHECK_RESULT_WARN = 2;
 	/**
 	 * 鏈�柊姹囨姤鏃堕棿娈�	 */
 	

@@ -11,14 +11,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tianyi.yw.common.JsonResult;
+import com.tianyi.yw.common.utils.StringUtil;
 import com.tianyi.yw.model.Device;
 import com.tianyi.yw.model.DeviceDiagnosis;
 import com.tianyi.yw.model.Log;
 import com.tianyi.yw.model.Parame;
+import com.tianyi.yw.model.Server;
 import com.tianyi.yw.model.Task;
 import com.tianyi.yw.model.TaskItem;
 import com.tianyi.yw.service.DataUtilService;
@@ -27,6 +30,7 @@ import com.tianyi.yw.service.DignosisService;
 import com.tianyi.yw.service.LogService;
 import com.tianyi.yw.service.ParamService;
 import com.tianyi.yw.service.ServerService;
+import com.tianyi.yw.service.TaskRunning;
 import com.tianyi.yw.service.TaskService;
 
 @Scope("prototype")
@@ -40,6 +44,8 @@ public class DataUtilAction {
 	@Resource(name = "dataUtilService")
 	private DataUtilService dataUtilService;
 	
+	@Resource(name = "taskRunService")
+	private TaskRunning taskRunService;
 	@Resource(name = "logService")
 	private LogService logService;
 	
@@ -54,7 +60,41 @@ public class DataUtilAction {
 	
 	@Resource
 	private ServerService serverService;
-	    
+
+	 /**
+	 * 任务执行 立即执行
+	 * 
+	 * @param task
+	 * @param request
+	 * @param response
+	 * {@value id}
+	 * @return js
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/jsonloadTaskRun.do", method = RequestMethod.POST, produces = { "text/html;charset=UTF-8" })
+	public JsonResult<Task> RunTask(
+			@RequestParam(value = "id", required = false) final Integer id,
+			HttpServletRequest request, HttpServletResponse response) {
+		JsonResult<Task> js = new JsonResult<Task>();
+		js.setCode(new Integer(1));
+		js.setMessage("任务启动失败!");
+		try { 
+			Task task = taskService.getTaskById(id);
+			task.setFlag(1);
+			taskService.saveOrUpdateTask(task);
+			new Thread(){
+				public void run(){
+					taskRunService.TaskRun(id);
+					}
+			}.start();
+			js.setCode(0);
+			js.setMessage("任务启动成功,正在执行!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			js.setMessage("任务启动失敗,详细:"+e.getMessage());
+		}
+		return js;
+	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/jsonLoadDeviceList.do", produces = { "text/html;charset=UTF-8" })
@@ -77,6 +117,38 @@ public class DataUtilAction {
 		return js;
 	}
 	 
+	
+
+	
+	@ResponseBody
+	@RequestMapping(value = "/jsonLoadTaskList.do", produces = { "text/html;charset=UTF-8" })
+	public JsonResult<Task> jsonLoadTaskList(HttpServletRequest request,
+			HttpServletResponse response) {
+		JsonResult<Task> js = new JsonResult<Task>();
+		js.setCode(new Integer(1));
+		js.setMessage("加载当前有效任务失败!");
+		try{
+			List<Task> list = new ArrayList<Task>();
+			list = taskService.getTaskList(new Task());
+			Task temp = new Task();
+			for (Task t : list) {
+				if (t.getFlag() == 1) {
+					temp = t;
+					break;
+				}
+			}
+			List<Task> eff = new ArrayList<Task>();
+			eff.add(temp);
+			js.setList(eff);
+			js.setCode(0);
+			js.setMessage("加载当前有效任务成功！"); 
+		}catch(Exception ex){
+			ex.printStackTrace();
+			logService.writeLog(1, "加载当前有效任务失败!", ex.getMessage());
+		}
+		return js;
+	}
+	
 	/**
 	 * 服务器分配
 	 * @param count
@@ -158,7 +230,7 @@ public class DataUtilAction {
 	   */
 	    @ResponseBody
 		@RequestMapping(value = "/jsonSaveDiagnosis.do", produces = { "text/html;charset=UTF-8" })
-		public void DeviceDiagnosis(
+		public String DeviceDiagnosis(
 				@RequestParam(value = "id", required = false) int deviceId,
 				@RequestParam(value = "itemId", required = false) int taskItemId,
 				@RequestParam(value = "score", required = false) int score,
@@ -173,6 +245,7 @@ public class DataUtilAction {
 				ex.printStackTrace(); 
 				logService.writeLog(1, "保存数据失败", ex.getMessage());
 			} 
+			return "1";
 		}
 	    
 	    /** 
@@ -184,9 +257,25 @@ public class DataUtilAction {
 		 */
 		@ResponseBody
 		@RequestMapping(value = "/checkIP.do")
-		public void checkIP(  @RequestParam(value = "ip", required = false) String ip,
+		public JsonResult<Server> checkIP(  @RequestParam(value = "ip", required = false) String ip,
 				HttpServletRequest request, HttpServletResponse response) {
-			dataUtilService.CheckIP(ip, request, response);
+			JsonResult<Server> js = new JsonResult<Server>();
+			  js.setCode(1);
+			  js.setMessage("获取结果诊断项失败！");
+			  try{
+				  if(!StringUtil.isEmpty(ip)){
+					dataUtilService.CheckIP(ip, request, response);
+					js.setCode(0);
+					js.setMessage("服务启动成功!");
+				  }else{
+						js.setMessage("服务启动检测!");
+						logService.writeLog(1, "诊断服务启用出现异常", "诊断服务启用出现异常,详细:未获取到客户端ip");
+				  }
+			  }catch(Exception ex){ 
+					js.setMessage("服务启动失败!");
+					logService.writeLog(1, "诊断服务启用出现异常", "诊断服务启用出现异常,详细:"+ex.getMessage());
+			  }
+			  return js;
 		}
 		
 }

@@ -105,7 +105,7 @@ function sltSchEtime(date){
 	$("#endTimes").val(dates);
 }
  function runTask(id){
-	$.messager.confirm("执行确认","确认立即执行该任务?",function(r){  
+	$.messager.confirm("执行确认","确认执行该任务,并在后台自动运行?",function(r){  
 		    if (r){  
 		  //  $.messager.alert('任务开始启动!');
 			$.ajax({
@@ -125,7 +125,29 @@ function sltSchEtime(date){
 			});
 	    }  
 	}); 
-}   
+}  
+function runTaskNow(id){
+	$.messager.confirm("执行确认","确认立即执行该任务?",function(r){  
+		    if (r){  
+		  //  $.messager.alert('任务开始启动!');
+			$.ajax({
+				url : "<%=basePath%>dataUtil/jsonloadTaskRun.do?id="+id,
+				type : "post",  
+		    	dataType : "json",								
+				success : function(data) { 									
+		  			if(data.code == 0){ 
+		  				$.messager.alert('任务启动信息',data.message,'info',function(){ 
+		  					search(); 
+		  					//window.location.href="taskList.do";
+		      		});
+		  			}else{		  			    
+						$.messager.alert('错误信息','任务启动失败！','error');
+		  			}  
+			    } 
+			});
+	    }  
+	}); 
+} 
 function deleteTask(id){
 	$.messager.confirm("删除确认","确认删除该任务?",function(r){  
 		    if (r){   
@@ -184,14 +206,14 @@ function StopTask(id){
 						<span>任务名称：</span><input type="text" name="searchName"   validType="SpecialWord"
 						 class="easyui-validatebox" 
 							placeholder="搜索" value="${Task.searchName}" type="hidden"/> 
-						<span>开始时间：</span>
+						<%-- <span>开始时间：</span>
 						<input id="startedTimes" name="startedTimes" value="${Task.startedTimes}" type="hidden" />
 						 <input data-options="editable:false,onSelect:sltSchStime" type="text"  class="easyui-datebox" 
 					    	 style="width:180px;height:32px;"/>  
 						<span>结束时间：</span>
 						<input id="endTimes" name="endTimes" value="${Task.endTimes}" type="hidden"  />
 						 <input data-options="editable:false,onSelect:sltSchEtime"   type="text"  class="easyui-datebox"
-						   style="width:180px;height:32px;"/> 
+						   style="width:180px;height:32px;"/>  --%>
 						<span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>						
 					</div>
 
@@ -210,26 +232,27 @@ function StopTask(id){
 						<th width="4%" style="display:none">&nbsp;</th>
 						<th width="12%" >任务名称</th> 
 						<th width="10%" >启动时间</th> 
-						<th width="10%" >执行间隔</th>
+						<!-- <th width="10%" >执行间隔</th> -->
 						<th width="10%" >执行次数</th>
 						<!-- <th width="8%" >诊断并发路数</th>  -->
 				 		<th style="text-align: left" >诊断项目</th>  
-						<th width="8%">操作</th>					
+						<th width="15%">操作</th>					
 					<!--  	<th width="8%" >删除任务</th> -->
 					</tr>
-					<c:forEach var="item" items="${Tasklist}">
+					<c:forEach var="item" items="${Tasklist}">  
 						<tr> 
 							<td align="right" style="display:none">${item.id}</td> 
 							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.name}</td> 
 							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.startTimes}</td> 
-							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.runIntervals}</td> 
+							<%-- <td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.runIntervals}</td>  --%>
 							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.runTimes}</td> 
 						<%-- 	<td align="right" onclick="window.location.href='taskI nfo.do?id=${item.id}'" >${item.runCount}</td>   --%>						  
 							<td style="text-align: left" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.itemTypeName}</td>  							  
 							<td align="left">							
 							<c:if test="${item.flag == 0 && Task.flagCount == 0}">
 						<%-- 	<input id="runTaskId" name="runTaskId" value="${item.id}" type="hidden" />		 --%>					
-								<a style="color:blue"  onclick="runTask(${item.id});">立即执行</a>							
+								<a style="color:blue"  onclick="runTask(${item.id});">后台运行</a>							
+								<a style="color:blue;margin-left:15px;"  onclick="runTaskNow(${item.id});">立即执行</a>							
 								<a style="color:blue;margin-left:15px;"  onclick="runTask(${item.id});">删除</a>											
 							</c:if>
 
