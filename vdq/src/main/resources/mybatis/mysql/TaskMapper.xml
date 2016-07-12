@@ -137,10 +137,10 @@
       and   
       	t.name like CONCAT('%',#{searchName,jdbcType=VARCHAR},'%')
      </if>
-     <if test="startedTime != null and startedTime !='' and endTime !='' and endTime != null">
+      <if test="startedTime != null and startedTime !='' and endTime !='' and endTime != null">
      and 
         t.start_time  between #{startedTime,jdbcType=DATE}  and #{endTime,jdbcType=DATE} 
-     </if>	     
+     </if>	
   </sql>
   
    <select id="getExistList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Task" >

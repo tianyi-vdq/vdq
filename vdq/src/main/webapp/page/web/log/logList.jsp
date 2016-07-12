@@ -81,7 +81,7 @@ function getSelectDate(date){
 	$("#searchTimes").val(dates);
 }    
 function exportLog(){
-    var filepath = "d:/DownLog";
+    var filepath = "C:/Users/lq/Downloads";
 	$.messager.confirm("执行确认","确认导出全部日志?导出路径:"+filepath,function(r){  
 		    if (r){  
 		  //  $.messager.alert('导出开始!');
@@ -153,10 +153,10 @@ function exportLog(){
 				<table class="yw-cm-table yw-center yw-bg-hover">
 					<tr style="background-color:#D6D3D3;font-weight: bold;">
 						<th style="display:none">&nbsp;</th>
-						<th width="20%">日志内容</th>  
+						<th >日志内容</th>  
 						<th width="14%">日志类型</th> 
 			    		<th width="14%">日志记录时间</th>
-						<th>日志详细描述</th>
+						<th width="60%">日志详细描述</th>
 						
 					</tr>
 					<c:forEach var="item" items="${Loglist}">

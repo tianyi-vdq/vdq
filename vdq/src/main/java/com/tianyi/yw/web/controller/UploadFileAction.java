@@ -151,6 +151,8 @@ public class UploadFileAction extends BaseAction {
 							|| "".equals(point.getIpAddress())) {
 						nulllist.add(point);
 					} else {
+						if(point.getPlatformId() != null)
+							point.setDeviceKey(point.getPlatformId()+"*"+point.getPointId());
 						list.add(point);
 					}
 				}
@@ -535,34 +537,42 @@ public class UploadFileAction extends BaseAction {
 				Device point = new Device();
 				XSSFCell cell0 = row.getCell(0);
 				if (cell0 != null || "".equals(cell0)) {
+					cell0.setCellType(Cell.CELL_TYPE_STRING);
 					point.setPointId(cell0.getStringCellValue());
 				}
 				XSSFCell cell1 = row.getCell(1);
 				if (cell1 != null || "".equals(cell1)) {
+					cell1.setCellType(Cell.CELL_TYPE_STRING);
 					point.setPointNumber(cell1.getStringCellValue());
 				}
 				XSSFCell cell2 = row.getCell(2);
 				if (cell2 != null || "".equals(cell2)) {
+					cell2.setCellType(Cell.CELL_TYPE_STRING);
 					point.setPointName(cell2.getStringCellValue());
 				}
 				XSSFCell cell3 = row.getCell(3);
 				if (cell3 != null || "".equals(cell3)) {
+					cell3.setCellType(Cell.CELL_TYPE_STRING);
 					point.setPointNaming(cell3.getStringCellValue());
 				}
 				XSSFCell cell4 = row.getCell(4);
 				if (cell4 != null || "".equals(cell4)) {
+					cell4.setCellType(Cell.CELL_TYPE_STRING);
 					point.setType(cell4.getStringCellValue());
 				}
 				XSSFCell cell5 = row.getCell(5);
 				if (cell5 != null || "".equals(cell5)) {
+					cell5.setCellType(Cell.CELL_TYPE_STRING);
 					point.setAddress(cell5.getStringCellValue());
 				}
 				XSSFCell cell6 = row.getCell(6);
 				if (cell6 != null || "".equals(cell6)) {
+					cell6.setCellType(Cell.CELL_TYPE_STRING);
 					point.setIpAddress(cell6.getStringCellValue());
 				}
 				XSSFCell cell7 = row.getCell(7);
 				if (cell7 != null || "".equals(cell7)) {
+					cell7.setCellType(Cell.CELL_TYPE_STRING);
 					for(Area a:areaList){
 						if(a.getName().equals(cell7.getStringCellValue())){
 							point.setAreaId(a.getId());
@@ -570,9 +580,13 @@ public class UploadFileAction extends BaseAction {
 							break;
 						}
 					}
+				}else{
+					point.setAreaId(areaList.get(0).getId());
+					point.setAreaName(areaList.get(0).getName());
 				}
 				XSSFCell cell8 = row.getCell(8);
 				if (cell8 != null || "".equals(cell8)) {
+					cell8.setCellType(Cell.CELL_TYPE_STRING);
 					point.setRtspUrl((cell8.getStringCellValue()));
 				}
 				XSSFCell cell9 = row.getCell(9);
@@ -585,6 +599,13 @@ public class UploadFileAction extends BaseAction {
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
+				}else{
+					point.setFlag(0);
+				}
+				XSSFCell cell10 = row.getCell(10);
+				if (cell10 != null || "".equals(cell10)){
+					cell10.setCellType(Cell.CELL_TYPE_STRING);
+					point.setPlatformId(cell10.getStringCellValue());
 				}
 				result.add(point);
 			}
@@ -608,34 +629,42 @@ public class UploadFileAction extends BaseAction {
 				Device point = new Device();
 				HSSFCell cell0 = row.getCell(0);
 				if (cell0 != null || "".equals(cell0)) {
+					cell0.setCellType(Cell.CELL_TYPE_STRING);
 					point.setPointId(cell0.getStringCellValue());
 				}
 				HSSFCell cell1 = row.getCell(1);
 				if (cell1 != null || "".equals(cell1)) {
+					cell1.setCellType(Cell.CELL_TYPE_STRING);
 					point.setPointNumber(cell1.getStringCellValue());
 				}
 				HSSFCell cell2 = row.getCell(2);
 				if (cell2 != null || "".equals(cell2)) {
+					cell2.setCellType(Cell.CELL_TYPE_STRING);
 					point.setPointName(cell2.getStringCellValue());
 				}
 				HSSFCell cell3 = row.getCell(3);
 				if (cell3 != null || "".equals(cell3)) {
+					cell3.setCellType(Cell.CELL_TYPE_STRING);
 					point.setPointNaming(cell3.getStringCellValue());
 				}
 				HSSFCell cell4 = row.getCell(4);
 				if (cell4 != null || "".equals(cell4)) {
+					cell4.setCellType(Cell.CELL_TYPE_STRING);
 					point.setType(cell4.getStringCellValue());
 				}
 				HSSFCell cell5 = row.getCell(5);
 				if (cell5 != null || "".equals(cell5)) {
+					cell5.setCellType(Cell.CELL_TYPE_STRING);
 					point.setAddress(cell5.getStringCellValue());
 				}
 				HSSFCell cell6 = row.getCell(6);
 				if (cell6 != null || "".equals(cell6)) {
+					cell6.setCellType(Cell.CELL_TYPE_STRING);
 					point.setIpAddress(cell6.getStringCellValue());
 				}
 				HSSFCell cell7 = row.getCell(7);
 				if (cell7 != null || "".equals(cell7)) {
+					cell7.setCellType(Cell.CELL_TYPE_STRING);
 					for(Area a:areaList){
 						if(a.getName().equals(cell7.getStringCellValue())){
 							point.setAreaId(a.getId());
@@ -643,9 +672,13 @@ public class UploadFileAction extends BaseAction {
 							break;
 						}
 					}
+				}else{
+					point.setAreaId(areaList.get(0).getId());
+					point.setAreaName(areaList.get(0).getName());
 				}
 				HSSFCell cell8 = row.getCell(8);
 				if (cell8 != null || "".equals(cell8)) {
+					cell8.setCellType(Cell.CELL_TYPE_STRING);
 					point.setRtspUrl((cell8.getStringCellValue()));
 				}
 				HSSFCell cell9 = row.getCell(9);
@@ -654,6 +687,13 @@ public class UploadFileAction extends BaseAction {
 					String s = cell9.getStringCellValue();
 					Integer i = Integer.valueOf(s);
 					point.setFlag(i);
+				}else{
+					point.setFlag(0);
+				}
+				HSSFCell cell10 = row.getCell(10);
+				if (cell10 != null || "".equals(cell10)){
+					cell10.setCellType(Cell.CELL_TYPE_STRING);
+					point.setPlatformId(cell10.getStringCellValue());
 				}
 				result.add(point);
 			}
