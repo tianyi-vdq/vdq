@@ -110,20 +110,13 @@ function saveTask(obj){
         	                 <%-- <input name="startTimes"   doc="taskInfo" type="hidden" value="${task.startTime}"/> --%>
         	                 <span style="color:red">*</span> 
 						</td>
-						</tr>
-						<tr> 
-							<td align="right">执行间隔： </td>
-							<td><input  id="runIntervals" name="runIntervals" doc="taskInfo" onblur="valueTrim(this);" type="text" value="${Task.runIntervals}" class="easyui-validatebox"  required="true"   validType="number" style="width:254px;height:28px;"/>
-        	                <%-- <input name="runTimes" value="${task.runTimes}" type="hidden" /> --%>
-        	                <span style="color:red">*</span>
-                         	</td>
-                         	 </tr>
-						<tr>
+						</tr>						
+						<%-- <tr>
 							<td align="right">执行次数：</td>
 							<td><input id="runTimes" name="runTimes" doc="taskInfo" onblur="valueTrim(this);" type="text" value="${Task.runTimes}" class="easyui-validatebox"  required="true"   validType="number" style="width:254px;height:28px;"/>
-                           <%--  <input name="runTimes" doc="taskInfo" type="hidden" value="${task.runTimes}"/> --%>
+                            <input name="runTimes" doc="taskInfo" type="hidden" value="${task.runTimes}"/>
                         	<span style="color:red">*</span> </td>
-						</tr>
+						</tr> --%>
 						<%-- <tr>
 							<td align="right">运行次数：</td>
 							<td><input id="runCount" name="runCount" onblur="valueTrim(this);" doc="taskInfo" type="text" value="${Task.runCount}" class="easyui-validatebox"  required="true"   validType="number" style="width:254px;height:28px;"/>
