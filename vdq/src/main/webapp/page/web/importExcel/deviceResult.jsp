@@ -54,6 +54,7 @@
 						<th>Ip地址</th>
 						<th>RTSP</th> 
 						<th>所属区域</th> 
+						<th>平台ID</th>
 					</tr>
 					<c:forEach var="item" items="${pointlist}">
 						<tr>
@@ -67,6 +68,7 @@
 							<td>${item.ipAddress}</td> 
 							<td>${item.rtspUrl}</td>
 							<td>${item.areaName}</td>
+							<td>${item.platformId}</td>
 						</tr>
 					</c:forEach>
 				</table> 

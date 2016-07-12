@@ -21,6 +21,8 @@ import com.tianyi.yw.model.TaskItemType;
 import com.tianyi.yw.service.TaskService;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,10 +59,17 @@ public class TaskAction extends BaseAction {
 			String searchName = new String(task.getSearchName().getBytes("iso8859-1"), "utf-8");
 			task.setSearchName(searchName);
 		}
-		if (task.getStartedTimes() != null
-				&& !task.getStartedTimes().equals("")
-				&& task.getEndTimes() != null && !task.getEndTimes().equals("")) {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");// 小写的mm表示的是分钟
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");// 小写的mm表示的是分钟
+		if ((task.getStartedTimes() != null
+				&& !task.getStartedTimes().equals(""))
+				|| (task.getEndTimes() != null && !task.getEndTimes().equals(""))) {
+			if(!(task.getStartedTimes() != null
+					&& !task.getStartedTimes().equals(""))){
+				task.setStartedTimes("2000-01-01");
+			}
+			if(!(task.getEndTimes() != null && !task.getEndTimes().equals(""))){
+				task.setEndTimes("2050-01-01");
+			}
 			Date date1 = sdf.parse(task.getStartedTimes());
 			Date date2 = sdf.parse(task.getEndTimes());
 			if (date1.before(date2)) {	
@@ -71,8 +80,7 @@ public class TaskAction extends BaseAction {
 				c.add(Calendar.DATE, 1);
 				task.setEndTime(c.getTime());
 			}
-		}		
-
+		}
 		if (task.getPageNo() == null)
 			task.setPageNo(1);
 		task.setPageSize(Constants.DEFAULT_PAGE_SIZE);
@@ -112,7 +120,7 @@ public class TaskAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response) {
 		JsonResult<Task> js = new JsonResult<Task>();
 		js.setCode(new Integer(1));
-		js.setMessage("保存失败!");
+		js.setMessage("保存失败!");		
 		try {
 			if (task.getId() == null || task.getId() == 0) {
 				task.setId(0);
@@ -124,7 +132,17 @@ public class TaskAction extends BaseAction {
 				task.setStartTime(sdf.parse(startTimes));
 			}
 			String message = null;
-			if (task.getName() != null) {
+			//执行中的任务只能停止，不可编辑
+			if(task.getId() != 0 && task.getId() != null){
+				Task t = new Task();
+				t = taskService.getTaskById(task.getId());
+				task.setName(t.getName());
+				if(t.getFlag() == 1 && task.getFlag() == 1){
+					js.setMessage("任务执行中不可编辑！");
+					return js;
+				}
+			}
+			if (task.getName() != null ) {
 				Task p = new Task();
 				String name = task.getName();
 				p.setName(name);
@@ -167,6 +185,7 @@ public class TaskAction extends BaseAction {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		
 		return js;
 	}
 
@@ -220,16 +239,22 @@ public class TaskAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response) {
 		JsonResult<Task> js = new JsonResult<Task>();
 		js.setCode(new Integer(1));
-		js.setMessage("任务启动失败!");
-		try {
+		js.setMessage("任务启动失败!");		
+		try {			
 			Task task = taskService.getTaskById(id);
+			//诊断空项目判断
+			if(task.getItemTypeId() == null){
+				js.setMessage("请选择至少一个诊断项目！");
+				return js;
+			}
 			task.setFlag(1);
-			taskService.saveOrUpdateTask(task);
+			taskService.saveOrUpdateTask(task);			
 			js.setCode(new Integer(0));
 			js.setMessage("任务启动成功!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return js;
 	}
 	

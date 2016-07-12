@@ -299,7 +299,7 @@ $(document).ready(function(){
 						<th width="4%" style="display:none"></th>
 						<th style="border-left:1px #E4E9EF solid;">设备ID</th>
 						<th>设备编号</th>
-						<th>设备名称</th>
+					 	<th>设备名称</th>
 						<th>IP地址</th> 
 						<th>所属区域</th> 
 					</tr>
@@ -309,9 +309,9 @@ $(document).ready(function(){
 							<td width="4%" align="center" style="display:none">${group.id}</td>
 							<td style="border-left:1px #E4E9EF solid;" align="left">${item.pointId}</td>
 							<td>${item.pointNumber}</td>
-							<td>${item.pointName}</td>
+							 <td>${item.pointName}</td>
 							<td>${item.ipAddress}</td>
-							<td>${item.areaName}</td>
+							<td>${item.areaName}</td> 
 						</tr>
 					</c:forEach>
 						<tr style="height:35px;">

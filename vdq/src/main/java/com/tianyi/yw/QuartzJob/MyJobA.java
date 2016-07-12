@@ -20,26 +20,26 @@ public class MyJobA {
 	private TaskRunning taskRunService;
 
 	public void work() {
-		List<Task> list = new ArrayList<Task>();
-		list = taskService.getTaskList(new Task());
-		Task temp = new Task();
-		for (Task t : list) {
-			if (t.getFlag() == 1) {
-				temp = t;
-				break;
-			}
-		}
-		if (temp != null && temp.getName() != null) {
-			Calendar rightNow = Calendar.getInstance();
-			Date now = rightNow.getTime();
-			List<Date> nextTime = new ArrayList<Date>();
-			if(temp.getRunIntervals()!= null&& temp.getRunIntervals()>0){
-				nextTime = getIntevelTime(temp);
-			}
-			if (now.compareTo(temp.getStartTime())==0||nextTime.contains(now)) {
-				taskRunService.TaskRun(temp.getId());
-			}
-		}
+//		List<Task> list = new ArrayList<Task>();
+//		list = taskService.getTaskList(new Task());
+//		Task temp = new Task();
+//		for (Task t : list) {
+//			if (t.getFlag() == 1) {
+//				temp = t;
+//				break;
+//			}
+//		}
+//		if (temp != null && temp.getName() != null) {
+//			Calendar rightNow = Calendar.getInstance();
+//			Date now = rightNow.getTime();
+//			List<Date> nextTime = new ArrayList<Date>();
+//			if(temp.getRunIntervals()!= null&& temp.getRunIntervals()>0){
+//				nextTime = getIntevelTime(temp);
+//			}
+//			if (now.compareTo(temp.getStartTime())==0||nextTime.contains(now)) {
+//				taskRunService.TaskRun(temp.getId());
+//			}
+//		}
 	}
 
 	private List<Date> getIntevelTime(Task temp) {
