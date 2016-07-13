@@ -10,6 +10,8 @@ public class TaskTime  extends Page{
     private Integer taskId;
 
     private Date startTime;
+    
+    private String startTimes;
 
     public Integer getId() {
         return id;
@@ -34,4 +36,12 @@ public class TaskTime  extends Page{
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
+
+	public String getStartTimes() {
+		return startTimes;
+	}
+
+	public void setStartTimes(String startTimes) {
+		this.startTimes = startTimes;
+	}
 }

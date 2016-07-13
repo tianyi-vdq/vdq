@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.tianyi.yw.model.Task;
 import com.tianyi.yw.model.TaskItem;
 import com.tianyi.yw.model.TaskItemType;
@@ -202,16 +204,18 @@ public class TaskAction extends BaseAction {
 	 * @param response
 	 * {@value id}
 	 * @return web/task/taskInfo
+	 * @throws ParseException 
 	 */
 	@RequestMapping(value = "/taskInfo.do", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public String editTask(
 			@RequestParam(value = "id", required = false) Integer id,
-			HttpServletRequest req, HttpServletResponse res) {
+			HttpServletRequest req, HttpServletResponse res) throws ParseException {
 		TaskItemType taskItemType = new TaskItemType();
 		List<TaskItemType> taskItemTypelist = new ArrayList<TaskItemType>();
 		Task task = new Task();
 		TaskTime taskTime = new TaskTime();
 		List<TaskTime> taskTimelist = new ArrayList<TaskTime>();
+		List<String> list = new ArrayList<String>(); //临时集合，排序任务执行时间
 		task.setId(id);
 		taskTime.setTaskId(id);
 		if(task.getId()>0){
@@ -224,18 +228,25 @@ public class TaskAction extends BaseAction {
 				timeCount = taskService.getTaskTimeCount(taskTime);
 				task.setRunTimes(timeCount);
 				String at = null;
+				String startTime = null;
 				if(taskTimelist.size() != 0){
 					for(TaskTime t:taskTimelist){										
-						if(!task.getStartTime().before(t.getStartTime()))
+						/*if(!task.getStartTime().before(t.getStartTime())){
 							task.setStartTime(t.getStartTime());
-						if(at == null){
+						}*/
+						startTime = sdf.format(t.getStartTime());
+						list.add(startTime);
+						/*if(at == null){
 							at = sdf.format(t.getStartTime());
 						}else{
 							at += "," + sdf.format(t.getStartTime());
-						}
+						}*/
 					}
-					task.setAllTimes(at);
-					task.setStartTimes(sdf.format(task.getStartTime()));	
+					Collections.sort(list); //对任务执行时间排序
+					//Collections.reverse(list);
+					//task.setAllTimes(at);
+					//task.setStartTimes(sdf.format(task.getStartTime()));	
+					req.setAttribute("timeList",list);
 				}
 								
 			}

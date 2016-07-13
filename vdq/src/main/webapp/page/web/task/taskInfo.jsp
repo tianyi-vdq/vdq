@@ -20,19 +20,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript">
 		$(document).ready(function(){
 		 	var taskId = $("#hid_taskId").val();		 	
-		 	if(taskId>0){
-		 		var itemTypeId = $("#hid_itemTypeId").val();
-		 		var allTime = $("#hid_allTimes").val();
-		 		var runTimes = $("#hid_runTimes").val();
-		 		var time = allTime.split(",");
-		 		var array = itemTypeId.split(",");		 		
-		 		$.each(time,function(index,arr){
-		 			addMoreTime(obj[0],arr);
-		 		});
-		 		$.each(array,function(index,arr){
-		 			$("#itemType"+arr).attr("checked","checked");
-		 		});
-		 	}
+		 	/* var timeSize = $("#timeList").val();
+		 	var array = new Array();
+		 	if(timeSize != null && timeSize != "" && timeSize != undefined){
+		 		timeSize = timeSize.substring(1,timeSize.length-1);
+				array = timeSize.split(",");
+				for(var i = 0;i < array.length;i++){
+					var val = array[i];
+					var newDate = new Date(val);
+					var date = formatDate(newDate,"yyyy-MM-dd hh:mm:ss")
+					alert("#time_"+$.trim(array[i]));
+					$("#time_"+$.trim(array[i])).datetimebox({
+			            required: true,
+			            value: date,
+			        });
+				}
+		 	}else{
+		 		alert(2);
+		 	} */
 		 	var flag = $("#flag").val();
 		 	if(flag == 1){
 		 		/* $("#taskTable").attr("readonly",true); */
@@ -43,60 +48,66 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		 		/* $("#digType").onclick = function(){return false;} */
 		 	}
 		 });
-function saveTask(obj){
-	if ($('#taskInfoForm').form('validate')) {
-		$(obj).attr("onclick", ""); 
-		showProcess(true, '温馨提示', '正在提交数据...'); 
-		 $('#taskInfoForm').form('submit',{
-		  		success:function(data){ 
-					showProcess(false);
-		  			data = $.parseJSON(data);
-		  			if(data.code==0){	  					
-		  				$.messager.alert('保存信息',data.message,'info',function(){
-		  					window.location.href="task/taskList.do";
-	        			});
-	  		/* 			success : function(data) {
-										showProcess(false);
-										data = $.parseJSON(data);
-										if (data.code == 0) {
-											$.messager.alert('保存信息',data.message,'info',
-															function() {
-																window.location.href = "device/deviceList.do";
-															});
-											//$("#i_back").click();	 */
-		  			}else{
-						$.messager.alert('错误信息',data.message,'error',function(){
-	        			});
-						$(obj).attr("onclick", "saveTask(this);"); 
-		  			}
-		  		}
-		  	 });  
-	}
-
-}   
-//新增更多执行时间
-	var count = 0;
-	function addMoreTime(obj,value){
-		count++;
-		var str = 
-            '<tr>'+
-		'<td width="10%" align="right">启动时间：</td>'+
-		'<td><input id="startTimes'+count+'" name="aTimes'+count+'" data-options="editable:false"  onblur="valueTrim(this);"  doc="taskInfo" type="text" value="'+value+'" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>'+
-	     ' <span style="color:red">*</span>'+
-	      '<span id="btnAddStartTime'+count+'" doc="taskInfo" class="yw-btn bg-blue ml60 cur" title="添加新的执行时间" onClick="addMoreTime(this,'');">+添加执行时间</span>'+
-		'<span doc="btn_action" class="yw-btn bg-red ml26 cur" onclick="deleteTime('+count+');">删除</span>'+
-		'</td></tr>'
-				
-		/* if(value!=""){
-			 str += ' disabled="true" ';
-		}  */
-		
-		/* if(value!=""){
-			 str += ' disabled="true" ';
-		} */
-		str += ' onfocus="openWin('+count+');"  name="areaUserName" class="easyui-validatebox"  style="width:554px;height:28px;" readonly="readonly"  /><span style="color:red">*</span>'+
-			'<span doc="btn_action" class="yw-btn bg-red ml26 cur" onclick="deleteArea('+count+');">删除</span>'+
-		 '</p>';
+		 var count=1;
+		  function addMoreTime(){
+		  	var targetObj = $("#startTimeList").append("<input data-options='editable:false,onchange:function(){ $(" + "\"#" + count + "\").val(this.value) }'  onblur='valueTrim(this);'  doc='taskInfo' type='text' class='easyui-datetimebox' required='true'  style='width:254px;height:28px;'/>")
+		  	.append("<input type='hidden' id='"+count+"'/>")
+		  	.append("<span style='color:red'>*</span> <br>");
+		  	$.parser.parse(targetObj);
+		  	count++;
+		  }
+		function saveTask(obj){
+			var startTimes = ""; //连接开始时间字符串
+			var array = new Array();
+			var timeSize = $("#timeList").val();
+			timeSize = timeSize.substring(1,timeSize.length-1);
+			array = timeSize.split(",");
+			for(var i = 0;i < array.length;i++){
+				var conn = $("#time_"+array[i]).datetimebox('getValue');
+				startTimes+=conn+",";
+			}
+			alert(startTimes);
+			if ($('#taskInfoForm').form('validate')) {
+				$(obj).attr("onclick", ""); 
+				showProcess(true, '温馨提示', '正在提交数据...'); 
+				 $('#taskInfoForm').form('submit',{
+				  		success:function(data){ 
+							showProcess(false);
+				  			data = $.parseJSON(data);
+				  			if(data.code==0){	  					
+				  				$.messager.alert('保存信息',data.message,'info',function(){
+				  					window.location.href="task/taskList.do";
+			        			});
+				  			}else{
+								$.messager.alert('错误信息',data.message,'error',function(){
+			        			});
+								$(obj).attr("onclick", "saveTask(this);"); 
+				  			}
+				  		}
+				  	 });
+			}
+		}
+		//格式化日期,
+      function formatDate(date,format){
+        var paddNum = function(num){
+          num += "";
+          return num.replace(/^(\d)$/,"0$1");
+        }
+        //指定格式字符
+        var cfg = {
+           yyyy : date.getFullYear() //年 : 4位
+          ,yy : date.getFullYear().toString().substring(2)//年 : 2位
+          ,M  : date.getMonth() + 1  //月 : 如果1位的时候不补0
+          ,MM : paddNum(date.getMonth() + 1) //月 : 如果1位的时候补0
+          ,d  : date.getDate()   //日 : 如果1位的时候不补0
+          ,dd : paddNum(date.getDate())//日 : 如果1位的时候补0
+          ,hh : date.getHours()  //时
+          ,mm : date.getMinutes() //分
+          ,ss : date.getSeconds() //秒
+        }
+        format || (format = "yyyy-MM-dd hh:mm:ss");
+        return format.replace(/([a-z])(\1)*/ig,function(m){return cfg[m];});
+      } 
 	</script>
   </head> 
   <body>
@@ -115,12 +126,11 @@ function saveTask(obj){
 				</div>
 				<div class="fr">
 					<!-- <span class="yw-btn bg-green mr26 hide" id="editBtn"  onclick="editTask();">编辑</span> -->
-					<span class="yw-btn bg-red mr26" id="saveBtn" onclick="saveTask(this);">保存</span>
-					<span class="yw-btn bg-green mr26"  onclick="$('#i_back').click();">返回</span>
+					<span id="btnAddStartTime" doc="taskInfo"  class="yw-btn bg-blue ml60 cur" onclick="addMoreTime();">添加执行时间</span>
+					<span class="yw-btn bg-red" style="margin-left: 10px;" id="saveBtn" onclick="saveTask(this);">保存</span>
+					<span class="yw-btn bg-green" style="margin-left: 10px;margin-right: 10px;" onclick="$('#i_back').click();">返回</span>
 				</div>
 			</div>
-			
-			
 				<form id="taskInfoForm" name="taskInfoForm" action="task/jsonSaveOrUpdateTask.do" method="post">
 					<div id="tab1" class="yw-tab">
 					<table class="yw-cm-table font16" id="taskTable">
@@ -130,6 +140,7 @@ function saveTask(obj){
 								<%-- <input name="name" type="hidden" doc="taskInfo" value="${task.name}"/> --%>
 								<input type="hidden" id="hid_taskId" name="id" doc="taskInfo" value="${Task.id}"/>
 								<input type="hidden" id="flag" value="${Task.flag}"/>
+								<input type="hidden" id="timeList" value="${timeList}"/>
 								<span style="color:red">*</span>
 							</td>
 						</tr> 
@@ -156,11 +167,20 @@ function saveTask(obj){
 					
 					<tr>
 						<td width="10%" align="right">启动时间：</td>
-						<td><input id="startTimes" name="aTimes" data-options="editable:false"  onblur="valueTrim(this);"  doc="taskInfo" type="text" value="${Task.startTimes}" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>
-        	                 <input id="hid_runTimes" name="runTimes" doc="taskInfo"  type="hidden" value="${Task.runTimes}" />
-        	                 <input id="hid_allTimes"name="allTimes"   doc="taskInfo" type="hidden" value="${Task.allTimes}"/> 
-        	                 <span style="color:red">*</span> 
-        	                 <span id="btnAddStartTime" doc="taskInfo" class="yw-btn bg-blue ml60 cur" title="添加新的执行时间" onClick="addMoreTime(this,'');">+添加执行时间</span>
+						<td id="startTimeList">
+							<c:if test="${empty timeList}">
+								<input type="hidden" id="emptyTime" style="width:254px;height:28px;"/>
+								<input data-options="editable:false,onChange:function(value){ $('#emptyTime').val(value) }"  onblur="valueTrim(this);"  doc="taskInfo" type="text" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>
+	        	                <span style="color:red">*</span> 
+							</c:if>
+							<c:if test="${!empty timeList}">
+								<c:forEach var="item" items="${timeList }">
+									<%-- <input id="time_${item}" type="text"  style="width:254px;height:28px;"/> --%>
+									<input data-options="editable:false,onChange:function(value){ $('#time_${item}').val(value) }"  onblur="valueTrim(this);"  doc="taskInfo" type="text" value="${item}" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>
+									<input type="text" id="time_${item}" value="${item}"/>
+		        	                <span style="color:red">*</span> <br> 
+								</c:forEach>
+							</c:if>
 						</td>
 						</tr>						
 						<%-- <tr>
