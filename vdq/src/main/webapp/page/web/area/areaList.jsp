@@ -245,13 +245,13 @@ function excelChange(file){
 		<div class="fl yw-lump">
 			<div class="yw-lump-title">
 				<i class="yw-icon icon-partner"></i><span>区域列表</span><input type="hidden" value="${area.id}" id="hid_areaId" />
-				<span class="fr yw-btn bg-orange line-hei22 mr10 mt9 cur">导入区域
+				<%-- <span class="fr yw-btn bg-orange line-hei22 mr10 mt9 cur">导入区域
 					<div class="temp">
 					<form id="fileForms" name="fileForms" action="${pageContext.request.contextPath}/fileUpload/uploadAreaExcel.do"  enctype="multipart/form-data" method="post" style="margin:0;padding:0;">
 				       	<input type="file" name="file" id="jfile" class="yw-upload-file" onChange="excelChange(this);">
 					</form>
 					</div>
-				</span>	
+				</span> --%>	
 			</div>
 		</div>
 		<div class="fl yw-lump mt10">

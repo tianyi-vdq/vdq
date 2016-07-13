@@ -175,12 +175,11 @@ public class AreaAction  extends BaseAction {
 		js.setCode(new Integer(1));
 		js.setMessage("保存失败！");
 		try {
-			if(area.getParentId() == null || "".equals(area.getParentId())){
-				js.setMessage("请选择所属区域!");
-				return js;
-			}
 			if (area.getId() == null || area.getId() == 0) {
 				area.setId(0);
+				if(("").equals(area.getParentId()) || area.getParentId() == null){
+					area.setParentId(0);
+				}
 				String serialCode = getAreaSerialCode(area.getParentId());
 				if(serialCode.equals("")){
 					js.setMessage("创建区域编码出错!");
@@ -211,6 +210,7 @@ public class AreaAction  extends BaseAction {
 			if (area.getId() > 0) {
 				a.setId(area.getId());
 			}
+			a.setParentId(area.getParentId());
 			List<Area> lc = areaService.getExistArea(a);
 			if(lc.size()==0){
 				a.setFlag(0);
@@ -279,7 +279,9 @@ public class AreaAction  extends BaseAction {
 					String maxCodeStr =  maxCodeInt+""; 
 					int maxCodeStrLen = frontMaxCodeStr.length() + maxCodeStr.length();
 					int diff = lastMaxCodeStrLen - maxCodeStrLen;
-					if (diff == 1) {
+					if(diff == 0){
+						serialCode = frontMaxCodeStr + maxCodeStr;
+					} else if (diff == 1) {
 						serialCode = frontMaxCodeStr + "0" + maxCodeStr;
 					} else if (diff == 2) {
 						serialCode = frontMaxCodeStr + maxCodeStr;
