@@ -49,9 +49,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		 	if(flag == 1){
 		 		/* $("#taskTable").attr("readonly",true); */
 		 		$("#taskName").attr("disabled",true);
-		 		$("#runIntervals").attr("disabled",true);
-		 		$("#runTimes").attr("disabled",true);
-		 		$("#runCount").attr("disabled",true);
+		 		$("#ftimes").attr("disabled",true);
+		 	/* 	$("#runTimes").attr("disabled",true);
+		 		$("#runCount").attr("disabled",true); */
 		 		/* $("#digType").onclick = function(){return false;} */
 		 	}
 		 });
@@ -82,13 +82,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}
 			}
 			$("#timeList").val(startTimes); */
-			
+			 
 			if ($('#taskInfoForm').form('validate')) {
 				var st1 = $("#ftimes").timespinner("getHours");
 				var st2 = $("#ltimes").timespinner("getHours");
+				var st3 = $("#ftimes").timespinner("getMinutes");
+				var st4 = $("#ltimes").timespinner("getMinutes");
 				if(st2&&st2>0){ 
-					if(st1>st2){
-						$.messager.alert("操作提示","其他执行时间不能小于首次执行时间","error");
+					if(st1>st2 || (st1==st2&&st3>=st4)){
+						$.messager.alert("操作提示","其他执行时间不能小于等于首次执行时间","error");
 						return;
 					}
 					if(st2-st1<2){
@@ -184,11 +186,11 @@ function getLastTime(date){
 					<table class="yw-cm-table font16" id="taskTable">
 						<tr>
 							<td width="8%" align="right">任务名称：</td>
-							<td><input id="taskName" name="name" type="text" onblur="valueTrim(this);"  doc="taskInfo" value="${Task.name}" class="easyui-validatebox" required="true"  validType="Length[1,50]" style="width:254px;height:28px;"/>
+							<td><input id="taskName" name="name" type="text" onblur="valueTrim(this);"  doc="taskInfo" value="${Task.name}" required="true"  validType="Length[1,50]" style="width:254px;height:28px;"/>
 								<%-- <input name="name" type="hidden" doc="taskInfo" value="${task.name}"/> --%>
 								<input type="hidden" id="hid_taskId" name="id" doc="taskInfo" value="${Task.id}"/>
 								<input type="hidden" id="flag" value="${Task.flag}"/>
-								<input type="hidden" id="timeList" name="allTimes" value="${timeList}"/>
+								<%-- <input type="hidden" id="timeList" name="allTimes" value="${timeList}"/> --%>
 								<span style="color:red">*</span>
 							</td>
 						</tr> 

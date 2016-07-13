@@ -155,7 +155,7 @@ public class TaskAction extends BaseAction {
 			if(task.getId() != 0 && task.getId() != null){
 				Task t = new Task();
 				t = taskService.getTaskById(task.getId());
-				task.setName(t.getName());
+				//task.setName(t.getName());
 				if(t.getFlag() == 1 && task.getFlag() == 1){
 					js.setMessage("任务执行中不可编辑！");
 					return js;
