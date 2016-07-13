@@ -9,11 +9,11 @@
      <mapping path="**/index.do**" exclue="true" />
      <mapping path="**/login.do**" exclue="true" />
      <mapping path="**/jsonLoad**" exclue="true" />
+     <mapping path="**/jsonload**" exclue="true" />
      <mapping path="**/jsonSave**" exclue="true" />
      <mapping path="**/jsonDelete**" exclue="true" />
      <mapping path="**/jsonUpdate**" exclue="true" />
      <mapping path="**/jsonSaveOrUpdate**" exclue="true" />
      <mapping path="**/dataUtil/**" exclue="true" />
-     <mapping path="**/jsonloadLogExport.do/**" exclue="true" />
 </sitemesh>
     

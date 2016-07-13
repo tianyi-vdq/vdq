@@ -164,18 +164,18 @@ public class LogAction extends BaseAction
 	         font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);  
 	         style.setFont(font);  
 	         HSSFCell cell = row.createCell(0);  
-	         cell.setCellValue("日志ID");  
+	         /*cell.setCellValue("日志ID");  
 	         cell.setCellStyle(style);  
-	         cell = row.createCell((int) 1);  
+	         cell = row.createCell((int) 1);*/  
 	         cell.setCellValue("日志内容");  
 	         cell.setCellStyle(style);  
-	         cell = row.createCell(2);  
+	         cell = row.createCell(1);  
 	         cell.setCellValue("日志类型");  
 	         cell.setCellStyle(style);  
-	         cell = row.createCell(3);  
+	         cell = row.createCell(2);  
 	         cell.setCellValue("创建时间");  
 	         cell.setCellStyle(style);  
-	         cell = row.createCell(4);  
+	         cell = row.createCell(3);  
 	         cell.setCellValue("详细描述");  
 	         cell.setCellStyle(style);  
 	  		     
@@ -189,33 +189,39 @@ public class LogAction extends BaseAction
 	            row = sheet.createRow(i++);               
 	            // 第四步，创建单元格，并设置值  
 	         
-	            row.createCell(0).setCellValue((Integer) t.getId());  
-	            row.createCell(1).setCellValue((String) t.getContent());  
-	            row.createCell(2).setCellValue((String) t.getTypeName());  
-	            row.createCell(3).setCellValue((String) t.getCreateTimes()); 
-	            row.createCell(4).setCellValue((String) t.getDescription()); 		             
+	           // row.createCell(0).setCellValue((Integer) t.getId());  
+	            row.createCell(0).setCellValue((String) t.getContent());  
+	            row.createCell(1).setCellValue((String) t.getTypeName());  
+	            row.createCell(2).setCellValue((String) t.getCreateTimes()); 
+	            row.createCell(3).setCellValue((String) t.getDescription()); 		             
 	        }  	
 	        //设置下载路径
-	        String fileName = "视频诊断日志.xls";
-	        @SuppressWarnings("deprecation")
-			String filePath = request.getRealPath("/") + fileName;
-	        //response.addHeader("Content-Disposition", "attachment;filename="+ new String(fileName.getBytes(), "UTF-8"));    
+	        String fileName = "logInfo.xls";
+	        String filePath = request.getSession().getServletContext()
+					.getRealPath("temp");
+			//String filePath = request.getRealPath("/") + fileName;
+	        //response.setHeader("Content-Disposition", "attachment;filename="+ new String(fileName.getBytes(), "UTF-8"));    
 	        //response.setContentType("application/vnd.ms-excel;charset=gb2312");    
+	        filePath = filePath+"/"+fileName; 
+	        File file = new File(filePath);
+	        if(file.exists()){
+	        	file.delete();
+	        }
 	        try {
 				FileOutputStream os = new FileOutputStream(filePath);
 				logbook.write(os);
 				//fileName = new String(fileName.getBytes("ISO-8859-1"), "utf-8");
-				FileInputStream inStream = new FileInputStream(filePath);
+				/*FileInputStream inStream = new FileInputStream(filePath);
 				byte[] b = new byte[100];
 				int len;
 				while ((len = inStream.read(b)) > 0) {
 					response.getOutputStream().write(b, 0, len);
 					// this.getRes().getOutputStream().write(b,0,len);
 				}
-				inStream.close();
+				inStream.close();*/
 	        	os.close(); 			
 			    js.setCode(new Integer(0));
-			    js.setGotoUrl(filePath);
+			    js.setGotoUrl(fileName);
 			    js.setMessage("日志导出成功!");
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -268,7 +274,47 @@ public class LogAction extends BaseAction
 		return js;
 	}
 	
-	
+	@ResponseBody
+	@RequestMapping(value = "/downfile.do")
+	public void downFile(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(value = "filepath", required = true) String filepath) {
+		try {
+//			String moduleName = new String(filepath.getBytes("iso8859-1"),
+//					"utf-8");
+//			String filePath = request.getRealPath("/") + moduleName;
+			String filePath = request.getSession().getServletContext()
+					.getRealPath("temp")+"/" + filepath;
+			String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+			fileName = new String(fileName.getBytes("ISO-8859-1"), "utf-8");
+			/*response.reset();
+			response.setContentType("APPLICATION/OCTET-STREAM; charset=UTF-8");
+			response.setHeader("Content-disposition", "attachment;filename="
+					+ fileName + ".xls");*/
+			response.reset();
+			final String userAgent = request.getHeader("USER-AGENT");
+			if(StringUtils.contains(userAgent, "MSIE")){//IE浏览器  
+				fileName = URLEncoder.encode(fileName,"UTF8");  
+			}else if(StringUtils.contains(userAgent, "Mozilla")){//google,火狐浏览器  
+				fileName = new String(fileName.getBytes(), "ISO8859-1");  
+			}else{  
+				fileName = URLEncoder.encode(fileName,"UTF8");//其他浏览器  
+			}  
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");//这里设置一下让浏览器弹出下载提示框，而不是直接在浏览器中打开  
+			response.setContentType("application/vnd.ms-excel"); 
+			filePath = new String(filePath.getBytes("ISO-8859-1"), "utf-8");
+			FileInputStream inStream = new FileInputStream(filePath);
+			byte[] b = new byte[100];
+			int len;
+			while ((len = inStream.read(b)) > 0) {
+				response.getOutputStream().write(b, 0, len);
+				// this.getRes().getOutputStream().write(b,0,len);
+			}
+			inStream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 }
 
