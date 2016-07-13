@@ -23,4 +23,6 @@ public interface TaskTimeMapper {
 	int getTaskTimeCount(TaskTime record);
 
 	List<TaskTime> getAllTaskTimeList(Integer taskId);
+
+	void deleteByTaskId(Integer id);
 }

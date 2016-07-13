@@ -66,33 +66,36 @@ public class TaskAction extends BaseAction {
 			task.setSearchName(searchName);
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");// 小写的mm表示的是分钟
-		if ((task.getStartedTimes() != null
-				&& !task.getStartedTimes().equals(""))
-				|| (task.getEndTimes() != null && !task.getEndTimes().equals(""))) {
-			if(!(task.getStartedTimes() != null
-					&& !task.getStartedTimes().equals(""))){
-				task.setStartedTimes("2000-01-01");
-			}
-			if(!(task.getEndTimes() != null && !task.getEndTimes().equals(""))){
-				task.setEndTimes("2050-01-01");
-			}
-			Date date1 = sdf.parse(task.getStartedTimes());
-			Date date2 = sdf.parse(task.getEndTimes());
-			if (date1.before(date2)) {	
-											
-				task.setStartedTime(date1);
-				Calendar c = Calendar.getInstance();
-				c.setTime(date2);				
-				c.add(Calendar.DATE, 1);
-				task.setEndTime(c.getTime());
-			}
-		}
+//		if ((task.getStartedTimes() != null
+//				&& !task.getStartedTimes().equals(""))
+//				|| (task.getEndTimes() != null && !task.getEndTimes().equals(""))) {
+//			if(!(task.getStartedTimes() != null
+//					&& !task.getStartedTimes().equals(""))){
+//				task.setStartedTimes("2000-01-01");
+//			}
+//			if(!(task.getEndTimes() != null && !task.getEndTimes().equals(""))){
+//				task.setEndTimes("2050-01-01");
+//			}
+//			Date date1 = sdf.parse(task.getStartedTimes());
+//			Date date2 = sdf.parse(task.getEndTimes());
+//			if (date1.before(date2)) {	
+//											
+//				task.setStartedTime(date1);
+//				Calendar c = Calendar.getInstance();
+//				c.setTime(date2);				
+//				c.add(Calendar.DATE, 1);
+//				task.setEndTime(c.getTime());
+//			}
+//		}
 		if (task.getPageNo() == null)
 			task.setPageNo(1);
 		task.setPageSize(Constants.DEFAULT_PAGE_SIZE);
 		List<Task> tasklist = new ArrayList<Task>();
+		List<TaskTime> taskTimelist = new ArrayList<TaskTime>();
+		TaskTime taskTime = new TaskTime();
 		int totalCount = 0;
 		int flagCount = 0;
+		int timeCount = 0;
 		try {
 			SimpleDateFormat Format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			tasklist = taskService.getTaskList(task);
@@ -100,6 +103,14 @@ public class TaskAction extends BaseAction {
 			flagCount = taskService.getRunTaskCount(task);			
 			for(Task t : tasklist) {
 				t.setCreateTimes(Format.format(t.getCreateTime()));
+				taskTime.setTaskId(t.getId());
+				taskTimelist = taskService.getTaskTimeList(taskTime);				
+				for(TaskTime tt:taskTimelist){
+					if(tt.getStartTime().before(t.getStartTime()))
+						t.setStartTime(tt.getStartTime());
+				}
+				timeCount = taskService.getTaskTimeCount(taskTime);
+				t.setRunTimes(timeCount);
 				t.setStartTimes(Format.format(t.getStartTime()));				
 			}		
 		} catch (Exception ex) {

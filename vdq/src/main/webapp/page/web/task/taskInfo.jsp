@@ -19,7 +19,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	-->
 	<script type="text/javascript">
 		$(document).ready(function(){
-		 	var taskId = $("#hid_taskId").val();		 	
+		 	var taskId = $("#hid_taskId").val();
+		 	if(taskId>0){
+		 		var itemTypeId = $("#hid_itemTypeId").val();
+		 		var array = itemTypeId.split(",");
+		 		$.each(array,function(index,arr){
+		 			$("#itemType"+arr).attr("checked","checked");
+		 		});
+		 	}		 	
 		 	/* var timeSize = $("#timeList").val();
 		 	var array = new Array();
 		 	if(timeSize != null && timeSize != "" && timeSize != undefined){
@@ -50,8 +57,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		 });
 		 var count=1;
 		  function addMoreTime(){
-		  	var targetObj = $("#startTimeList").append("<input data-options='editable:false,onchange:function(){ $(" + "\"#" + count + "\").val(this.value) }'  onblur='valueTrim(this);'  doc='taskInfo' type='text' class='easyui-datetimebox' required='true'  style='width:254px;height:28px;'/>")
-		  	.append("<input type='hidden' id='"+count+"'/>")
+		  	var targetObj = $("#startTimeList").append("<input type='hidden' id='"+count+"'/>")
+		  	.append("<input data-options='editable:false,onChange:function(value){ $(" + "\"#" + count + "\").val(value) }'  onblur='valueTrim(this);'  doc='taskInfo' type='text' class='easyui-datetimebox' required='true'  style='width:254px;height:28px;'/>")
 		  	.append("<span style='color:red'>*</span> <br>");
 		  	$.parser.parse(targetObj);
 		  	count++;
@@ -62,11 +69,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			var timeSize = $("#timeList").val();
 			timeSize = timeSize.substring(1,timeSize.length-1);
 			array = timeSize.split(",");
-			for(var i = 0;i < array.length;i++){
-				var conn = $("#time_"+array[i]).datetimebox('getValue');
+			//追加之前的开始时间
+			for(var i = 1;i <= array.length;i++){
+				var conn = $("#time_"+i).val();
 				startTimes+=conn+",";
 			}
-			alert(startTimes);
+			if(count > 1){
+				for(var i=1;i < count;i++){
+					var conn = $("#"+i).val();
+					startTimes+=conn+",";
+				}
+			}
+			$("#timeList").val(startTimes);
 			if ($('#taskInfoForm').form('validate')) {
 				$(obj).attr("onclick", ""); 
 				showProcess(true, '温馨提示', '正在提交数据...'); 
@@ -140,7 +154,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								<%-- <input name="name" type="hidden" doc="taskInfo" value="${task.name}"/> --%>
 								<input type="hidden" id="hid_taskId" name="id" doc="taskInfo" value="${Task.id}"/>
 								<input type="hidden" id="flag" value="${Task.flag}"/>
-								<input type="hidden" id="timeList" value="${timeList}"/>
+								<input type="hidden" id="timeList" name="allTimes" value="${timeList}"/>
 								<span style="color:red">*</span>
 							</td>
 						</tr> 
@@ -164,6 +178,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						 <div class="cl"></div>
 						 </p>
 					</div> --%>
+					<tr>
+							<td width="8%" align="right">首次执行时间：</td>
+							<td><input id="startTimes" name="startTimes" data-options="editable:false" onblur="valueTrim(this);"  doc="taskInfo" value="${Task.startTimes}" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>							
+								<span style="color:red">*</span>
+							</td>
+						</tr> 
 					
 					<tr>
 						<td width="10%" align="right">启动时间：</td>
@@ -174,10 +194,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        	                <span style="color:red">*</span> 
 							</c:if>
 							<c:if test="${!empty timeList}">
-								<c:forEach var="item" items="${timeList }">
+								<c:forEach var="item" varStatus="xh" items="${timeList }">
 									<%-- <input id="time_${item}" type="text"  style="width:254px;height:28px;"/> --%>
-									<input data-options="editable:false,onChange:function(value){ $('#time_${item}').val(value) }"  onblur="valueTrim(this);"  doc="taskInfo" type="text" value="${item}" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>
-									<input type="text" id="time_${item}" value="${item}"/>
+									<input type="hidden" id="time_${xh.count}" value="${item}"/>
+									<input data-options="editable:false,onChange:function(value){ $('#time_${xh.count}').val(value) }"  onblur="valueTrim(this);"  doc="taskInfo" type="text" value="${item}" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>
 		        	                <span style="color:red">*</span> <br> 
 								</c:forEach>
 							</c:if>

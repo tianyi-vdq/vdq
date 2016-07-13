@@ -84,7 +84,7 @@ public class TaskServiceImpl implements TaskService {
 	private void saveOrUpdateTaskTime(Task task) {
 		// TODO Auto-generated method stub
 		if(!StringUtil.isEmpty(task.getAllTimes())){
-			taskTimeMapper.deleteByPrimaryKey(task.getId());
+			taskTimeMapper.deleteByTaskId(task.getId());
 			String[] ids = task.getAllTimes().split(",");
 			SimpleDateFormat sdf = new SimpleDateFormat(
 					"yyyy-MM-dd HH:mm:ss");
