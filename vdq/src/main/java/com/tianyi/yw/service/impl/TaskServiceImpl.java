@@ -171,5 +171,11 @@ public class TaskServiceImpl implements TaskService {
 		return taskTimeMapper.getAllTaskTimeList(taskId);
 	}
 
+	@Override
+	public List<Task> getEffectTaskList(Task task) {
+		// TODO Auto-generated method stub
+		return taskMapper.getEffectTaskList(task);
+	}
+
 }
 
