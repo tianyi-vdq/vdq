@@ -14,5 +14,6 @@
      <mapping path="**/jsonUpdate**" exclue="true" />
      <mapping path="**/jsonSaveOrUpdate**" exclue="true" />
      <mapping path="**/dataUtil/**" exclue="true" />
+     <mapping path="**/jsonloadLogExport.do/**" exclue="true" />
 </sitemesh>
     

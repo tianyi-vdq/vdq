@@ -25,7 +25,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    totalCount:'${Log.totalCount}',
 			    buttonClickCallback:PageClick                     /* 表示点击分页数按钮调用的方法 */                  
 			});
-			
 		}); 
 		
 PageClick = function(pageclickednumber) {
@@ -81,15 +80,14 @@ function getSelectDate(date){
 	$("#searchTimes").val(dates);
 }    
 function exportLog(){
-    var filepath = "C:/Users/lq/Downloads";
-	$.messager.confirm("执行确认","确认导出全部日志?导出路径:"+filepath,function(r){  
+    /* var filepath = "C:/Users/lq/Downloads"; */
+	$.messager.confirm("执行确认","确认导出全部日志?",function(r){  
 		    if (r){  
-		  //  $.messager.alert('导出开始!');
 			$.ajax({
-				url : "jsonloadLogExport.do?filepath="+filepath,
+				url : "jsonloadLogExport.do",
 				type : "post",  
 		    	dataType : "json",								
-				success : function(data) { 									
+				success : function(data) { 
 		  			if(data.code == 0){ 
 		  				$.messager.alert('导出信息',data.message,'info',function(){ 
 		  					search();
@@ -97,7 +95,10 @@ function exportLog(){
 		  			}else{		  			    
 						$.messager.alert('错误信息',data.massage,'error');
 		  			} 		 				
-			    } 			
+			    },
+			    error : function(data){
+			    	alert(1);
+			    }			
 			});
 	    }  
 	}); 

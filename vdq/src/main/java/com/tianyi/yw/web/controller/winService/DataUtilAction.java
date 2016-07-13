@@ -127,18 +127,10 @@ public class DataUtilAction {
 		JsonResult<Task> js = new JsonResult<Task>();
 		js.setCode(new Integer(1));
 		js.setMessage("加载当前有效任务失败!");
-		try{
-			List<Task> list = new ArrayList<Task>();
-			list = taskService.getTaskList(new Task());
-			Task temp = new Task();
-			for (Task t : list) {
-				if (t.getFlag() == 1) {
-					temp = t;
-					break;
-				}
-			}
-			List<Task> eff = new ArrayList<Task>();
-			eff.add(temp);
+		try{ 
+			Task task = new Task();
+			task.setFlag(1);
+			List<Task> eff = taskService.getEffectTaskList(task); 
 			js.setList(eff);
 			js.setCode(0);
 			js.setMessage("加载当前有效任务成功！"); 

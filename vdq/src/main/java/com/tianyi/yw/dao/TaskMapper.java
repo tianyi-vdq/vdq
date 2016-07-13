@@ -27,5 +27,7 @@ public interface TaskMapper {
 
 	Task getTaskById(Integer id);
 
+	List<Task> getEffectTaskList(Task task);
+
 }
 

@@ -1,9 +1,13 @@
 package com.tianyi.yw.web.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +19,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -123,13 +128,13 @@ public class LogAction extends BaseAction
 	 * @param request
 	 * @param response
 	 * @return js
+	 * @throws IOException 
 	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/jsonloadLogExport.do", method = RequestMethod.POST, produces = { "text/html;charset=UTF-8" })
 	public JsonResult<Log> RunTask(
-			@RequestParam(value = "filepath", required = false) String filepath,
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		JsonResult<Log> js = new JsonResult<Log>();
 		js.setCode(new Integer(1));
 		js.setMessage("日志导出失败!");
@@ -192,7 +197,54 @@ public class LogAction extends BaseAction
 	        }  	
 	        //设置下载路径
 	        String fileName = "视频诊断日志.xls";
-	        File file = new File(filepath);
+	        @SuppressWarnings("deprecation")
+			String filePath = request.getRealPath("/") + fileName;
+	        //response.addHeader("Content-Disposition", "attachment;filename="+ new String(fileName.getBytes(), "UTF-8"));    
+	        //response.setContentType("application/vnd.ms-excel;charset=gb2312");    
+	        try {
+				FileOutputStream os = new FileOutputStream(filePath);
+				logbook.write(os);
+				//fileName = new String(fileName.getBytes("ISO-8859-1"), "utf-8");
+				FileInputStream inStream = new FileInputStream(filePath);
+				byte[] b = new byte[100];
+				int len;
+				while ((len = inStream.read(b)) > 0) {
+					response.getOutputStream().write(b, 0, len);
+					// this.getRes().getOutputStream().write(b,0,len);
+				}
+				inStream.close();
+	        	os.close(); 			
+			    js.setCode(new Integer(0));
+			    js.setGotoUrl(filePath);
+			    js.setMessage("日志导出成功!");
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			/*FileInputStream inStream = new FileInputStream(logbook.write());
+			byte[] b = new byte[100];
+			int len;
+			while ((len = inStream.read(b)) > 0) {
+				response.getOutputStream().write(b, 0, len);
+				// this.getRes().getOutputStream().write(b,0,len);
+			}
+			inStream.close();
+			
+			
+			OutputStream os = response.getOutputStream();  
+	        xls.getWorkbook().write(os);  
+	        os.flush(); 
+			
+			filePath = new String(filePath.getBytes("ISO-8859-1"), "utf-8");
+			FileInputStream inStream = new FileInputStream(filePath);
+			byte[] b = new byte[100];
+			int len;
+			while ((len = inStream.read(b)) > 0) {
+				response.getOutputStream().write(b, 0, len);
+				// this.getRes().getOutputStream().write(b,0,len);
+			}
+			inStream.close();*/
+	        /*File file = new File(filepath);
 	        if(!file.mkdirs())
 	        {	        		       
 	        	try {
@@ -212,7 +264,7 @@ public class LogAction extends BaseAction
 			    js.setMessage("日志导出成功!");
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 		return js;
 	}
 	

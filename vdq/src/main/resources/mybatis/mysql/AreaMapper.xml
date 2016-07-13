@@ -160,6 +160,9 @@
     <if test="id != null">
     	and t.id != #{id,jdbcType = INTEGER}
     </if>
+    <if test="parentId == 0">
+    	and t.PARENT_ID = 0
+    </if>
     and t.flag = 0
   </select>
   <delete id="deleteAreaById" parameterType = "com.tianyi.yw.model.Area">
