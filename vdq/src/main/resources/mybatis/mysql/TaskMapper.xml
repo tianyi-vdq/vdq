@@ -215,6 +215,24 @@
   		</if>
   </select> 
   
+  <select id="getEffectTaskList" resultMap="VMModelResultMap" parameterType="com.tianyi.yw.model.Task" >
+    select t.id ,t.name,
+		(select GROUP_CONCAT( tt.`name` SEPARATOR "," )  from t_task as t1
+		 left join t_task_item  ti on t1.id = ti.task_id
+		 left join t_task_item_type tt on ti.item_type_id = tt.id
+		where t.id = t1.id
+		) as item_type_name,
+    (select GROUP_CONCAT( tt.`id` SEPARATOR "," )  from t_task as t1
+		 left join t_task_item  ti on t1.id = ti.task_id
+		 left join t_task_item_type tt on ti.item_type_id = tt.id
+		where t.id = t1.id
+		) as item_type_id	
+		from  t_task t
+		where 1 = 1 
+		<if test="flag != null">
+			and t.flag = #{flag,jdbcType=INTEGER}
+		</if>
+  </select> 
 </mapper>
 
 

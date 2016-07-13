@@ -38,4 +38,6 @@ public interface TaskService {
 	int getTaskTimeCount(TaskTime taskTime);
 	
 	List<TaskTime> getAllTaskTimeList(Integer integer);
+
+	List<Task> getEffectTaskList(Task task);
 }
