@@ -85,12 +85,12 @@ function exportLog(){
 		    if (r){  
 			$.ajax({
 				url : "jsonloadLogExport.do",
-				type : "post",  
-		    	dataType : "json",								
+				type : "post",   
+				dataType:"json",							
 				success : function(data) { 
 		  			if(data.code == 0){ 
 		  				$.messager.alert('导出信息',data.message,'info',function(){ 
-		  					search();
+		  					window.location.href="downfile.do?filepath=" + data.gotoUrl;
 		      		});
 		  			}else{		  			    
 						$.messager.alert('错误信息',data.massage,'error');
