@@ -231,9 +231,9 @@ function StopTask(id){
 					<tr style="background-color:#D6D3D3;font-weight: bold;">
 						<th width="4%" style="display:none">&nbsp;</th>
 						<th width="12%" >任务名称</th> 
-						<th width="10%" >启动时间</th> 
+						<!-- <th width="10%" >启动时间</th>  -->
 						<!-- <th width="10%" >执行间隔</th> -->
-						<th width="10%" >执行次数</th>
+						 <th width="10%" >执行次数</th> 
 						<!-- <th width="8%" >诊断并发路数</th>  -->
 				 		<th style="text-align: left" >诊断项目</th>  
 						<th width="15%">操作</th>					
@@ -243,10 +243,10 @@ function StopTask(id){
 						<tr> 
 							<td align="right" style="display:none">${item.id}</td> 
 							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.name}</td> 
-							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.startTimes}</td> 
+							<%-- <td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.startTimes}</td>  --%>
 							<%-- <td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.runIntervals}</td>  --%>
-							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.runTimes}</td> 
-						<%-- 	<td align="right" onclick="window.location.href='taskI nfo.do?id=${item.id}'" >${item.runCount}</td>   --%>						  
+							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.runTimes}</td>  
+					    	<%-- <td align="right" onclick="window.location.href='taskI nfo.do?id=${item.id}'" >${item.runCount}</td>   --%>						  
 							<td style="text-align: left" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.itemTypeName}</td>  							  
 							<td align="left">							
 							<c:if test="${item.flag == 0 && Task.flagCount == 0}">

@@ -14,6 +14,10 @@ public class Task extends Page {
     
     private String startTimes;
     
+    private String firstTimes;
+    
+    private String lastTimes;
+    
     private String allTimes;
     
 	private Date startedTime;
@@ -200,6 +204,22 @@ public class Task extends Page {
 
 	public void setAllTimes(String allTimes) {
 		this.allTimes = allTimes;
+	}
+
+	public String getFirstTimes() {
+		return firstTimes;
+	}
+
+	public void setFirstTimes(String firstTimes) {
+		this.firstTimes = firstTimes;
+	}
+
+	public String getLastTimes() {
+		return lastTimes;
+	}
+
+	public void setLastTimes(String lastTimes) {
+		this.lastTimes = lastTimes;
 	}
  
 }
