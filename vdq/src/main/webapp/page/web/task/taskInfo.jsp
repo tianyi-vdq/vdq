@@ -57,14 +57,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		 });
 		 var count=1;
 		  function addMoreTime(){
-		  	var targetObj = $("#startTimeList").append("<input type='hidden' id='"+count+"'/>")
-		  	.append("<input data-options='editable:false,onChange:function(value){ $(" + "\"#" + count + "\").val(value) }'  onblur='valueTrim(this);'  doc='taskInfo' type='text' class='easyui-datetimebox' required='true'  style='width:254px;height:28px;'/>")
-		  	.append("<span style='color:red'>*</span> <br>");
+		  	var targetObj = $("#startTimeList").append("<br /><input type='hidden' id='"+count+"'/>")
+		  	.append("<input data-options='editable:false,onChange:function(value){ $(" + "\"#" + count + "\").val(value) }'  onblur='valueTrim(this);'  doc='taskInfo' type='text' class='easyui-datetimebox' required='false'  style='width:254px;height:28px;'/>")
+		  	.append("<span style='color:red'>*</span>");
 		  	$.parser.parse(targetObj);
 		  	count++;
 		  }
 		function saveTask(obj){
-			var startTimes = ""; //连接开始时间字符串
+			/* var startTimes = ""; //连接开始时间字符串
 			var array = new Array();
 			var timeSize = $("#timeList").val();
 			timeSize = timeSize.substring(1,timeSize.length-1);
@@ -74,16 +74,29 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				var conn = $("#time_"+i).val();
 				startTimes+=conn+",";
 			}
+			
 			if(count > 1){
 				for(var i=1;i < count;i++){
 					var conn = $("#"+i).val();
 					startTimes+=conn+",";
 				}
 			}
-			$("#timeList").val(startTimes);
+			$("#timeList").val(startTimes); */
+			
 			if ($('#taskInfoForm').form('validate')) {
+				var st1 = $("#ftimes").timespinner("getHours");
+				var st2 = $("#ltimes").timespinner("getHours");
+				if(st2&&st2>0){ 
+					if(st1>st2){
+						$.messager.alert("操作提示","其他执行时间不能小于首次执行时间","error");
+						return;
+					}
+					if(st2-st1<2){
+						$.messager.alert("操作提示","建议时间间隔为3-5小时","info"); 
+					}
+				}
 				$(obj).attr("onclick", ""); 
-				showProcess(true, '温馨提示', '正在提交数据...'); 
+				//showProcess(true, '温馨提示', '正在提交数据...'); 
 				 $('#taskInfoForm').form('submit',{
 				  		success:function(data){ 
 							showProcess(false);
@@ -101,7 +114,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				  	 });
 			}
 		}
-		//格式化日期,
+	/* 	//格式化日期,
       function formatDate(date,format){
         var paddNum = function(num){
           num += "";
@@ -120,15 +133,36 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
           ,ss : date.getSeconds() //秒
         }
         format || (format = "yyyy-MM-dd hh:mm:ss");
-        return format.replace(/([a-z])(\1)*/ig,function(m){return cfg[m];});
-      } 
+        return format.replace(/([a-z])(\1)* /ig,function(m){return cfg[m];});
+      }  */
+      
+ /*   function getTimeModel(date){
+	var H = date.getHours();
+	var M = date.getMinutes();
+	
+	if(H <10){
+		H = "0"+H;
+	}
+	if(M <10){
+		M = "0"+ M;
+	}
+	var dates = H+":"+M+":00";
+	return dates;
+}
+function getFirstTime(date){
+	var dates = getTimeModel(date);
+	$("#ftimes").val(dates);
+}
+function getLastTime(date){
+	var dates = getTimeModel(date);
+	$("#ltimes").val(dates);
+} */
 	</script>
   </head> 
   <body>
 	<div class="con-right" id="conRight">
 		<div class="fl yw-lump">
-			<div class="yw-lump-title">
-
+			<div class="yw-lump-title"> 
 					<i id="i_back" class="yw-icon icon-back" onclick="window.location.href='task/taskList.do'"></i><span>任务列表</span>
 			</div>
 		</div>
@@ -140,7 +174,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				</div>
 				<div class="fr">
 					<!-- <span class="yw-btn bg-green mr26 hide" id="editBtn"  onclick="editTask();">编辑</span> -->
-					<span id="btnAddStartTime" doc="taskInfo"  class="yw-btn bg-blue ml60 cur" onclick="addMoreTime();">添加执行时间</span>
+					
 					<span class="yw-btn bg-red" style="margin-left: 10px;" id="saveBtn" onclick="saveTask(this);">保存</span>
 					<span class="yw-btn bg-green" style="margin-left: 10px;margin-right: 10px;" onclick="$('#i_back').click();">返回</span>
 				</div>
@@ -159,50 +193,46 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							</td>
 						</tr> 
 						
-						
-						
-						
-					<%-- 	<div id="tab2" class="yw-bi-rows">
-						<div class="yw-bi-tabs mt5">
-							<span class="yw-bi-now">项目区域设置</span>
-						</div> 
-					</div>
-					<div id="tab3" class="yw-tab">  
-						<p class="hide">
-							<input id="hid_areaId" value="${project.areaId}"/> 
-							<input id="hid_areaName" value="${project.areaName}"/> 
-						</p>
-						 <p class="yw-window-p mt30">
-						 	<span id="btnAddArea" doc="btn_add_action" class="yw-btn bg-blue ml60 cur" title="添加新的维护区域" onClick="addMoreArea(this,'');">+添加维护区域</span>
-						 	
-						 <div class="cl"></div>
-						 </p>
-					</div> --%>
-					<tr>
+						<tr>
 							<td width="8%" align="right">首次执行时间：</td>
-							<td><input id="startTimes" name="startTimes" data-options="editable:false" onblur="valueTrim(this);"  doc="taskInfo" value="${Task.startTimes}" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>							
+							<td><input id="ftimes" name="firstTimes" data-options="require:true"  onblur="valueTrim(this);"  doc="taskInfo" type="text" value="${Task.firstTimes}" class="easyui-timespinner"  style="width:254px;height:28px;"/>							
 								<span style="color:red">*</span>
 							</td>
 						</tr> 
-					
-					<tr>
-						<td width="10%" align="right">启动时间：</td>
+							<tr>
+							<td width="8%" align="right">其他执行时间：</td>
+							<td><input id="ltimes" name="lastTimes" data-options="require:false"    doc="taskInfo" type="text" value="${Task.lastTimes}" class="easyui-timespinner"  style="width:254px;height:28px;"/>
+								
+								
+							</td>
+						</tr> 
+						
+						
+				
+					<%-- <tr>
+						<td width="10%" align="right">执行时间：</td>
 						<td id="startTimeList">
-							<c:if test="${empty timeList}">
+							<div id="div_moreTime">
+							<c:if test="${!empty timeList}">
+								<c:forEach var="item" varStatus="xh" items="${timeList }">
+									<input id="time_${item}" type="text"  style="width:254px;height:28px;"/>
+									<input type="hidden" id="time_${xh.count}" value="${item}"/>
+									<input data-options="editable:false,onChange:function(value){ $('#time_${xh.count}').val(value) }"  onblur="valueTrim(this);"  doc="taskInfo" type="text" value="${item}" class="easyui-timespinner" required="true"  style="width:254px;height:28px;"/>
+		        	                <span style="color:red">*</span> <br> 
+								</c:forEach>
+								<span id="btnAddStartTime" doc="taskInfo"  class="yw-btn bg-blue cur" onclick="addMoreTime();">添加</span>
+							</c:if> --%>
+							<%-- <c:if test="${empty timeList}">
 								<input type="hidden" id="emptyTime" style="width:254px;height:28px;"/>
 								<input data-options="editable:false,onChange:function(value){ $('#emptyTime').val(value) }"  onblur="valueTrim(this);"  doc="taskInfo" type="text" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>
 	        	                <span style="color:red">*</span> 
-							</c:if>
-							<c:if test="${!empty timeList}">
-								<c:forEach var="item" varStatus="xh" items="${timeList }">
-									<%-- <input id="time_${item}" type="text"  style="width:254px;height:28px;"/> --%>
-									<input type="hidden" id="time_${xh.count}" value="${item}"/>
-									<input data-options="editable:false,onChange:function(value){ $('#time_${xh.count}').val(value) }"  onblur="valueTrim(this);"  doc="taskInfo" type="text" value="${item}" class="easyui-datetimebox" required="true"  style="width:254px;height:28px;"/>
-		        	                <span style="color:red">*</span> <br> 
-								</c:forEach>
-							</c:if>
+	        	                <span id="btnAddStartTime" doc="taskInfo"  class="yw-btn bg-blue cur" onclick="addMoreTime();">添加</span>
+							</c:if> --%>
+							
+						<!-- 	</div>
+							
 						</td>
-						</tr>						
+						</tr>		 -->				
 						<%-- <tr>
 							<td align="right">执行次数：</td>
 							<td><input id="runTimes" name="runTimes" doc="taskInfo" onblur="valueTrim(this);" type="text" value="${Task.runTimes}" class="easyui-validatebox"  required="true"   validType="number" style="width:254px;height:28px;"/>
@@ -233,7 +263,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                          	<td>
 								<div class="yw-window-p" id="digType">
         							<input type="hidden" id="hid_itemTypeId" value="${Task.itemTypeId }" />
-	                         		<c:forEach var="item"  items="${TaskItemTypelist}" >
+	                         		 <c:forEach var="item"  items="${TaskItemTypelist}" >
 			                    		<label><input id="itemType${item.id}"  type="checkbox" name="itemTypeId"  value="${item.id}" />${item.name}</label> 
 			                    	</c:forEach>
 		                    	</div>

@@ -153,10 +153,10 @@ function exportLog(){
 				<table class="yw-cm-table yw-center yw-bg-hover">
 					<tr style="background-color:#D6D3D3;font-weight: bold;">
 						<th style="display:none">&nbsp;</th>
-						<th >日志内容</th>  
+						<th width="20%">日志内容</th>  
 						<th width="14%">日志类型</th> 
 			    		<th width="14%">日志记录时间</th>
-						<th width="60%">日志详细描述</th>
+						<th style="text-align: left" >日志详细描述</th>
 						
 					</tr>
 					<c:forEach var="item" items="${Loglist}">
@@ -165,7 +165,7 @@ function exportLog(){
 							<td>${item.content}</td>  
 							<td>${item.typeName}</td> 
 						  	<td>${item.createTimes}</td>
-							<td>${item.description}</td> 
+							<td style="text-align: left" >${item.description}</td> 
 							
 						</tr>
 					</c:forEach>

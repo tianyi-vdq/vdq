@@ -83,25 +83,56 @@ public class TaskServiceImpl implements TaskService {
 	
 	private void saveOrUpdateTaskTime(Task task) {
 		// TODO Auto-generated method stub
-		if(!StringUtil.isEmpty(task.getAllTimes())){
+		TaskTime t = new TaskTime();
+		if(task.getId() > 0){
 			taskTimeMapper.deleteByTaskId(task.getId());
-			String[] ids = task.getAllTimes().split(",");
-			SimpleDateFormat sdf = new SimpleDateFormat(
-					"yyyy-MM-dd HH:mm:ss");
-			if(ids.length>0){
-				for(String times :ids){
-					TaskTime tt = new TaskTime();
-					try {
-						tt.setStartTime(sdf.parse(times));
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					tt.setTaskId(task.getId());
-					taskTimeMapper.insert(tt);
-				}
-			}
 		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat(
+				"HH:mm:ss");
+		if(task.getFirstTimes() != null && task.getFirstTimes() != ""){
+			String t1 = task.getFirstTimes() + ":00";
+			try {
+				t.setStartTime(sdf.parse(t1));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			t.setId(0);
+			t.setTaskId(task.getId());
+			taskTimeMapper.insert(t);
+		}
+		if(task.getLastTimes() != null && task.getLastTimes() != ""){
+			String t2 = task.getLastTimes() + ":00";
+			try {
+				t.setStartTime(sdf.parse(t2));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			t.setId(0);
+			t.setTaskId(task.getId());
+			taskTimeMapper.insert(t);
+		}
+//		if(!StringUtil.isEmpty(task.getAllTimes())){
+//			taskTimeMapper.deleteByTaskId(task.getId());
+//			String[] ids = task.getAllTimes().split(",");
+//			SimpleDateFormat sdf = new SimpleDateFormat(
+//					"yyyy-MM-dd HH:mm:ss");
+//			if(ids.length>0){
+//				for(String times :ids){
+//					TaskTime tt = new TaskTime();
+//					try {
+//						tt.setStartTime(sdf.parse(times));
+//					} catch (ParseException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					tt.setTaskId(task.getId());
+//					taskTimeMapper.insert(tt);
+//				}
+//			}
+//		}
 	}
 
 	@Override

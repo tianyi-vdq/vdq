@@ -95,23 +95,25 @@ public class TaskAction extends BaseAction {
 		TaskTime taskTime = new TaskTime();
 		int totalCount = 0;
 		int flagCount = 0;
-		int timeCount = 0;
+//		int timeCount = 0;
 		try {
-			SimpleDateFormat Format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//			SimpleDateFormat Format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			tasklist = taskService.getTaskList(task);
 			totalCount = taskService.getTaskCount(task);
 			flagCount = taskService.getRunTaskCount(task);			
 			for(Task t : tasklist) {
-				t.setCreateTimes(Format.format(t.getCreateTime()));
+//				t.setCreateTimes(Format.format(t.getCreateTime()));
 				taskTime.setTaskId(t.getId());
-				taskTimelist = taskService.getTaskTimeList(taskTime);				
-				for(TaskTime tt:taskTimelist){
-					if(tt.getStartTime().before(t.getStartTime()))
-						t.setStartTime(tt.getStartTime());
-				}
-				timeCount = taskService.getTaskTimeCount(taskTime);
-				t.setRunTimes(timeCount);
-				t.setStartTimes(Format.format(t.getStartTime()));				
+				taskTimelist = taskService.getTaskTimeList(taskTime);
+				t.setRunTimes(taskTimelist.size());
+				
+//				for(TaskTime tt:taskTimelist){
+//					if(tt.getStartTime().before(t.getStartTime()))
+//						t.setStartTime(tt.getStartTime());
+//				}
+//				timeCount = taskService.getTaskTimeCount(taskTime);
+//				t.setRunTimes(timeCount);
+//				t.setStartTimes(Format.format(t.getStartTime()));				
 			}		
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -188,16 +190,20 @@ public class TaskAction extends BaseAction {
 					if(message != null)
 					{
 						js.setMessage("保存成功!"+message);
+						return js;
 					}else
 					{
 						js.setMessage("保存成功!");
+						return js;
 					}
 					
 				} else {
 					js.setMessage("任务已存在!");
+					return js;
 				}
 			} else {
 				js.setMessage("任务名称不能为空!");
+				return js;
 			}
 
 		} catch (Exception ex) {
@@ -208,7 +214,7 @@ public class TaskAction extends BaseAction {
 	}
 
 	/**
-	 * 任务新建
+	 * 任务新建/编辑
 	 * 
 	 * @param task
 	 * @param request
@@ -226,42 +232,61 @@ public class TaskAction extends BaseAction {
 		Task task = new Task();
 		TaskTime taskTime = new TaskTime();
 		List<TaskTime> taskTimelist = new ArrayList<TaskTime>();
-		List<String> list = new ArrayList<String>(); //临时集合，排序任务执行时间
+		//List<String> list = new ArrayList<String>(); //临时集合，排序任务执行时间
 		task.setId(id);
 		taskTime.setTaskId(id);
 		if(task.getId()>0){
 			int timeCount = 0;
 			task = taskService.getTaskById(task.getId());
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			//设置所有执行时间String，启动时间
-			if(task != null){
-				taskTimelist = taskService.getTaskTimeList(taskTime);
-				timeCount = taskService.getTaskTimeCount(taskTime);
-				task.setRunTimes(timeCount);
-				String at = null;
-				String startTime = null;
-				if(taskTimelist.size() != 0){
-					for(TaskTime t:taskTimelist){										
-						/*if(!task.getStartTime().before(t.getStartTime())){
-							task.setStartTime(t.getStartTime());
-						}*/
-						startTime = sdf.format(t.getStartTime());
-						list.add(startTime);
-						/*if(at == null){
-							at = sdf.format(t.getStartTime());
-						}else{
-							at += "," + sdf.format(t.getStartTime());
-						}*/
-					}
-					Collections.sort(list); //对任务执行时间排序
-					//Collections.reverse(list);
-					//task.setAllTimes(at);
-					//task.setStartTimes(sdf.format(task.getStartTime()));	
-					req.setAttribute("timeList",list);
-				}
-								
+			
+			//首次执行时间，其他执行时间
+			taskTimelist = taskService.getTaskTimeList(taskTime);
+			if(taskTimelist.size() >= 1){
+			    Date d1 = taskTimelist.get(0).getStartTime();
+			    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+			    task.setFirstTimes(sdf.format(d1));
+			    if(taskTimelist.size() == 2){
+			    	 Date d2 = taskTimelist.get(1).getStartTime();
+			    	 if(d1.before(d2)){
+			    		 task.setLastTimes(sdf.format(d2)); 
+			    	 }else{
+			    		 task.setFirstTimes(sdf.format(d2));
+			    		 task.setLastTimes(sdf.format(d1)); 
+			    	 }
+			    		 
+			    }
 			}
-		}  
+		}
+//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//			//设置所有执行时间String，启动时间
+//			if(task != null){
+//				taskTimelist = taskService.getTaskTimeList(taskTime);
+//				timeCount = taskService.getTaskTimeCount(taskTime);
+//				task.setRunTimes(timeCount);
+//				String at = null;
+//				String startTime = null;
+//				if(taskTimelist.size() != 0){
+//					for(TaskTime t:taskTimelist){										
+//						/*if(!task.getStartTime().before(t.getStartTime())){
+//							task.setStartTime(t.getStartTime());
+//						}*/
+//						startTime = sdf.format(t.getStartTime());
+//						list.add(startTime);
+//						/*if(at == null){
+//							at = sdf.format(t.getStartTime());
+//						}else{
+//							at += "," + sdf.format(t.getStartTime());
+//						}*/
+//					}
+//					Collections.sort(list); //对任务执行时间排序
+//					//Collections.reverse(list);
+//					//task.setAllTimes(at);
+//					//task.setStartTimes(sdf.format(task.getStartTime()));	
+//					req.setAttribute("timeList",list);
+//				}
+//								
+//			}
+//		}  
 		taskItemTypelist = taskService.getTaskItemTypeList(taskItemType);
 		req.setAttribute("Task", task);
 		req.setAttribute("TaskItemTypelist", taskItemTypelist);

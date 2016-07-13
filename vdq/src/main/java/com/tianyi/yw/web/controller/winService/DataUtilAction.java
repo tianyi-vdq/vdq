@@ -112,7 +112,7 @@ public class DataUtilAction {
 			js.setMessage("加载设备列表成功！"); 
 		}catch(Exception ex){
 			ex.printStackTrace();
-			logService.writeLog(1, "加载设备列表失败!", ex.getMessage());
+			logService.writeLog(1, "加载设备列表失败!","未读取到设备数据!详细："+ ex.getMessage());
 		}
 		return js;
 	}
@@ -144,7 +144,7 @@ public class DataUtilAction {
 			js.setMessage("加载当前有效任务成功！"); 
 		}catch(Exception ex){
 			ex.printStackTrace();
-			logService.writeLog(1, "加载当前有效任务失败!", ex.getMessage());
+			logService.writeLog(1, "加载当前有效任务失败!", "未读取到数据！详细："+ex.getMessage());
 		}
 		return js;
 	}
@@ -174,9 +174,9 @@ public class DataUtilAction {
 				js.setMessage("未获取到参数！");
 			}
 		}catch(Exception ex){ 
-			ex.printStackTrace();
-			logService.writeLog(1, "获取诊断点位设备失败！", ex.getMessage());
+			ex.printStackTrace();			
 			js.setMessage("未获取到参数！详细："+ex.getMessage());
+			logService.writeLog(1, "获取诊断点位设备失败！",js.getMessage());
 		}
 		return js;
 	}
@@ -213,8 +213,8 @@ public class DataUtilAction {
 		  }catch(Exception ex){
 			  ex.printStackTrace();
 			  js.setCode(1);
-			  js.setMessage("获取结果诊断项失败！");
-			  logService.writeLog(1, "获取结果诊断项失败！", ex.getMessage());
+			  js.setMessage("获取结果诊断项失败！详细："+ex.getMessage());
+			  logService.writeLog(1, "获取结果诊断项失败！",js.getMessage());
 		  }
 		  return js;
 	  }
@@ -239,11 +239,11 @@ public class DataUtilAction {
 				if(deviceId >0 && score >0 && taskItemId >0){
 					dataUtilService.DeviceDiagnosis(deviceId,taskItemId, score, request, response); 
 				}else{
-					logService.writeLog(1, "保存数据失败", "返回数据异常，不能保存诊断结果！");
+					logService.writeLog(1, "保存数据失败", "保存数据失败！详细：客户端数据异常，保存诊断结果失败！");
 				}
 			}catch(Exception ex){
 				ex.printStackTrace(); 
-				logService.writeLog(1, "保存数据失败", ex.getMessage());
+				logService.writeLog(1, "保存数据失败", "详细："+ex.getMessage());
 			} 
 			return "1";
 		}
