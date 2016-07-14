@@ -172,7 +172,7 @@ function stopOrStartDevice(id,flag){
 						<span class="ml26">设备信息</span>
 						
 						<input type="text" name="searchName"   validType="SpecialWord" class="easyui-validatebox" 
-							placeholder="按设备ID搜索" value="${Device.searchName}" /> 
+							placeholder="搜索" value="${Device.searchName}" /> 
 						<span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>
 					</div>
 					<div class="fr">
