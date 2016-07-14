@@ -37,8 +37,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
    				 	var deviceId = $("#deviceId").val();
    				 	
    				 	if(deviceId>0){
-   				 		var pId = $("#areaId").val();
-   				 		$("#cmbParentArea").combotree("setValue",pId);
+   				 		//var pId = $("#areaId").val();
+   				 		var areaName = $("#areaName").val();
+   				 		$("#cmbParentArea").combotree("setValue",areaName);
    				 		
    				 	}else{
 						//$("#cmbParentArea").combotree("disable",true);
@@ -107,6 +108,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<td><input  name="pointId" doc="pointInfo" onblur="valueTrim(this);"    type="text" value="${Device.pointId}" class="easyui-validatebox" required="true" validType="Length[1,10]" style="width:254px;height:28px;" />
 					<span style="color:red">*</span>
 					<input id="deviceId" name="id" type="hidden" value="${Device.id}" />
+					<input type="hidden" id="areaName" value="${Device.areaName}"/>
 					<input name="flag" doc="pointInfo"  type="hidden" value="${Device.flag}"/>
 					</td>
 					 
