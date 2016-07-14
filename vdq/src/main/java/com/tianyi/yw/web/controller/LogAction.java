@@ -196,7 +196,7 @@ public class LogAction extends BaseAction
 	            row.createCell(3).setCellValue((String) t.getDescription()); 		             
 	        }  	
 	        //设置下载路径
-	        String fileName = "logInfo.xls";
+	        String fileName = "日志详情.xls";
 	        String filePath = request.getSession().getServletContext()
 					.getRealPath("temp");
 			//String filePath = request.getRealPath("/") + fileName;

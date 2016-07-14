@@ -41,6 +41,7 @@ public class MyJobA {
 		for (Task t : list) {
 			if (t.getFlag() == 1) {
 				temp = t;
+				//System.out.println(t.getName());
 				break;
 			}
 		}
@@ -109,7 +110,9 @@ public class MyJobA {
 		try {
 			String s1 = df.format(now);
 			String s2 = df.format(tasktime);
+			//System.out.println("现在时间："+s1+"任务执行时间："+s2);
 			result = s1.compareTo(s2);
+			//System.out.println(result);
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}

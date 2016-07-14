@@ -11,6 +11,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <base href="<%=basePath%>">
 <meta charset="utf-8">
 <title>设备状态</title>
+<meta http-equiv="refresh" content="180">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, minimum-scale=1  ,maximum-scale=1, user-scalable=no" />
 <script
@@ -28,6 +29,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			});
 			//loadCompanyList();
 		});
+		//指定3分钟刷新一次,这种刷新有点问题，我采用的另一种方式<meta http-equiv="refresh" content="180">
+		/* function myrefresh(){ 
+			window.location.reload(); 
+		} 
+		setTimeout('myrefresh()',180000); */ 
 function getAreaListByParentId(pid){
 	$.ajax({
  		url:'area/jsonLoadAreaTreeList.do?pid='+pid
@@ -95,7 +101,7 @@ function pagesearch(){
    <table class="yw-cm-table yw-center yw-bg-hover" id="deviceStatusList">
 		<tr style="background-color:#D6D3D3;font-weight: bold;">
 			<th width="4%" style="display:none">&nbsp;</th>
-			<th>设备ID</th>
+			<th>设备编号</th>
 			<th width="8%">网络连接状态</th>
 			<th>拉流</th>
 			<th>雪花噪音</th>

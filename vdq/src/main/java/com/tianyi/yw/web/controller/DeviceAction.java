@@ -101,12 +101,12 @@ public class DeviceAction  extends BaseAction{
 			deviceStatuslist =  deviceService.getDeviceStatusList(deviceStatus);
 			totalCount = deviceService.getDeviceStatusCount(deviceStatus);
 
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");		
+			/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");		
 			for(DeviceStatus ds:deviceStatuslist )
 			{				
 				ds.setCreateTimes(sdf.format(ds.getCreateTime()));
 				ds.setRecordTimes(sdf.format(ds.getRecordTime()));			
-			}
+			}*/
 		}catch(Exception ex){ 
 			ex.printStackTrace();
 		}	

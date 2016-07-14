@@ -185,5 +185,6 @@
   	select
   	<include refid="Base_Column_List"/>
     from t_area t
+    where t.flag = 0
   </select>
 </mapper>
