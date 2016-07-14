@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.tianyi.yw.common.utils.StringUtil;
 import com.tianyi.yw.dao.LogMapper;
 import com.tianyi.yw.dao.LogTypeMapper;
 import com.tianyi.yw.model.Log;
@@ -43,6 +44,9 @@ public class LogServiceImpl implements LogService {
 	@Override
 	public void saveOrUpdateLog(Log log) {
 		// TODO Auto-generated method stub
+		if(StringUtil.isEmpty(log.getDescription())){
+			log.setDescription("无");
+		}
 		if(log.getId()>0){
 			logMapper.updateByPrimaryKeySelective(log);
 		}else{

@@ -77,6 +77,7 @@
 							<td width="10%" align="center">组名描述：</td>
 							<td>
 								<input id="description" name="description" class="easyui-validatebox" required="true" value="${group.description}" validType="Length[1,50]" style="width:254px;height:32px;" />
+							    <span style="color:red">*</span>
 							</td>
 						</tr>
 					</table>

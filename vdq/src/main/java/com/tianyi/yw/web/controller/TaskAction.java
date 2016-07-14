@@ -240,7 +240,7 @@ public class TaskAction extends BaseAction {
 		task.setId(id);
 		taskTime.setTaskId(id);
 		if(task.getId()>0){
-			int timeCount = 0;
+			//int timeCount = 0;
 			task = taskService.getTaskById(task.getId());
 			
 			//首次执行时间，其他执行时间
