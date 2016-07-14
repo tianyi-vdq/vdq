@@ -71,10 +71,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				var st3 = $("#ftimes").timespinner("getMinutes");
 				var st4 = $("#ltimes").timespinner("getMinutes");
 				var type = $("#hid_itemTypeId").val();
-				if(type == null || type == ""){
-				$.messager.alert("操作提示","诊断项目不能为空！","error");
-						return;
-				}
+				
 				if(st2&&st2>0){ 
 					if(st1>st2 || (st1==st2&&st3>=st4)){
 						$.messager.alert("操作提示","其他执行时间不能小于等于首次执行时间","error");
