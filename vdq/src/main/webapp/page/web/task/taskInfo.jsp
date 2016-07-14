@@ -64,30 +64,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		  	count++;
 		  }
 		function saveTask(obj){
-			/* var startTimes = ""; //连接开始时间字符串
-			var array = new Array();
-			var timeSize = $("#timeList").val();
-			timeSize = timeSize.substring(1,timeSize.length-1);
-			array = timeSize.split(",");
-			//追加之前的开始时间
-			for(var i = 1;i <= array.length;i++){
-				var conn = $("#time_"+i).val();
-				startTimes+=conn+",";
-			}
-			
-			if(count > 1){
-				for(var i=1;i < count;i++){
-					var conn = $("#"+i).val();
-					startTimes+=conn+",";
-				}
-			}
-			$("#timeList").val(startTimes); */
-			 
+			  
 			if ($('#taskInfoForm').form('validate')) {
 				var st1 = $("#ftimes").timespinner("getHours");
 				var st2 = $("#ltimes").timespinner("getHours");
 				var st3 = $("#ftimes").timespinner("getMinutes");
 				var st4 = $("#ltimes").timespinner("getMinutes");
+				var type = $("#hid_itemTypeId").val();
+				
 				if(st2&&st2>0){ 
 					if(st1>st2 || (st1==st2&&st3>=st4)){
 						$.messager.alert("操作提示","其他执行时间不能小于等于首次执行时间","error");
@@ -116,49 +100,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				  	 });
 			}
 		}
-	/* 	//格式化日期,
-      function formatDate(date,format){
-        var paddNum = function(num){
-          num += "";
-          return num.replace(/^(\d)$/,"0$1");
-        }
-        //指定格式字符
-        var cfg = {
-           yyyy : date.getFullYear() //年 : 4位
-          ,yy : date.getFullYear().toString().substring(2)//年 : 2位
-          ,M  : date.getMonth() + 1  //月 : 如果1位的时候不补0
-          ,MM : paddNum(date.getMonth() + 1) //月 : 如果1位的时候补0
-          ,d  : date.getDate()   //日 : 如果1位的时候不补0
-          ,dd : paddNum(date.getDate())//日 : 如果1位的时候补0
-          ,hh : date.getHours()  //时
-          ,mm : date.getMinutes() //分
-          ,ss : date.getSeconds() //秒
-        }
-        format || (format = "yyyy-MM-dd hh:mm:ss");
-        return format.replace(/([a-z])(\1)* /ig,function(m){return cfg[m];});
-      }  */
-      
- /*   function getTimeModel(date){
-	var H = date.getHours();
-	var M = date.getMinutes();
-	
-	if(H <10){
-		H = "0"+H;
-	}
-	if(M <10){
-		M = "0"+ M;
-	}
-	var dates = H+":"+M+":00";
-	return dates;
-}
-function getFirstTime(date){
-	var dates = getTimeModel(date);
-	$("#ftimes").val(dates);
-}
-function getLastTime(date){
-	var dates = getTimeModel(date);
-	$("#ltimes").val(dates);
-} */
+	 
 	</script>
   </head> 
   <body>

@@ -150,6 +150,10 @@ public class TaskAction extends BaseAction {
 						"yyyy-MM-dd HH:mm:ss");
 				task.setStartTime(sdf.parse(startTimes));
 			}
+			if("".equals(task.getItemTypeId()) || task.getItemTypeId() == null){
+				js.setMessage("保存失败！至少选择一个诊断项目！");
+				return js;
+			}
 			String message = null;
 			//执行中的任务只能停止，不可编辑
 			if(task.getId() != 0 && task.getId() != null){
