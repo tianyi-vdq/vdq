@@ -246,9 +246,10 @@
   </select> 
   <sql id="query_sql">
       	from t_device_status ds
-      	left join t_device d on d.id = ds.device_id   
+      	left join t_device d on d.id = ds.device_id  
 		where 
-		1=1
+		 d.flag = 0
+          and d.id = ds.device_id
 	 	<if test="searchAreaId != null and searchAreaId != ''">
 		and 
 		(select t3.parent_id from t_area t3 where 
