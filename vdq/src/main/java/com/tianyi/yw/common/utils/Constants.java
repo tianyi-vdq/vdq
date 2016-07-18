@@ -63,4 +63,8 @@ public class Constants {
 	public final static String OPENFIRE_DOMAIN = PropertiesUtil.getInstance().getParamsProperty("OPENFIRE_DOMAIN"); 
 	public final static String APK_VERSION = PropertiesUtil.getInstance().getParamsProperty("APK_VERSION"); 
 	public final static String INIT_PASSWORD = "111111";
+	public static final String ROUTEDATA_YWALARM_VIDEO = "routeData.ywAlarm.video";//视频诊断故障 
+	public static final String ROUTEDATA_YWALARM_VIDEO_CODE = "109015";//视频诊断故障编码
+	public static final String ROUTEDATA_YWALARM_VIDEO_TYPE = "B1";//视频诊断故障 类型
+
 }

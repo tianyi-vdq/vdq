@@ -1,6 +1,7 @@
 package com.tianyi.yw.web.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -62,31 +63,12 @@ public class TaskAction extends BaseAction {
 			ParseException {
 		// searchName
 		if (task.getSearchName() != null && task.getSearchName().length() > 0) {
-			String searchName = new String(task.getSearchName().getBytes("iso8859-1"), "utf-8");
+			String searchName = URLDecoder.decode(task.getSearchName(),"utf-8"); 
 			task.setSearchName(searchName);
+//			String searchName = new String(task.getSearchName().getBytes("iso8859-1"), "utf-8");
+//			task.setSearchName(searchName);
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");// 小写的mm表示的是分钟
-//		if ((task.getStartedTimes() != null
-//				&& !task.getStartedTimes().equals(""))
-//				|| (task.getEndTimes() != null && !task.getEndTimes().equals(""))) {
-//			if(!(task.getStartedTimes() != null
-//					&& !task.getStartedTimes().equals(""))){
-//				task.setStartedTimes("2000-01-01");
-//			}
-//			if(!(task.getEndTimes() != null && !task.getEndTimes().equals(""))){
-//				task.setEndTimes("2050-01-01");
-//			}
-//			Date date1 = sdf.parse(task.getStartedTimes());
-//			Date date2 = sdf.parse(task.getEndTimes());
-//			if (date1.before(date2)) {	
-//											
-//				task.setStartedTime(date1);
-//				Calendar c = Calendar.getInstance();
-//				c.setTime(date2);				
-//				c.add(Calendar.DATE, 1);
-//				task.setEndTime(c.getTime());
-//			}
-//		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");// 小写的mm表示的是分钟  
 		if (task.getPageNo() == null)
 			task.setPageNo(1);
 		task.setPageSize(Constants.DEFAULT_PAGE_SIZE);
@@ -94,26 +76,15 @@ public class TaskAction extends BaseAction {
 		List<TaskTime> taskTimelist = new ArrayList<TaskTime>();
 		TaskTime taskTime = new TaskTime();
 		int totalCount = 0;
-		int flagCount = 0;
-//		int timeCount = 0;
-		try {
-//			SimpleDateFormat Format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		int flagCount = 0; 
+		try { 
 			tasklist = taskService.getTaskList(task);
 			totalCount = taskService.getTaskCount(task);
 			flagCount = taskService.getRunTaskCount(task);			
-			for(Task t : tasklist) {
-//				t.setCreateTimes(Format.format(t.getCreateTime()));
+			for(Task t : tasklist) { 
 				taskTime.setTaskId(t.getId());
 				taskTimelist = taskService.getTaskTimeList(taskTime);
-				t.setRunTimes(taskTimelist.size());
-				
-//				for(TaskTime tt:taskTimelist){
-//					if(tt.getStartTime().before(t.getStartTime()))
-//						t.setStartTime(tt.getStartTime());
-//				}
-//				timeCount = taskService.getTaskTimeCount(taskTime);
-//				t.setRunTimes(timeCount);
-//				t.setStartTimes(Format.format(t.getStartTime()));				
+				t.setRunTimes(taskTimelist.size()); 			
 			}		
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -154,7 +125,7 @@ public class TaskAction extends BaseAction {
 				js.setMessage("保存失败！至少选择一个诊断项目！");
 				return js;
 			}
-			String message = null;
+			String message = "";
 			//执行中的任务只能停止，不可编辑
 			if(task.getId() != 0 && task.getId() != null){
 				Task t = new Task();
@@ -179,32 +150,15 @@ public class TaskAction extends BaseAction {
 				    if(flagCount == 1)
 				    {
 				    	task.setFlag(0);
-				    	message = "当前已有任务执行，启动失败！";
-				    }else if(flagCount == 0)
-				    {
-				    	task.setFlag(1);
-				    }
-				}
-				List<Task> lc = taskService.getExistTask(p);
-				if (lc.size() == 0) {
-					task.setCreateTime(new Date());
-					
-					taskService.saveOrUpdateTask(task); 
-					js.setCode(new Integer(0));
-					if(message != null)
-					{
-						js.setMessage("保存成功!"+message);
-						return js;
-					}else
-					{
-						js.setMessage("保存成功!");
-						return js;
-					}
-					
-				} else {
-					js.setMessage("任务已存在!");
-					return js;
-				}
+				    	message = "当前已有任务执行，不能立即执行任务！";
+				    } 
+				} 
+				task.setCreateTime(new Date());
+				
+				taskService.saveOrUpdateTask(task); 
+				js.setCode(new Integer(0)); 
+				js.setMessage("保存成功!"+message);
+				return js; 
 			} else {
 				js.setMessage("任务名称不能为空!");
 				return js;
@@ -236,64 +190,30 @@ public class TaskAction extends BaseAction {
 		Task task = new Task();
 		TaskTime taskTime = new TaskTime();
 		List<TaskTime> taskTimelist = new ArrayList<TaskTime>();
-		//List<String> list = new ArrayList<String>(); //临时集合，排序任务执行时间
 		task.setId(id);
 		taskTime.setTaskId(id);
-		if(task.getId()>0){
-			//int timeCount = 0;
+		int timeCount = 0; 
+		if(task.getId()>0){ 
 			task = taskService.getTaskById(task.getId());
 			
 			//首次执行时间，其他执行时间
+		    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 			taskTimelist = taskService.getTaskTimeList(taskTime);
-			if(taskTimelist.size() >= 1){
-			    Date d1 = taskTimelist.get(0).getStartTime();
-			    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-			    task.setFirstTimes(sdf.format(d1));
-			    if(taskTimelist.size() == 2){
-			    	 Date d2 = taskTimelist.get(1).getStartTime();
-			    	 if(d1.before(d2)){
-			    		 task.setLastTimes(sdf.format(d2)); 
-			    	 }else{
-			    		 task.setFirstTimes(sdf.format(d2));
-			    		 task.setLastTimes(sdf.format(d1)); 
-			    	 }
-			    		 
-			    }
-			}
-		}
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//			//设置所有执行时间String，启动时间
-//			if(task != null){
-//				taskTimelist = taskService.getTaskTimeList(taskTime);
-//				timeCount = taskService.getTaskTimeCount(taskTime);
-//				task.setRunTimes(timeCount);
-//				String at = null;
-//				String startTime = null;
-//				if(taskTimelist.size() != 0){
-//					for(TaskTime t:taskTimelist){										
-//						/*if(!task.getStartTime().before(t.getStartTime())){
-//							task.setStartTime(t.getStartTime());
-//						}*/
-//						startTime = sdf.format(t.getStartTime());
-//						list.add(startTime);
-//						/*if(at == null){
-//							at = sdf.format(t.getStartTime());
-//						}else{
-//							at += "," + sdf.format(t.getStartTime());
-//						}*/
-//					}
-//					Collections.sort(list); //对任务执行时间排序
-//					//Collections.reverse(list);
-//					//task.setAllTimes(at);
-//					//task.setStartTimes(sdf.format(task.getStartTime()));	
-//					req.setAttribute("timeList",list);
-//				}
-//								
-//			}
-//		}  
+			if(taskTimelist.size()>0){
+				timeCount = taskTimelist.size();
+				task.setFirstTimes(sdf.format(taskTimelist.get(0).getStartTime()));
+				taskTimelist.remove(0);  
+				String st = "";
+				for(TaskTime tt : taskTimelist){
+					st += sdf.format(tt.getStartTime())+",";
+				} 
+				task.setStartedTimes(st);
+			} 
+		} 
 		taskItemTypelist = taskService.getTaskItemTypeList(taskItemType);
 		req.setAttribute("Task", task);
-		req.setAttribute("TaskItemTypelist", taskItemTypelist);
+		req.setAttribute("TaskItemTypelist", taskItemTypelist); 
+		req.setAttribute("TimeListCount", timeCount);
 		return "web/task/taskInfo";
 
 	}

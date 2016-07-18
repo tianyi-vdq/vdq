@@ -37,6 +37,7 @@ PageClick = function(pageclickednumber) {
 }
 function search(){
 	$("#pageNumber").val("1");
+	$("#hid_serarch").val(encodeURI($("#seaarchNameTemp").val()));
 	pagesearch(); 
 } 
 function pagesearch(){
@@ -203,9 +204,9 @@ function StopTask(id){
 				action="taskList.do" method="get">
 				<div class=pd10>
 					<div class="fl">  
-						<span>任务名称：</span><input type="text" name="searchName"   validType="SpecialWord"
-						 class="easyui-validatebox" 
-							placeholder="搜索" value="${Task.searchName}" type="hidden"/> 
+						<span>任务名称：</span>
+						<input type="text" id="seaarchNameTemp" validType="SpecialWord" class="easyui-validatebox" placeholder="搜索" value="${Task.searchName}" /> 
+						<input type="hidden" name="searchName" id="hid_serarch" /> 
 						<%-- <span>开始时间：</span>
 						<input id="startedTimes" name="startedTimes" value="${Task.startedTimes}" type="hidden" />
 						 <input data-options="editable:false,onSelect:sltSchStime" type="text"  class="easyui-datebox" 

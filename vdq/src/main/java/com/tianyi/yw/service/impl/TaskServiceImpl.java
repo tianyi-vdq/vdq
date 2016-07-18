@@ -103,36 +103,25 @@ public class TaskServiceImpl implements TaskService {
 			taskTimeMapper.insert(t);
 		}
 		if(task.getLastTimes() != null && task.getLastTimes() != ""){
-			String t2 = task.getLastTimes() + ":00";
-			try {
-				t.setStartTime(sdf.parse(t2));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			String[] timeStr = task.getLastTimes().split("\\,");
+			if(timeStr.length>0){
+				for(String s : timeStr){
+					if(!StringUtil.isEmpty(s)){
+						String t2 = s + ":00";
+						try {
+							t.setStartTime(sdf.parse(t2));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						t.setId(0);
+						t.setTaskId(task.getId());
+						taskTimeMapper.insert(t);
+					}
+				}
 			}
-			t.setId(0);
-			t.setTaskId(task.getId());
-			taskTimeMapper.insert(t);
+			
 		}
-//		if(!StringUtil.isEmpty(task.getAllTimes())){
-//			taskTimeMapper.deleteByTaskId(task.getId());
-//			String[] ids = task.getAllTimes().split(",");
-//			SimpleDateFormat sdf = new SimpleDateFormat(
-//					"yyyy-MM-dd HH:mm:ss");
-//			if(ids.length>0){
-//				for(String times :ids){
-//					TaskTime tt = new TaskTime();
-//					try {
-//						tt.setStartTime(sdf.parse(times));
-//					} catch (ParseException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					tt.setTaskId(task.getId());
-//					taskTimeMapper.insert(tt);
-//				}
-//			}
-//		}
 	}
 
 	@Override
