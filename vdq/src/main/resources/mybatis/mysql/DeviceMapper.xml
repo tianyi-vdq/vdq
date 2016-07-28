@@ -10,6 +10,7 @@
     <result column="type" property="type" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="ip_address" property="ipAddress" jdbcType="VARCHAR" />
+    <result column="port" property="port" jdbcType="INTEGER" />
     <result column="area_id" property="areaId" jdbcType="INTEGER" />
     <result column="flag" property="flag" jdbcType="INTEGER" />
     <result column="area_name" property="areaName" jdbcType="VARCHAR" />
@@ -19,7 +20,7 @@
     <result column="device_key" property="deviceKey" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    t.id, t.point_id, t.point_number, t.point_name, t.point_naming, t.type, t.address, t.ip_address, 
+    t.id, t.point_id, t.point_number, t.point_name, t.point_naming, t.type, t.address, t.ip_address, t.port, 
     t.area_id,t.rtsp_url,t.flag,t.platform_id,t.device_key
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -38,11 +39,11 @@
 		</selectKey>
     insert into t_device (id, point_id, point_number, 
       point_name, point_naming, type, 
-      address, ip_address, area_id,rtsp_url,flag,platform_id,device_key
+      address, ip_address,port, area_id,rtsp_url,flag,platform_id,device_key
       )
     values (#{id,jdbcType=INTEGER}, #{pointId,jdbcType=VARCHAR}, #{pointNumber,jdbcType=VARCHAR}, 
       #{pointName,jdbcType=VARCHAR}, #{pointNaming,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{ipAddress,jdbcType=VARCHAR}, #{areaId,jdbcType=INTEGER},
+      #{address,jdbcType=VARCHAR}, #{ipAddress,jdbcType=VARCHAR}, #{port,jdbcType=INTEGER}, #{areaId,jdbcType=INTEGER},
       #{rtspUrl,jdbcType=VARCHAR},#{flag,jdbcType=INTEGER}, #{platformId,jdbcType=VARCHAR},	
        #{deviceKey,jdbcType=VARCHAR}
       )
@@ -73,6 +74,9 @@
       </if>
       <if test="ipAddress != null" >
         ip_address,
+      </if>
+      <if test="port != null" >
+        port,
       </if>
       <if test="areaId != null" >
         area_id,
@@ -114,6 +118,9 @@
       </if>
       <if test="ipAddress != null" >
         #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null" >
+        #{port,jdbcType=INTEGER},
       </if>
       <if test="areaId != null" >
         #{areaId,jdbcType=INTEGER},
@@ -157,6 +164,9 @@
       <if test="ipAddress != null" >
         ip_address = #{ipAddress,jdbcType=VARCHAR},
       </if>
+      <if test="port != null" >
+        port = #{port,jdbcType=INTEGER},
+      </if>
       <if test="areaId != null" >
         area_id = #{areaId,jdbcType=INTEGER},
       </if>
@@ -184,6 +194,7 @@
       type = #{type,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
       ip_address = #{ipAddress,jdbcType=VARCHAR},
+      port = #{port,jdbcType=INTEGER},
       area_id = #{areaId,jdbcType=INTEGER},
       rtsp_url = #{rtspUrl,jdbcType=VARCHAR},
       flag = #{flag,jdbcType=INTEGER},

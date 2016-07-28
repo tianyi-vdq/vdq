@@ -27,7 +27,7 @@ public class Constants {
 	public static final int IMAGE_RESIZE_HEIGHT = 150;
 
 	public static final int DEFAULT_PAGE_SIZE = 10;
-	public static final int DEFAULT_QUEUE_SIZE = 10;
+	public static final int DEFAULT_QUEUE_SIZE = 1;
 	/**
 	 * api鎺ュ彛杩斿洖鐘讹拷?鍏叡鐮佽〃 start
 	 */
@@ -66,5 +66,6 @@ public class Constants {
 	public static final String ROUTEDATA_YWALARM_VIDEO = "routeData.ywAlarm.video";//视频诊断故障 
 	public static final String ROUTEDATA_YWALARM_VIDEO_CODE = "109015";//视频诊断故障编码
 	public static final String ROUTEDATA_YWALARM_VIDEO_TYPE = "B1";//视频诊断故障 类型
+	public static final String ROUTEDATA_YWALARM_VIDEO_IP = "25.30.9.244";
 
 }

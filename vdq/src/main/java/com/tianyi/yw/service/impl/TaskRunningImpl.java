@@ -3,6 +3,7 @@ package com.tianyi.yw.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -10,16 +11,26 @@ import org.springframework.stereotype.Service;
 
 import com.tianyi.yw.dao.DeviceDiagnosisMapper;
 import com.tianyi.yw.dao.DeviceMapper;
+import com.tianyi.yw.dao.DeviceStatusMapper;
 import com.tianyi.yw.dao.LogMapper;
 import com.tianyi.yw.dao.TaskMapper;
 import com.tianyi.yw.model.Device;
 import com.tianyi.yw.model.Log;
+import com.tianyi.yw.model.MediaCenterConfig;
 import com.tianyi.yw.model.Task;
 import com.tianyi.yw.service.TaskRunning;
 
-@Service("taskRunService")
+@Service
 public class TaskRunningImpl implements TaskRunning {
+ 
+	private final static String m_center_ipaddress = MediaCenterConfig.getInstance().getIp();
 
+    private final static String m_center_port = MediaCenterConfig.getInstance().getPort();
+
+    private final static String m_center_connect_key = MediaCenterConfig.getInstance().getConnectionKey();
+ 
+    private final static String m_center_connect_session = MediaCenterConfig.getInstance().getConnectionSession();
+	
 	@Resource
 	private TaskMapper taskMapper;
 
@@ -28,6 +39,8 @@ public class TaskRunningImpl implements TaskRunning {
 
 	@Resource
 	private DeviceMapper deviceMapper;
+	@Resource
+	private DeviceStatusMapper deviceStatusMapper;
 	@Resource
 	private LogMapper logMapper;
 
@@ -39,14 +52,16 @@ public class TaskRunningImpl implements TaskRunning {
 			Task task = taskMapper.selectByPrimaryKey(taskId);
 			if (task != null) {
 				while (isOk) {
-//					int count = task.getRunTimes();
-//					while (count > 0) {
-//						count--;
 						List<Device> deviceList = new ArrayList<Device>();
 						dignosisMapper.clear();
 						deviceList = deviceMapper.getAllDeviceList();
 						// 遍历，给device对象追加任务id,设置默认服务器id,初始化检测次数
 						for (Device device : deviceList) {
+							if(device.getRtspUrl()==null||device.getRtspUrl().equals("")){
+								UUID uuid = UUID.randomUUID();
+								String rtspUrl = m_center_ipaddress+":"+m_center_port+m_center_connect_key + device.getPointNaming()+m_center_connect_session+uuid.toString();
+								device.setRtspUrl(rtspUrl);
+							}
 							device.setTaskId(taskId);
 							device.setServerId(0);
 							device.setCheckTimes(0);
@@ -57,13 +72,7 @@ public class TaskRunningImpl implements TaskRunning {
 						boolean isOver= true;
 						while(isOver){
 							result = dignosisMapper.getCheckResultList();
-							// System.out.println(result);
 							if (result == 0) {
-								//可能存在其他任务开始时间
-								//Task t = taskMapper.getTaskById(taskId);
-								//t.setFlag(0);
-								//taskMapper.updateByPrimaryKeySelective(t);
-								//任务执行成功，清空临时表
 								dignosisMapper.clear();
 								isOver= false;
 							}

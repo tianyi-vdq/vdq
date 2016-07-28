@@ -38,15 +38,15 @@ import com.tianyi.yw.service.TaskService;
 @RequestMapping("/dataUtil")
 public class DataUtilAction {
 	
-	@Resource(name = "taskService")
+	@Resource 
 	private TaskService taskService;
 	
-	@Resource(name = "dataUtilService")
+	@Resource 
 	private DataUtilService dataUtilService;
 	
-	@Resource(name = "taskRunService")
+	@Resource 
 	private TaskRunning taskRunService;
-	@Resource(name = "logService")
+	@Resource 
 	private LogService logService;
 	
 	@Resource
@@ -62,7 +62,7 @@ public class DataUtilAction {
 	private ServerService serverService;
 
 	 /**
-	 * 任务执行 立即执行
+	 * 任务执行 立即执行 , 更改任务状态
 	 * 
 	 * @param task
 	 * @param request
@@ -81,12 +81,7 @@ public class DataUtilAction {
 		try { 
 			Task task = taskService.getTaskById(id);
 			task.setFlag(1);
-			taskService.saveOrUpdateTask(task);
-			new Thread(){
-				public void run(){
-					taskRunService.TaskRun(id);
-					}
-			}.start();
+			taskService.saveOrUpdateTask(task); 
 			js.setCode(0);
 			js.setMessage("任务启动成功,正在执行!");
 		} catch (Exception e) {
@@ -95,6 +90,22 @@ public class DataUtilAction {
 		}
 		return js;
 	}
+	/**
+	 * 任务执行 立即执行
+	 * 
+	 * @param task
+	 * @param request
+	 * @param response
+	 * {@value id}
+	 * @return js
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/jsonloadTaskRunRightNow.do", method = RequestMethod.POST, produces = { "text/html;charset=UTF-8" })
+	public void RunTaskNow(
+			@RequestParam(value = "id", required = false) final Integer id,
+			HttpServletRequest request, HttpServletResponse response) {
+		taskRunService.TaskRun(id);
+	} 
 	
 	@ResponseBody
 	@RequestMapping(value = "/jsonLoadDeviceList.do", produces = { "text/html;charset=UTF-8" })
@@ -223,13 +234,15 @@ public class DataUtilAction {
 	    @ResponseBody
 		@RequestMapping(value = "/jsonSaveDiagnosis.do", produces = { "text/html;charset=UTF-8" })
 		public String DeviceDiagnosis(
-				@RequestParam(value = "id", required = false) int deviceId,
-				@RequestParam(value = "itemId", required = false) int taskItemId,
-				@RequestParam(value = "score", required = false) int score,
+				@RequestParam(value = "id", required = false) int deviceId, 
+				@RequestParam(value = "score", required = false) String score,
 				HttpServletRequest request,HttpServletResponse response){ 
+	    	String result = "0";
 			try{
-				if(deviceId >0 && score >0 && taskItemId >0){
-					dataUtilService.DeviceDiagnosis(deviceId,taskItemId, score, request, response); 
+				if(deviceId >0){
+					if(dataUtilService.DeviceDiagnosis(deviceId, score, request, response)){
+						result =  "1";
+					} 
 				}else{
 					logService.writeLog(1, "保存数据失败", "保存数据失败！详细：客户端数据异常，保存诊断结果失败！");
 				}
@@ -237,7 +250,7 @@ public class DataUtilAction {
 				ex.printStackTrace(); 
 				logService.writeLog(1, "保存数据失败", "详细："+ex.getMessage());
 			} 
-			return "1";
+			return result;
 		}
 	    
 	    /** 

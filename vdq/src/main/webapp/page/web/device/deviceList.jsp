@@ -189,86 +189,46 @@ function stopOrStartDevice(id,flag){
 				<table class="yw-cm-table yw-center yw-bg-hover" id="deviceList">
 					<tr style="background-color:#D6D3D3;font-weight: bold;">
 						<th width="4%" style="display:none">&nbsp;</th>
-						<th>设备ID</th>
-						<th>平台ID</th>
-						<th>设备标志ID</th>
-						<th>设备编号</th>
-						<th>设备名称</th>
+						<th width="5%" >设备名称</th>
+						<th width="5%" >设备ID</th>
+						<th width="5%" >设备类型</th>  
+						<th width="5%" >设备编号</th>
 						<th>Naming</th>
 						<th>RTSP</th>
-						<th>设备类型</th> 
+						<th width="5%" >IP</th> 
+						<th width="5%" >端口</th> 
 						<th>设备地址</th>
-						<th>IP地址</th> 
-						<th>所属区域</th>						
-						<th>操作</th>
+						<th>所属区域</th>	
+						<!-- <th>平台ID</th>			 -->		
+						<!-- <th>操作</th> -->
 					</tr>
 					<c:forEach var="item" items="${Devicelist}">
 						<tr>
 							<td align="center" style="display:none">${item.id}</td>
-							<td align="left" onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'" >${item.pointId}</td>
-							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.platformId}</td>
-							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.deviceKey}</td>
-							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointNumber}</td>
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointName}</td>
+							<td align="left" onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'" >${item.pointId}</td>
+							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.type}</td> 
+							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointNumber}</td>
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointNaming}</td>
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.rtspUrl}</td>
-							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.type}</td>
-							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.address}</td> 
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.ipAddress}</td> 
+							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.port}</td> 
+							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.address}</td> 
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.areaName}</td>
-							<td>
+							<%-- <td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.platformId}</td> --%>
+							<%-- <td>
 							<c:if test="${item.flag == 0}">
 								<a href="javascript:void(0);" onclick="stopOrStartDevice(${item.id},${item.flag});">停用设备</a>
 							</c:if>
 							<c:if test="${item.flag == 1}">
 								<a href="javascript:void(0);" onclick="stopOrStartDevice(${item.id},${item.flag});">启用设备</a>
 							</c:if>
-							</td>
+							</td> --%>
 						</tr>
 					</c:forEach>
 				</table>
 				<div class="page" id="pager"></div> 
 		</div>	
-		</div>
- 	  <div id="pointInfoWindow" class="easyui-window" title="新添加设备" style="width:560px;height:580px;overflow:hidden;padding:10px;text-align:center;" iconCls="icon-info" closed="true" modal="true"   resizable="false" collapsible="false" minimizable="false" maximizable="false">
-		<form id="savePointForm" name ="savePointForm" action="device/jsonSaveOrUpdatePoint.do"  method="post">
-		<p style="display:none">
-        	<span>id：</span><input name="id" type="hidden" value="0" class="easyui-validatebox"/>
-        </p>
-		<p class="yw-window-p">
-        	<span>&nbsp;&nbsp;&nbsp;&nbsp;设备ID：</span><input name="pointId" type="text"  onblur="valueTrim(this);"  value="" class="easyui-validatebox" required="true"  validType="Length[1,10]" style="width:254px;height:28px;"/>
-			<span style="color:red">*</span>
-        </p>
-        <p class="yw-window-p">
-        	<span>设备编号：</span><input  name=pointNumber type="text" value="" onblur="valueTrim(this);"   class="easyui-validatebox" required="true"  validType="Length[1,25]" style="width:254px;height:28px;"/>
-			<span style="color:red">*</span>
-        </p>
-        <p class="yw-window-p">
-        	<span>设备名称：</span><input name="pointName" type="text" value="" onblur="valueTrim(this);"   class="easyui-validatebox" required="true"  validType="Length[1,30]" style="width:254px;height:28px;"/>
-			<span style="color:red">*</span>
-        </p>
-        <p class="yw-window-p">
-        	<span>&nbsp;&nbsp;Naming：</span><input name="pointNaming" type="text" value="" onblur="valueTrim(this);"   class="easyui-validatebox" required="true"  validType="Length[1,30]" style="width:254px;height:28px;"/>
-			<span style="color:red">*</span>
-        </p>
-        <p class="yw-window-p">
-        	<span>设备类型：</span><input name="type" type="text" value="" onblur="valueTrim(this);"   class="easyui-validatebox" required="true"  validType="Length[1,30]" style="width:254px;height:28px;"/>
-			<span style="color:red">*</span>
-        </p>
-  
-        <p class="yw-window-p">
-        	<span>设备地址：</span><input name="address" type="text" value="" onblur="valueTrim(this);"  class="easyui-validatebox" required="true"  validType="Length[1,50]" style="width:254px;height:28px;"/>
-			<span style="color:red">*</span>
-        </p>
-        <p class="yw-window-p">
-        	<span>&nbsp;&nbsp;&nbsp;&nbsp;IP地址：</span><input name="ipAddress" type="text" value="" onblur="valueTrim(this);"  class="easyui-validatebox" required="true"  validType="IP" style="width:254px;height:28px;"/>
-			<span style="color:red">*</span>
-        </p>
-        <div class="yw-window-footer txt-right">
-        	<span id="btnCancel" class="yw-window-btn bg-lightgray mt12"  onclick="$('#savePointForm .easyui-validatebox').val('');$('#pointInfoWindow').window('close');">退出</span>
-        	<span class="yw-window-btn bg-blue mt12" onclick="savePoint(this);">保存</span>
-        </div>
-        </form>
-	</div>
+		</div> 
   </body>
 </html>

@@ -33,10 +33,10 @@
     <!--see https://github.com/alibaba/druid/wiki/%E9%85%8D%E7%BD%AE_DruidDataSource%E5%8F%82%E8%80%83%E9%85%8D%E7%BD%AE-->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
         <!-- 基本属性 url、user、password -->
-        <property name="url" value="jdbc:mysql://121.40.171.43:3306/vdq?useUnicode=true&amp;characterEncoding=UTF-8&amp;useServerPrepStmts=false"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/vdq?useUnicode=true&amp;characterEncoding=UTF-8&amp;useServerPrepStmts=false"/>
         <property name="username" value="root"/>
-      <property name="password" value="8a5c94af1d"/>
-     <!--  <property name="password" value="123456"/> -->
+      <!-- <property name="password" value="8a5c94af1d"/> -->
+      <property name="password" value="123456"/> 
         <!-- 配置初始化大小、最小、最大 -->
         <property name="initialSize" value="10"/>
         <property name="minIdle" value="10"/>
@@ -94,7 +94,8 @@
         </tx:attributes>
     </tx:advice>
 
-    <aop:config expose-proxy="true" proxy-target-class="true">
+  <!--   <aop:config expose-proxy="true" proxy-target-class="true"> -->
+  <aop:config expose-proxy="true" >
         <!-- 只对业务逻辑层实施事务 -->
         <aop:pointcut id="txPointcut" expression="execution(* com.tianyi.yw..service..*+.*(..))"/>
         <aop:advisor id="txAdvisor" advice-ref="txAdvice" pointcut-ref="txPointcut"/>
@@ -118,8 +119,8 @@
         <property name="jobDetail" ref="myJobDetailA">
         </property>
         <property name="cronExpression">
-           <value>0/30 * * * * ?</value> 
-           <!--  <value>0 0/3 * * * ?</value> -->
+           <!-- <value>0/30 * * * * ?</value>  -->
+           <value>0 0/1 * * * ?</value>
         </property>
     </bean>
     

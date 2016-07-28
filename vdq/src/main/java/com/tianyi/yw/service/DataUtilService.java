@@ -13,7 +13,7 @@ public interface DataUtilService {
 	
 	void  DiagnosisList1(int count,HttpServletRequest request,HttpServletResponse response);
 
-	void DeviceDiagnosis(int deviceId,int taskItemId,int score,
+	boolean DeviceDiagnosis(int deviceId,String score,
 			HttpServletRequest request,HttpServletResponse response);
 
 	void CheckIP(String ip, HttpServletRequest request,

@@ -19,7 +19,7 @@ import com.tianyi.yw.model.TaskItemType;
 import com.tianyi.yw.model.TaskTime;
 import com.tianyi.yw.service.TaskService;
 
-@Service("taskService")
+@Service
 public class TaskServiceImpl implements TaskService {
 
 	@Resource
@@ -83,44 +83,46 @@ public class TaskServiceImpl implements TaskService {
 	
 	private void saveOrUpdateTaskTime(Task task) {
 		// TODO Auto-generated method stub
-		TaskTime t = new TaskTime();
-		if(task.getId() > 0){
-			taskTimeMapper.deleteByTaskId(task.getId());
-		}
-		
-		SimpleDateFormat sdf = new SimpleDateFormat(
-				"HH:mm:ss");
-		if(task.getFirstTimes() != null && task.getFirstTimes() != ""){
-			String t1 = task.getFirstTimes() + ":00";
-			try {
-				t.setStartTime(sdf.parse(t1));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			t.setId(0);
-			t.setTaskId(task.getId());
-			taskTimeMapper.insert(t);
-		}
-		if(task.getLastTimes() != null && task.getLastTimes() != ""){
-			String[] timeStr = task.getLastTimes().split("\\,");
-			if(timeStr.length>0){
-				for(String s : timeStr){
-					if(!StringUtil.isEmpty(s)){
-						String t2 = s + ":00";
-						try {
-							t.setStartTime(sdf.parse(t2));
-						} catch (ParseException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						t.setId(0);
-						t.setTaskId(task.getId());
-						taskTimeMapper.insert(t);
-					}
-				}
+		if(!StringUtil.isEmpty(task.getLastTimes())){
+			TaskTime t = new TaskTime();
+			if(task.getId() > 0){
+				taskTimeMapper.deleteByTaskId(task.getId());
 			}
 			
+			SimpleDateFormat sdf = new SimpleDateFormat(
+					"HH:mm:ss");
+			if(task.getFirstTimes() != null && task.getFirstTimes() != ""){
+				String t1 = task.getFirstTimes() + ":00";
+				try {
+					t.setStartTime(sdf.parse(t1));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				t.setId(0);
+				t.setTaskId(task.getId());
+				taskTimeMapper.insert(t);
+			}
+			if(task.getLastTimes() != null && task.getLastTimes() != ""){
+				String[] timeStr = task.getLastTimes().split("\\,");
+				if(timeStr.length>0){
+					for(String s : timeStr){
+						if(!StringUtil.isEmpty(s)){
+							String t2 = s + ":00";
+							try {
+								t.setStartTime(sdf.parse(t2));
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							t.setId(0);
+							t.setTaskId(task.getId());
+							taskTimeMapper.insert(t);
+						}
+					}
+				}
+				
+			}
 		}
 	}
 

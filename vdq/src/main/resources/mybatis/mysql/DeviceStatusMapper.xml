@@ -40,6 +40,12 @@
     from t_device_status ds
     where ds.id = #{id,jdbcType=INTEGER}
   </select>
+  <delete id="deleteMultDataInit">
+  	delete t from t_device_status t left join
+		(select device_id,max(id) as max_id from t_device_status group by device_id) t1
+		 on t.id=t1.max_id
+		where t1.max_id is null;
+  </delete>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_device_status
     where device_id = #{id,jdbcType=INTEGER}

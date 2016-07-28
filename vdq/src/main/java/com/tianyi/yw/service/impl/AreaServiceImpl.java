@@ -10,7 +10,7 @@ import com.tianyi.yw.dao.AreaMapper;
 import com.tianyi.yw.model.Area;
 import com.tianyi.yw.service.AreaService;
 
-@Service("areaService")
+@Service
 public class AreaServiceImpl implements AreaService {
 	
 	@Resource

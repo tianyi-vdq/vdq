@@ -41,10 +41,10 @@ import com.tianyi.yw.common.utils.Constants;
 @RequestMapping("/task")
 public class TaskAction extends BaseAction {
 
-	@Resource(name = "taskService")
+	@Resource
 	private TaskService taskService;
 
-	@Resource(name = "dignosisService")
+	@Resource
 	private DignosisService dignosisService;
 	/**
 	 * 任务列表

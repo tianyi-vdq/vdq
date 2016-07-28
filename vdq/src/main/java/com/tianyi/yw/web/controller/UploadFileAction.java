@@ -47,11 +47,11 @@ import com.tianyi.yw.service.LogService;
 @RequestMapping("/fileUpload")
 public class UploadFileAction extends BaseAction {
 
-	@Resource(name = "deviceService")
+	@Resource
 	private DeviceService deviceService;
-	@Resource(name = "areaService")
+	@Resource
 	private AreaService areaService;
-	@Resource(name = "logService")
+	@Resource
 	private LogService logService;
 
 	/**

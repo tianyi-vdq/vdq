@@ -28,9 +28,9 @@ import com.tianyi.yw.service.DeviceService;
 @Controller
 @RequestMapping("/area")
 public class AreaAction  extends BaseAction {
-	@Resource(name = "areaService")
+	@Resource
 	private AreaService areaService;
-	@Resource(name = "deviceService")
+	@Resource
 	private DeviceService deviceService;
 	/**
 	 * 区域管理

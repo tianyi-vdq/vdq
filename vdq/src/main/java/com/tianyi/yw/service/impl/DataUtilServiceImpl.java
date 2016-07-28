@@ -13,19 +13,23 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONObject;
+ 
+
+
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tianyi.yw.common.JsonResult;
 import com.tianyi.yw.common.utils.Constants;
-import com.tianyi.yw.dao.DeviceDiagnosisMapper;
-import com.tianyi.yw.dao.DeviceMapper;
+import com.tianyi.yw.common.utils.ConstantsResult;
+import com.tianyi.yw.dao.DeviceDiagnosisMapper; 
 import com.tianyi.yw.dao.DeviceStatusMapper;
 import com.tianyi.yw.model.DeviceDiagnosis;
-import com.tianyi.yw.model.DeviceStatus;
-import com.tianyi.yw.model.DiagnosisItemType;
-import com.tianyi.yw.model.Server;
-import com.tianyi.yw.model.TaskItem;
-import com.tianyi.yw.model.TaskItemType;
+import com.tianyi.yw.model.DeviceStatus; 
+import com.tianyi.yw.model.Server; 
 import com.tianyi.yw.service.DataUtilService;
 import com.tianyi.yw.service.DeviceService;
 import com.tianyi.yw.service.DignosisService;
@@ -34,13 +38,13 @@ import com.tianyi.yw.service.ParamService;
 import com.tianyi.yw.service.ServerService;
 import com.tianyi.yw.service.TaskService;
 
-@Service("dataUtilService")
+@Service
 public class DataUtilServiceImpl implements DataUtilService {
-
-	@Resource(name = "taskService")
+    
+	@Resource
 	private TaskService taskService;
 
-	@Resource(name = "logService")
+	@Resource
 	private LogService logService;
 
 	@Resource
@@ -61,6 +65,10 @@ public class DataUtilServiceImpl implements DataUtilService {
 	@Resource
 	private DeviceStatusMapper deviceStatusMapper;
 
+
+	@Autowired
+	private  RabbitTemplate rabbitTemplate;
+	
 	/**
 	 * 服务器分配（等待调度）
 	 * 
@@ -84,37 +92,17 @@ public class DataUtilServiceImpl implements DataUtilService {
 		try {
 			// dg.setCountSize(8);
 			// 不足10条，补足10条
-			if (count < Constants.DEFAULT_QUEUE_SIZE) {
+			//if (count < Constants.DEFAULT_QUEUE_SIZE) {
 				try {
-					dg.setCountSize(Constants.DEFAULT_QUEUE_SIZE - count);
+					//一次获取8条
+					dg.setCountSize(Constants.DEFAULT_QUEUE_SIZE);// - count);
 					dglist = diagnosisService.getList(dg);
 					// 获取请求端ip
-					String ip = getIpAddress(request);
-//					int port = request.getRemotePort();
-					if (dglist.size() != 0) {
-//						// 判断请求ip是否为空、是否有权限
-//						if (ip != null) {
-//							if (ip.equals("0:0:0:0:0:0:0:1")) {
-//								server.setIpaddress("127.0.0.1");
-//								server.setPort(8080);
-//							} else {
-//								server.setIpaddress(ip);
-//								server.setPort(port);
-//							}
+					String ip = getIpAddress(request); 
+					if (dglist.size() != 0) { 
 							server.setIpaddress(ip);
-							server = serverService.selectByIp(server);
-//							if (server.getId() == null) {
-//								js.setMessage("无权访问!");
-//								return js;
-//							}
-//						} else {
-//							js.setMessage("ip获取失败!");
-//							return js;
-//						}
-//						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						for (DeviceDiagnosis d : dglist) {
-//							 String dd =sdf.format(new Date());
-//							d.setCheckTime(sdf.parse(dd));
+							server = serverService.selectByIp(server); 
+						for (DeviceDiagnosis d : dglist) { 
 							d.setCheckTime(new Date());
 							d.setCheckServerId(server.getId());
 							d.setCheckServer(ip);
@@ -131,13 +119,12 @@ public class DataUtilServiceImpl implements DataUtilService {
 					logService.writeLog(5, "服务器分配任务出错！", ex.getMessage());
 					ex.printStackTrace();
 				}
-			}
+			//}
 		} finally {
 			lock.unlock();// 释放锁
 		}
 		return js;
 	}
-
 	/**
 	 * request获取ip
 	 * 
@@ -246,70 +233,130 @@ public class DataUtilServiceImpl implements DataUtilService {
 	 * @return
 	 */
 	@Override
-	public void DeviceDiagnosis(int deviceId, int taskItemId, int score,
+	public boolean DeviceDiagnosis(int deviceId, String score,
 			HttpServletRequest request, HttpServletResponse response) {
 		JsonResult<DeviceDiagnosis> js = new JsonResult<DeviceDiagnosis>();
 		js.setCode(1);
 		js.setMessage("诊断失败!");
 		int logType = 5;
+		boolean isOk = false;
 		try { 
 			DeviceDiagnosis deviceDis = dignosisMapper.selectByDeviceId(deviceId); 
-			if(score == Constants.CHECK_RESULT_NORMAL){
-				deviceDis.setCheckResult(score);
+			//诊断结果为正常 , 只进行一次诊断
+			if(score.equals(ConstantsResult.CHECK_RESULT_OK)){
+				deviceDis.setCheckResult(ConstantsResult.CHECK_TIMES);
 				deviceDis.setEndTime(new Date());
-				dignosisMapper.updateByPrimaryKeySelective(deviceDis);
-				updateDeviceStatus(deviceId,score,taskItemId);
-			}else{
+			}else{ 
+				//诊断结果为异常 , 进行3次重复诊断 
 				int checkTimes = deviceDis.getCheckTimes();
-				if(checkTimes<3){
+				if(checkTimes<ConstantsResult.CHECK_TIMES){
 					deviceDis.setCheckTimes(checkTimes+1);
 					deviceDis.setCheckResult(null);
 					deviceDis.setCheckServer(null);
 					deviceDis.setCheckServerId(0);
-					deviceDis.setCheckTime(new Date());
-					dignosisMapper.updateByPrimaryKeySelective(deviceDis);
+					deviceDis.setCheckTime(new Date()); 
 				}else{
-					deviceDis.setCheckTimes(3);
-					deviceDis.setCheckResult(score);
-					deviceDis.setEndTime(new Date());
-					dignosisMapper.updateByPrimaryKeySelective(deviceDis);
-					updateDeviceStatus(deviceId,score,taskItemId);
-				}
-			} 
+					deviceDis.setCheckTimes(ConstantsResult.CHECK_TIMES);
+					deviceDis.setCheckResult(ConstantsResult.CHECK_RESULT_STATUS_OK);
+					deviceDis.setEndTime(new Date()); 
+					//3次诊断诊断完成 , 结果异常, 则调用mq服务推送消息
+					if(pushMessageToMQ(deviceDis)){ 
+						logService.writeLog(logType, "诊断结果异常, 结果已推送到MQ服务！");
+					}else{
+						logService.writeLog(logType, "诊断结果异常, 结果推送到MQ服务,出错！");
+					}
+					
+				} 
+			}
+			dignosisMapper.updateByPrimaryKeySelective(deviceDis); 
+			updateDeviceStatus(deviceId,score);
+			isOk = true;
 		} catch (Exception ex) {
 			logService.writeLog(logType, "诊断分值后台服务度出错！", ex.getMessage());
-			ex.printStackTrace();
+			//ex.printStackTrace();
 		}
+		return isOk;
 	}
 
-	private void updateDeviceStatus(int deviceId, int score, int taskItemId) {
+	private boolean pushMessageToMQ(DeviceDiagnosis deviceDis) {
+		// TODO Auto-generated method stub
+		boolean isSuccess = false;
+		JSONObject json = new JSONObject();
+		json.element("cameraId", deviceDis.getDeviceId());
+		json.element("cameraName",deviceDis.getDeviceName());
+		json.element("deviceIp", Constants.ROUTEDATA_YWALARM_VIDEO_IP);
+		json.element("faultCode", Constants.ROUTEDATA_YWALARM_VIDEO_CODE);
+		json.element("faultContent", "点位视频诊断异常,请注意查收");
+		json.element("faultType", Constants.ROUTEDATA_YWALARM_VIDEO_TYPE);
+		try {
+			rabbitTemplate.convertAndSend(Constants.ROUTEDATA_YWALARM_VIDEO,json.toString());
+			isSuccess = true;
+		} catch (AmqpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return isSuccess;
+	}
+
+	private void updateDeviceStatus(int deviceId, String score) {
 		// TODO Auto-generated method stub
 		DeviceStatus ds = new DeviceStatus();
 		ds = deviceStatusMapper.selectByDeviceId(deviceId);
-		if(ds != null){
-			if (taskItemId == 1) {
-				ds.setNetworkStatus(score);
-			} else if (taskItemId == 2) {
-				ds.setStreamStatus(score);
-			} else if (taskItemId == 3) {
-				ds.setNoiseStatus(score);
-			} else if (taskItemId == 4) {
-				ds.setSignStatus(score);
-			} else if (taskItemId == 5) {
-				ds.setColorStatus(score);
-			} else if (taskItemId == 6) {
-				ds.setFrameFrozenStatus(score);
-			} else if (taskItemId == 7) {
-				ds.setFrameShadeStatus(score);
-			} else if (taskItemId == 8) {
-				ds.setFrameFuzzyStatus(score);
-			} else if (taskItemId == 9) {
-				ds.setFrameDisplacedStatus(score);
-			} else if (taskItemId == 10) {
-				ds.setFrameColorcaseStatus(score);
-			} else if (taskItemId == 11) {
-				ds.setLightExceptionStatus(score);
-			}
+		if(ds != null){ 
+			if(score.equals(ConstantsResult.CHECK_RESULT_OK)){
+				ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_OK); 
+				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setColorStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setFrameFrozenStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setFrameShadeStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setFrameStripStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setFrameFuzzyStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setFrameDisplacedStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setFrameColorcaseStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);  
+			}else if(score.equals(ConstantsResult.CHECK_RESULT_NULL)){
+				ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION); 
+				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setColorStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setFrameFrozenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setFrameFuzzyStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setFrameDisplacedStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setFrameColorcaseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setFrameShadeStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setFrameStripStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+			}else{
+				String[] scores = score.split("\\,");
+				for(String s :scores){
+					if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_NETWORK)) {
+						ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_STREAM)) {
+						ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_NOISE)) {
+						ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_SIGN)) {
+						ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_COLOR)) {
+						ds.setColorStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_FROZEN)) {
+						ds.setFrameFrozenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_SHADE)) {
+						ds.setFrameShadeStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_FUZZY)) {
+						ds.setFrameFuzzyStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_DISPLACED)) {
+						ds.setFrameDisplacedStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_COLORCASE)) {
+						ds.setFrameColorcaseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_LIGHTEXCEPTION)) {
+						ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					}
+				}
+			} 
 			ds.setRecordTime(new Date());
 			ds.setCreateTime(new Date());
 			deviceStatusMapper.updateByPrimaryKeySelective(ds);
@@ -319,29 +366,60 @@ public class DataUtilServiceImpl implements DataUtilService {
 			ds.setDeviceId(deviceId); 
 			ds.setRecordTime(new Date());
 			ds.setCreateTime(new Date());
-			if (taskItemId == 1) {
-				ds.setNetworkStatus(score);
-			} else if (taskItemId == 2) {
-				ds.setStreamStatus(score);
-			} else if (taskItemId == 3) {
-				ds.setNoiseStatus(score);
-			} else if (taskItemId == 4) {
-				ds.setSignStatus(score);
-			} else if (taskItemId == 5) {
-				ds.setColorStatus(score);
-			} else if (taskItemId == 6) {
-				ds.setFrameFrozenStatus(score);
-			} else if (taskItemId == 7) {
-				ds.setFrameShadeStatus(score);
-			} else if (taskItemId == 8) {
-				ds.setFrameFuzzyStatus(score);
-			} else if (taskItemId == 9) {
-				ds.setFrameDisplacedStatus(score);
-			} else if (taskItemId == 10) {
-				ds.setFrameColorcaseStatus(score);
-			} else if (taskItemId == 11) {
-				ds.setLightExceptionStatus(score);
-			}
+			if(score.equals(ConstantsResult.CHECK_RESULT_OK)){
+				ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_OK); 
+				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setColorStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setFrameFrozenStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setFrameShadeStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setFrameStripStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setFrameFuzzyStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setFrameDisplacedStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setFrameColorcaseStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+				ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);  
+			}else if(score.equals(ConstantsResult.CHECK_RESULT_NULL)){
+				ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION); 
+				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setFrameShadeStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setFrameStripStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setColorStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setFrameFrozenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setFrameFuzzyStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setFrameDisplacedStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setFrameColorcaseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+				ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+			}else{
+				String[] scores = score.split("\\,");
+				for(String s :scores){
+					if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_NETWORK)) {
+						ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_STREAM)) {
+						ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_NOISE)) {
+						ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_SIGN)) {
+						ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_COLOR)) {
+						ds.setColorStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_FROZEN)) {
+						ds.setFrameFrozenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_SHADE)) {
+						ds.setFrameShadeStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_FUZZY)) {
+						ds.setFrameFuzzyStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_DISPLACED)) {
+						ds.setFrameDisplacedStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_COLORCASE)) {
+						ds.setFrameColorcaseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_LIGHTEXCEPTION)) {
+						ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					}
+				}
+			} 
 			deviceStatusMapper.insert(ds);
 		}
 	}

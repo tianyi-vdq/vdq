@@ -13,7 +13,7 @@ import com.tianyi.yw.dao.LogTypeMapper;
 import com.tianyi.yw.model.Log;
 import com.tianyi.yw.model.LogType;
 import com.tianyi.yw.service.LogService;
-@Service("logService")
+@Service
 public class LogServiceImpl implements LogService {
 
 	@Resource

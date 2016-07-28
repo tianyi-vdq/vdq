@@ -24,7 +24,7 @@ import com.tianyi.yw.service.DeviceService;
 @RequestMapping("/statistic")
 public class StatisticAction  extends BaseAction{
 	
-	@Resource(name = "deviceService")
+	@Resource
 	private DeviceService deviceService;
 
 	/**

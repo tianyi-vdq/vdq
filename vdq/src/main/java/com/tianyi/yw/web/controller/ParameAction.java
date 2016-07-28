@@ -26,7 +26,7 @@ import com.tianyi.yw.service.ParamService;
 @RequestMapping("/parame")
 public class ParameAction  extends BaseAction{
 	
-	@Resource(name = "paramService")
+	@Resource
 	private ParamService paramService;
 	/**
 	 * 视频点位检测参数设置

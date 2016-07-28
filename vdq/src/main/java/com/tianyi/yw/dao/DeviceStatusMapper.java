@@ -23,4 +23,6 @@ public interface DeviceStatusMapper {
 
 	DeviceStatus selectByDeviceId(int id);
 
+	void deleteMultDataInit();
+
 }

@@ -61,6 +61,8 @@ public interface DeviceService {
 	
 	void saveOrUpdateDeviceStatus(DeviceStatus ds);
 
+	void deleteMultDataInit();
+
 
 
 }

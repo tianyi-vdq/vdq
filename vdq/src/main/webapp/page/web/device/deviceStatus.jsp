@@ -11,7 +11,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <base href="<%=basePath%>">
 <meta charset="utf-8">
 <title>设备状态</title>
-<meta http-equiv="refresh" content="180">
+<meta http-equiv="refresh" content="30">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, minimum-scale=1  ,maximum-scale=1, user-scalable=no" />
 <script
@@ -27,18 +27,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    totalCount:'${DeviceStatus.totalCount}',
 			    buttonClickCallback:PageClick                     /* 表示点击分页数按钮调用的方法 */                  
 			});
-			//loadCompanyList();
+			var hid_searchStatusId = $("#hid_searchStatusId").val();
+			if(hid_searchStatusId!=""){
+				$("#statusId").combobox("setValue",hid_searchStatusId);
+			}
 		});
+		
+		
 		//指定3分钟刷新一次,这种刷新有点问题，我采用的另一种方式<meta http-equiv="refresh" content="180">
 		/* function myrefresh(){ 
 			window.location.reload(); 
 		} 
 		setTimeout('myrefresh()',180000); */ 
-function getAreaListByParentId(pid){
-	$.ajax({
- 		url:'area/jsonLoadAreaTreeList.do?pid='+pid
-	});
-} 
+
 PageClick = function(pageclickednumber) {
 	$("#pager").pager({
 	    pagenumber:pageclickednumber,                 /* 表示启示页 */
@@ -52,6 +53,7 @@ PageClick = function(pageclickednumber) {
 }
 function search(){
 	$("#pageNumber").val("1");
+	$("#hid_serarch").val(encodeURI($("#seaarchNameTemp").val()));
 	pagesearch();
 }
 
@@ -74,19 +76,17 @@ function pagesearch(){
 		<form id="DeviceStatusForm" name="DeviceStatusForm"
 				action="device/deviceStatus.do" method="get">
 		<div class="pd10">
-		      <div class="fl">
-		      <%-- <input id ="areaId" name ="searchAreaId" type="hidden" value="${DeviceStatus.searchAreaId}"/> --%>
-			  <!-- <span>区域选择：</span><input  id ="cmbParentArea" name ="searchAreaId" type="text"  class="easyui-combotree" required="true" style="width:254px;height:28px;" /> -->			 		
-		      <span>设备编号：</span><input type="text" id="pointNumber" name="searchPointNumber"   validType="SpecialWord"
-				 class="easyui-validatebox" placeholder="搜索" value="${DeviceStatus.searchPointNumber}" type="hidden"/> 
+		      <div class="fl">	 	
+				<span>设备编号：</span>	<input type="text" id="seaarchNameTemp" validType="SpecialWord" class="easyui-validatebox" value="${DeviceStatus.searchPointNumber}"  /> 
+				<input type="hidden" name="searchPointNumber" id="hid_serarch" /> 	 
 			  <span>设备状态：</span>
-			  <select class="easyui-combobox"  id="statusId"  name="searchStatusId" value="${DeviceStatus.searchStatusId}"
-					style="width:180px;height:32px;" data-options="editable:false">
-		    <option name="searchStatusId" value="" >请选择设备状态</option>	             	
-			<option value="1">异常</option>	
-			<option value="2">警告</option>	
-			<option value="3">正常</option>	
-			<option value="4">失败</option>				        							
+			  <input type="hidden" name="searchStatusId" id="hid_searchStatusId" value="${DeviceStatus.searchStatusId}" />
+			  <select class="easyui-combobox"  id="statusId" style="width:180px;height:32px;" data-options="editable:false,onSelect:function(record){$('#hid_searchStatusId').val(record.value);}">
+				    <option value="" >请选择设备状态</option>	             	
+					<option value="1">异常</option>	
+					<!-- <option value="2">警告</option>	 -->
+					<option value="3">正常</option>	
+					<!-- <option value="4">失败</option>	 -->			        							
 			</select>		
 			 <span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>
 		</div>			
@@ -120,72 +120,84 @@ function pagesearch(){
 			<td align="center" style="display:none">${item.id}</td>
 			<td>${item.pointId}</td>                          
 			<td>
+			<c:if test="${item.networkStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			<c:if test="${item.networkStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
 			<c:if test="${item.networkStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
 			<c:if test="${item.networkStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.networkStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			</td>
-			<td>
+			<td> 
+			<c:if test="${item.streamStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			<c:if test="${item.streamStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
 			<c:if test="${item.streamStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
 			<c:if test="${item.streamStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.streamStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			</td>
 			<td>
+			<c:if test="${item.noiseStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			<c:if test="${item.noiseStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
 			<c:if test="${item.noiseStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
 			<c:if test="${item.noiseStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.noiseStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			</td>
 			<td>
+			<c:if test="${item.signStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			<c:if test="${item.signStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
 			<c:if test="${item.signStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
 			<c:if test="${item.signStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.signStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			</td>
 			<td>
+			<c:if test="${item.colorStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			<c:if test="${item.colorStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
 			<c:if test="${item.colorStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
 			<c:if test="${item.colorStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.colorStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			</td> 
 			<td>
+			<c:if test="${item.frameFrozenStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			<c:if test="${item.frameFrozenStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
 			<c:if test="${item.frameFrozenStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
 			<c:if test="${item.frameFrozenStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.frameFrozenStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			</td> 
 			<td>
+			<c:if test="${item.frameShadeStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			<c:if test="${item.frameShadeStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
 			<c:if test="${item.frameShadeStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
 			<c:if test="${item.frameShadeStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.frameShadeStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			</td>
 			<td>
+			<c:if test="${item.frameFuzzyStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			<c:if test="${item.frameFuzzyStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
 			<c:if test="${item.frameFuzzyStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
 			<c:if test="${item.frameFuzzyStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.frameFuzzyStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
                         </td>
 			<td>
+			<c:if test="${item.frameDisplacedStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			<c:if test="${item.frameDisplacedStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
 			<c:if test="${item.frameDisplacedStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
 			<c:if test="${item.frameDisplacedStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.frameDisplacedStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			</td>
 			<td>
+			<c:if test="${item.frameStripStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			<c:if test="${item.frameStripStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
 			<c:if test="${item.frameStripStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
 			<c:if test="${item.frameStripStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.frameStripStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			</td> 
 			<td>
+			<c:if test="${item.frameColorcaseStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			<c:if test="${item.frameColorcaseStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
 			<c:if test="${item.frameColorcaseStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
 			<c:if test="${item.frameColorcaseStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.frameColorcaseStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			</td> 
 			<td>
+			<c:if test="${item.lightExceptionStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			<c:if test="${item.lightExceptionStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
 			<c:if test="${item.lightExceptionStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
 			<c:if test="${item.lightExceptionStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>

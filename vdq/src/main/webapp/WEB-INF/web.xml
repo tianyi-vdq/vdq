@@ -20,7 +20,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
   </filter-mapping>
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>classpath*:spring/spring-config.xml</param-value>
+    <param-value>classpath*:spring/spring-config.xml,classpath*:spring/applicationContext-rabbitmq.xml</param-value>
   </context-param>
   <context-param>
     <param-name>log4jConfigLocation</param-name>
@@ -40,7 +40,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
     <servlet-class>com.tianyi.yw.web.interceptor.EncodingDispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>classpath*:spring/spring-mvc.xml,classpath*:spring/applicationContext-rabbitmq.xml</param-value>
+      <param-value>classpath*:spring/spring-mvc.xml</param-value>
     </init-param>
     <init-param>
       <param-name>encoding</param-name>

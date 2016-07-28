@@ -138,9 +138,9 @@ function runTaskNow(id){
 				success : function(data) { 									
 		  			if(data.code == 0){ 
 		  				$.messager.alert('任务启动信息',data.message,'info',function(){ 
-		  					search(); 
+		  					runTaskAction(id);
 		  					//window.location.href="taskList.do";
-		      		});
+		      			});
 		  			}else{		  			    
 						$.messager.alert('错误信息','任务启动失败！','error');
 		  			}  
@@ -149,6 +149,17 @@ function runTaskNow(id){
 	    }  
 	}); 
 } 
+function runTaskAction(id){
+ //  $.messager.alert('任务开始启动!');
+	$.ajax({
+		url : "<%=basePath%>dataUtil/jsonloadTaskRunRightNow.do?id="+id,
+		type : "post",  
+    	dataType : "json",								
+		success : function(data) {  
+	    } 
+	}); 
+	search();  
+}
 function deleteTask(id){
 	$.messager.confirm("删除确认","确认删除该任务?",function(r){  
 		    if (r){   

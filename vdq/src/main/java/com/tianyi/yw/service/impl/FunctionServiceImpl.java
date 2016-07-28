@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.tianyi.yw.dao.FunctionsMapper; 
 import com.tianyi.yw.model.Functions; 
 import com.tianyi.yw.service.FunctionService;
-@Service("functionService")
+@Service
 public class FunctionServiceImpl implements FunctionService {
 
 	

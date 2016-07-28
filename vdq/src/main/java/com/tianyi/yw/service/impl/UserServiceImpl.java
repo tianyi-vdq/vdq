@@ -13,7 +13,7 @@ import com.tianyi.yw.common.shiro.ShiroUsernamePasswordToken;
 import com.tianyi.yw.dao.UserMapper;
 import com.tianyi.yw.model.User;
 import com.tianyi.yw.service.UserService;
-@Service("userService")
+@Service
 public class UserServiceImpl implements UserService {
 
 	@Resource

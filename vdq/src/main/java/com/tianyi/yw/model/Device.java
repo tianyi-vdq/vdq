@@ -19,6 +19,8 @@ public class Device extends Page {
     private String address;
 
     private String ipAddress;
+    
+    private Integer port;
 
     private Integer areaId;
     
@@ -202,6 +204,14 @@ public class Device extends Page {
 
 	public void setServerId(Integer serverId) {
 		this.serverId = serverId;
+	}
+
+	public Integer getPort() {
+		return port;
+	}
+
+	public void setPort(Integer port) {
+		this.port = port;
 	}
 
 

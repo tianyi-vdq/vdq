@@ -7,7 +7,7 @@ import com.tianyi.yw.dao.ServerMapper;
 import com.tianyi.yw.model.Server;
 import com.tianyi.yw.service.ServerService;
 
-@Service("serverService")
+@Service
 public class ServerServiceImpl implements ServerService {
 
 	

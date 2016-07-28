@@ -103,69 +103,82 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<form id="devicePointForm" name="devicePointForm" action="device/jsonSaveOrUpdatePoint.do" method="post">
 		<div id="tab1" class="yw-tab">
 			<table class="yw-cm-table font16">
+				<tr>	
+					<td align="right" width="8%">设备名称：</td>
+					<td  align="left" ><input  name="pointName" doc="pointInfo"  onblur="valueTrim(this);"   type="text" value="${Device.pointName}" class="easyui-validatebox" required="true" validType="Length[1,100]" style="width:354px;height:28px;" />
+					<span style="color:red">*</span>
+					</td>
+					
+				</tr>
 				<tr>
-					<td align="right">设备id：</td>
-					<td><input  name="pointId" doc="pointInfo" onblur="valueTrim(this);"    type="text" value="${Device.pointId}" class="easyui-validatebox" required="true" validType="Length[1,10]" style="width:254px;height:28px;" />
+					<td align="right" width="8%">设备ID：</td> 
+					<td  align="left" ><input  name="pointId" doc="pointInfo" onblur="valueTrim(this);"    type="text" value="${Device.pointId}" class="easyui-validatebox" required="true" validType="Length[1,100]" style="width:354px;height:28px;" />
 					<span style="color:red">*</span>
 					<input id="deviceId" name="id" type="hidden" value="${Device.id}" />
 					<input type="hidden" id="areaName" value="${Device.areaName}"/>
 					<input name="flag" doc="pointInfo"  type="hidden" value="${Device.flag}"/>
 					</td>
 					 
-					 <td align="right">平台id：</td>
-					<td><input  name="platformId" doc="pointInfo" onblur="valueTrim(this);"    type="text" value="${Device.platformId}" class="easyui-validatebox" required="true" validType="Length[1,10]" style="width:254px;height:28px;" />
-					<span style="color:red">*</span>
-					</td>
 				
 			    </tr>
 				<tr>	
-					<td align="right">设备编号：</td>
-					<td><input  name="pointNumber" doc="pointInfo" onblur="valueTrim(this);"    type="text" value="${Device.pointNumber}" class="easyui-validatebox" required="true" validType="Length[1,10]" style="width:254px;height:28px;" />
-					<span style="color:red">*</span>
-					</td>
-				
-			
-					<td align="right">设备名称：</td>
-					<td><input  name="pointName" doc="pointInfo"  onblur="valueTrim(this);"   type="text" value="${Device.pointName}" class="easyui-validatebox" required="true" validType="Length[1,30]" style="width:254px;height:28px;" />
-					<span style="color:red">*</span>
-					</td>
-					
-				</tr>
-				<tr>
-					<td align="right">设备Naming值：</td>
-					<td><input  name="pointNaming" doc="pointInfo"  onblur="valueTrim(this);"   type="text" value="${Device.pointNaming}" class="easyui-validatebox" required="true" validType="Length[1,30]" style="width:254px;height:28px;" />
-					<span style="color:red">*</span>
-					</td>
 					<td align="right">设备类型：</td>
-					<td><input  name="type" doc="pointInfo"  onblur="valueTrim(this);"   type="text" value="${Device.type}" class="easyui-validatebox" required="true" validType="Length[1,50]" style="width:254px;height:28px;" />
-					<span style="color:red">*</span>
+					<td  align="left" ><input  name="type" doc="pointInfo"  onblur="valueTrim(this);"   type="text" value="${Device.type}" class="easyui-validatebox"  validType="Length[1,30]" style="width:354px;height:28px;" />
 					</td>
 				</tr>
 				<tr>	
-					<td align="right">设备地址:</td>
-					<td><input  name="address" doc="pointInfo"  type="text" value="${Device.address}" class="easyui-validatebox" required="true" validType="Length[1,50]" style="width:254px;height:28px;" />
+					<td align="right">设备编号：</td>
+					<td  align="left" ><input  name="pointNumber" doc="pointInfo" onblur="valueTrim(this);"    type="text" value="${Device.pointNumber}" class="easyui-validatebox" required="true" validType="Length[1,100]" style="width:354px;height:28px;" />
+					<span style="color:red">*</span>
+					</td> 
+			    </tr>
+				<tr>
+					<td align="right">Naming：</td>
+					<td  align="left" ><input  name="pointNaming" doc="pointInfo"  onblur="valueTrim(this);"   type="text" value="${Device.pointNaming}" class="easyui-validatebox" required="true" validType="Length[1,250]" style="width:354px;height:28px;" />
+					<span style="color:red">*</span>
+					</td> 
+			    </tr>
+				<tr>	
+					<td align="right">设备IP地址:</td>
+					<td  align="left" ><input  name="ipAddress" doc="pointInfo"  type="text" value="${Device.ipAddress}" class="easyui-validatebox" required="true" validType="IP" style="width:354px;height:28px;" />
+					<span style="color:red">*</span> 
+					</td> 
+				</tr>
+				<tr>	
+					<td align="right">设备端口:</td>
+					<td  align="left" ><input  name="port" doc="pointInfo"  type="text" value="${Device.port}" class="easyui-validatebox" required="true" validType="number" style="width:354px;height:28px;" />
 					<span style="color:red">*</span>
 					</td>
-					<td align="right">设备IP地址:</td>
-					<td><input  name="ipAddress" doc="pointInfo"  type="text" value="${Device.ipAddress}" class="easyui-validatebox" required="true" validType="IP" style="width:254px;height:28px;" />
-					<span style="color:red">*</span> 
-					</td>
+					
 				
-				</tr>
+			    </tr>
+				<tr>	
+					<td align="right">设备地址:</td>
+					<td  align="left" ><input  name="address" doc="pointInfo"  type="text" value="${Device.address}" class="easyui-validatebox" required="true" validType="Length[1,250]" style="width:354px;height:28px;" />
+					<span style="color:red">*</span>
+					</td>
+					
+				
+			    </tr>
 				<tr>
 					<td align="right">所属区域:</td>
-					<td>
+					<td  align="left" >
 					<input id ="areaId" name = "areaId" type="hidden" value="${Device.areaId}"/>
-					<input  id ="cmbParentArea" name="areaName" doc="pointInfo"  type="text"  class="easyui-combotree" required="true" style="width:254px;height:28px;" />
-					 
-					<span style="color:red">*</span> 
-					</td>
-				
+					<input  id ="cmbParentArea" name="areaName" doc="pointInfo"  type="text"  class="easyui-combotree"  style="width:354px;height:28px;" />  
+					</td> 
+			    </tr>
+				<tr>	
 					<td align="right">RTSP地址:</td>
-					<td><input  name="rtspUrl" doc="pointInfo"  type="text" value="${Device.rtspUrl}" class="easyui-validatebox" required="true" validType="Length[1,150]" style="width:254px;height:28px;" />
-					<span style="color:red">*</span> 
+					<td  align="left" ><input  name="rtspUrl" doc="pointInfo"  type="text" value="${Device.rtspUrl}" class="easyui-validatebox"  validType="Length[1,250]" style="width:354px;height:28px;" />
 					</td>
 				</tr>
+			<%-- 	<tr>	
+					 <td align="right">平台id：</td>
+					<td><input  name="platformId" doc="pointInfo" onblur="valueTrim(this);"    type="text" value="${Device.platformId}" class="easyui-validatebox" required="true" validType="Length[1,10]" style="width:354px;height:28px;" />
+					<span style="color:red">*</span>
+					</td>
+				
+			    </tr> --%>
 			</table> 
 		</div>  
 	</form>

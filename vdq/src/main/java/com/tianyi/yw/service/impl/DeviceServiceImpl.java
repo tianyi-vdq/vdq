@@ -2,10 +2,18 @@ package com.tianyi.yw.service.impl;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+import net.sf.json.JSONObject;
+
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.tianyi.yw.common.utils.Constants;
 import com.tianyi.yw.dao.DeviceGroupItemMapper;
 import com.tianyi.yw.dao.DeviceGroupMapper;
 import com.tianyi.yw.dao.DeviceMapper;
@@ -16,10 +24,9 @@ import com.tianyi.yw.model.DeviceGroup;
 import com.tianyi.yw.model.DeviceGroupItem; 
 import com.tianyi.yw.service.DeviceService;
 
-@Service("deviceService")
+@Service
 public class DeviceServiceImpl implements DeviceService {
-
-
+	
 	@Resource
 	private DeviceMapper deviceMapper;
 	@Resource
@@ -51,7 +58,8 @@ public class DeviceServiceImpl implements DeviceService {
 	
 	@Override
 	public List<DeviceStatus> getDeviceStatusList(DeviceStatus deviceStatus)
-	{
+	{ 
+				deviceStatusMapper.deleteMultDataInit();
 		return deviceStatusMapper.getDeviceStatusList(deviceStatus);
 	}
 
@@ -199,7 +207,11 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 	}
 
-
+	@Override
+	public void deleteMultDataInit() {
+		// TODO Auto-generated method stub
+		deviceStatusMapper.deleteMultDataInit();
+	}
 
 
 }

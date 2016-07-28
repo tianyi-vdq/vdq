@@ -1,5 +1,6 @@
 package com.tianyi.yw.web.controller;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +30,9 @@ import com.tianyi.yw.service.DeviceService;
 @RequestMapping("/device")
 public class DeviceAction  extends BaseAction{
 
-	@Resource(name = "deviceService")
+	@Resource
 	private DeviceService deviceService;
-	@Resource(name = "areaService")
+	@Resource
 	private AreaService areaService;
 	/**
 	 * 视频点位设备管理
@@ -48,8 +49,7 @@ public class DeviceAction  extends BaseAction{
 		//判断搜索栏是否为空，不为空则转为utf-8编码
 		if (device.getSearchName() != null
 				&& device.getSearchName().length() > 0) {
-			String searchName = new String(device.getSearchName().getBytes(
-					"iso8859-1"), "utf-8");
+			String searchName = new String(device.getSearchName().getBytes("iso8859-1"), "utf-8");
 			device.setSearchName(searchName);			
 		}
 		//设置页面初始值及页面尺寸
@@ -88,7 +88,8 @@ public class DeviceAction  extends BaseAction{
 
 		if(deviceStatus.getSearchPointNumber() != null && deviceStatus.getSearchPointNumber().length() > 0)
 		{
-			String pointNumber = new String(deviceStatus.getSearchPointNumber().getBytes("iso8859-1"), "utf-8");
+			String pointNumber = URLDecoder.decode(deviceStatus.getSearchPointNumber(),"utf-8"); 
+			//String pointNumber = new String(deviceStatus.getSearchPointNumber().getBytes("iso8859-1"), "utf-8");
 			deviceStatus.setSearchPointNumber(pointNumber);
 		}
 		
@@ -99,14 +100,7 @@ public class DeviceAction  extends BaseAction{
 		int totalCount =  0;
 		try{			
 			deviceStatuslist =  deviceService.getDeviceStatusList(deviceStatus);
-			totalCount = deviceService.getDeviceStatusCount(deviceStatus);
-
-			/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");		
-			for(DeviceStatus ds:deviceStatuslist )
-			{				
-				ds.setCreateTimes(sdf.format(ds.getCreateTime()));
-				ds.setRecordTimes(sdf.format(ds.getRecordTime()));			
-			}*/
+			totalCount = deviceService.getDeviceStatusCount(deviceStatus); 
 		}catch(Exception ex){ 
 			ex.printStackTrace();
 		}	
@@ -132,35 +126,23 @@ public class DeviceAction  extends BaseAction{
 			if (device.getId() == null || device.getId() == 0) {
 				device.setId(0);
 				device.setFlag(0);
+			} 
+			Device d = new Device();
+			d.setPointNumber(device.getPointNumber());
+			d.setPlatformId(device.getPlatformId());
+			//如为编辑，则给新建device对象赋传来的设备id值
+			if (device.getId() > 0) {
+				d.setId(device.getId());
 			}
-			if (device.getAreaId() == null){
-				js.setMessage("请选择设备所属区域!");
-				return js;
-			}
-					
-			//判断设备编号
-			if (device.getPointNumber() != null && device.getPlatformId() != null) {
-				Device d = new Device();
-				d.setPointNumber(device.getPointNumber());
-				d.setPlatformId(device.getPlatformId());
-				//如为编辑，则给新建device对象赋传来的设备id值
-				if (device.getId() > 0) {
-					d.setId(device.getId());
-				}
-				//根据设备编号和id去数据库匹配，如编辑，则可以直接保存；如新增，则需匹配设备编号是否重复
-				List<Device> lc = deviceService.getExistDevicePoint(d);
-				if (lc.size() == 0) {
-					String deviceKey = device.getPlatformId() + "*" + device.getPointId();
-					device.setDeviceKey(deviceKey);
-					deviceService.saveOrUpdateDevicepoint(device);
-					js.setCode(new Integer(0));
-					js.setMessage("保存成功!");
-				} else {
-					js.setMessage("设备编号已存在!");
-				}
+			//根据设备编号和id去数据库匹配，如编辑，则可以直接保存；如新增，则需匹配设备编号是否重复
+			List<Device> lc = deviceService.getExistDevicePoint(d);
+			if (lc.size() == 0) {  
+				deviceService.saveOrUpdateDevicepoint(device);
+				js.setCode(new Integer(0));
+				js.setMessage("保存成功!");
 			} else {
-				js.setMessage("设备编号都不能为空!");
-			}
+				js.setMessage("设备编号已存在!");
+			} 
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
@@ -226,4 +208,57 @@ public class DeviceAction  extends BaseAction{
 		}
 		return js;
 	} 
+	
+	/**
+	 * 设备状态 
+	 * @param deviceNumber  设备编号参数
+	 * @param statusId  设备状态参数 
+	 * @param pageNo  当前页数
+	 * @param request
+	 * @param response
+	 * @return web/device/jsonloadDeviceStatus
+	 * @throws UnsupportedEncodingException
+	 */
+
+	@ResponseBody
+	@RequestMapping(value = "/jsonloadDeviceStatus.do", method=RequestMethod.GET)
+	public JsonResult<DeviceStatus> jsonloadDeviceStatus(
+			@RequestParam(value = "deviceNumber", required = false) String deviceNumber,
+			@RequestParam(value = "statusId", required = false) Integer statusId,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{ 	
+		JsonResult<DeviceStatus> js = new JsonResult<DeviceStatus>();
+		DeviceStatus deviceStatus = new DeviceStatus();
+		if(deviceNumber != null && deviceNumber.length() > 0)
+		{
+			//String pointNumber = URLDecoder.decode(deviceStatus.getSearchPointNumber(),"utf-8"); 
+			//String pointNumber = new String(deviceNumber.getBytes("iso8859-1"), "utf-8");
+			deviceStatus.setSearchPointNumber(deviceNumber);
+		}
+		if(statusId != null && statusId>0){
+			deviceStatus.setSearchStatusId(statusId); 
+		} 
+		if (pageNo == null){
+			deviceStatus.setPageNo(1);
+		}
+		else{
+			deviceStatus.setPageNo(pageNo);
+		}
+		deviceStatus.setPageSize(Constants.DEFAULT_PAGE_SIZE);  
+		List<DeviceStatus> deviceStatuslist = new ArrayList<DeviceStatus>();
+		int totalCount =  0;
+		try{			
+			deviceStatuslist =  deviceService.getDeviceStatusList(deviceStatus);
+			totalCount = deviceService.getDeviceStatusCount(deviceStatus); 
+			deviceStatus.setTotalCount(totalCount); 
+			deviceStatus.setSearchPointNumber(null);
+			js.setCode(0);
+			js.setMessage("获取设备状态列表成功");
+			js.setObj(deviceStatus);
+			js.setList(deviceStatuslist); 
+		}catch(Exception ex){ 
+			ex.printStackTrace();
+		}	
+		return js;
+	}	
 }

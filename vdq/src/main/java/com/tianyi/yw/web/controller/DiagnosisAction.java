@@ -27,7 +27,7 @@ import com.tianyi.yw.service.DignosisService;
 @RequestMapping("/diagnosis")
 public class DiagnosisAction extends BaseAction {
 	
-	@Resource(name = "dignosisService")
+	@Resource
 	private DignosisService dignosisService;
 	
 	@RequestMapping(value = "/diagnosisList.do", method=RequestMethod.GET)

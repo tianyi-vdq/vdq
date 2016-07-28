@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tianyi.yw.dao.DeviceDiagnosisMapper;
@@ -13,7 +15,7 @@ import com.tianyi.yw.model.DeviceDiagnosis;
 import com.tianyi.yw.model.DiagnosisItemType;
 import com.tianyi.yw.service.DignosisService;
 
-@Service("dignosisService")
+@Service
 public class DignosisServiceImpl implements DignosisService {
 	
 	@Resource

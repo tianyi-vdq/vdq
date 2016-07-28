@@ -45,7 +45,7 @@ import com.tianyi.yw.service.LogService;
 @RequestMapping("/log")
 public class LogAction extends BaseAction 
 {	
-	@Resource(name = "logService")
+	@Resource
 	private LogService logService;
 	
 	/**

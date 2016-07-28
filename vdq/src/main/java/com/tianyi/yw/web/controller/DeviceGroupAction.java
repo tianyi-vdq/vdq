@@ -31,7 +31,7 @@ public class DeviceGroupAction extends BaseAction{
 	
 	@Resource
 	private DeviceService deviceService;
-	@Resource(name = "areaService")
+	@Resource
 	private AreaService areaService;
 	/**
 	 * 分组列表加载

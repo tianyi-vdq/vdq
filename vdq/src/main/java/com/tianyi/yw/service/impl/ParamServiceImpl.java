@@ -10,7 +10,7 @@ import com.tianyi.yw.dao.ParameMapper;
 import com.tianyi.yw.model.Device;
 import com.tianyi.yw.model.Parame;
 import com.tianyi.yw.service.ParamService;
-@Service("paramService")
+@Service
 public class ParamServiceImpl implements ParamService {
 	
 	@Resource

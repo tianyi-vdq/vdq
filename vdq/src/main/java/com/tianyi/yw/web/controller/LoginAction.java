@@ -8,6 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse; 
  
 
+
+
+
+import net.sf.json.JSONObject;
+
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody; 
   
+
+
+
 
 import com.tianyi.yw.common.JsonResult;
 import com.tianyi.yw.common.ReturnResult; 
@@ -28,12 +39,13 @@ import com.tianyi.yw.service.UserService;
 @Controller
 public class LoginAction extends BaseAction {
 	
-	@Resource(name="userService")
+	@Resource
 	private UserService userService;
 	 
 
-	@Resource(name="functionService")
-	private FunctionService functionService;
+	@Resource
+	private FunctionService functionService; 
+	
 	
 	@ResponseBody
 	@RequestMapping(value="/login.do", method=RequestMethod.POST)
@@ -41,7 +53,8 @@ public class LoginAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response){
 		JsonResult <User>json  = new JsonResult<User>();
 		json.setCode(new Integer(1));
-		json.setMessage("登录失败!");
+		json.setMessage("登录失败!"); 
+		
 		try{
 			ReturnResult<User> res = userService.login(user.getAccount(), user.getPassword());
 			if(res.getCode() == ReturnResult.SUCCESS){
