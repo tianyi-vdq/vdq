@@ -20,5 +20,6 @@ public class ConstantsResult {
 	public static final String CHECK_RESULT_STATUS_DISPLACED = "9";//视频诊断故障 类型  偏移
 	public static final String CHECK_RESULT_STATUS_COLORCASE = "10";//视频诊断故障 类型  彩条
 	public static final String CHECK_RESULT_STATUS_LIGHTEXCEPTION = "11";//视频诊断故障 类型  亮度异常
+	public static final String CHECK_RESULT_STATUS_BLACKSCREEN = "14";//视频诊断故障 类型  亮度异常
 	 
 }

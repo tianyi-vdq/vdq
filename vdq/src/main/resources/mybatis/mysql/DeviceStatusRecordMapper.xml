@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.tianyi.yw.dao.DeviceStatusMapper" >
-  <resultMap id="BaseResultMap" type="com.tianyi.yw.model.DeviceStatus" >
+<mapper namespace="com.tianyi.yw.dao.DeviceStatusRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.tianyi.yw.model.DeviceStatusRecord" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="device_id" property="deviceId" jdbcType="INTEGER" />
     <result column="network_status" property="networkStatus" jdbcType="INTEGER" />
@@ -19,59 +19,63 @@
     <result column="black_screen_status" property="blackScreenStatus" jdbcType="INTEGER" />
     <result column="record_time" property="recordTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-  <!--   <result column="area_id" property="areaId" jdbcType="INTEGER"/>
-    <result column="point_number" property="pointNumber" jdbcType="VARCHAR"/> -->
-    <result column="point_id" property="pointId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ds.id, ds.device_id, ds.network_status, ds.stream_status, ds.noise_status, ds.sign_status, ds.color_status, 
-    ds.frame_frozen_status, ds.frame_shade_status, ds.frame_fuzzy_status, ds.frame_displaced_status, 
-    ds.frame_strip_status, ds.frame_colorcase_status, ds.light_exception_status,ds.black_screen_status, ds.record_time, 
-    ds.create_time
+    id, device_id, network_status, stream_status, noise_status, sign_status, color_status, 
+    frame_frozen_status, frame_shade_status, frame_fuzzy_status, frame_displaced_status, 
+    frame_strip_status, frame_colorcase_status, light_exception_status, black_screen_status, 
+    record_time, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_device_status ds
-    where ds.id = #{id,jdbcType=INTEGER}
+    from t_device_status_record
+    where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectByDeviceId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_device_status ds
+    from t_device_status_record ds
     where ds.device_id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteMultDataInit">
-  	delete t from t_device_status t left join
-		(select device_id,max(id) as max_id from t_device_status group by device_id) t1
-		 on t.id=t1.max_id
-		where t1.max_id is null;
-  </delete>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from t_device_status
-    where device_id = #{id,jdbcType=INTEGER}
+    delete from t_device_status_record
+    where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.tianyi.yw.model.DeviceStatus" >
-    <selectKey resultType="INTEGER" keyProperty="id">
-			SELECT LAST_INSERT_ID()
-		</selectKey>
-    insert into t_device_status (id, device_id, network_status, 
+  <insert id="insertRecord" parameterType="com.tianyi.yw.model.DeviceStatus" >
+    insert into t_device_status_record (id, device_id, network_status, 
       stream_status, noise_status, sign_status, 
       color_status, frame_frozen_status, frame_shade_status, 
       frame_fuzzy_status, frame_displaced_status, 
       frame_strip_status, frame_colorcase_status, 
-      light_exception_status,black_screen_status, record_time, create_time
-      )
+      light_exception_status, black_screen_status, 
+      record_time, create_time)
     values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=INTEGER}, #{networkStatus,jdbcType=INTEGER}, 
       #{streamStatus,jdbcType=INTEGER}, #{noiseStatus,jdbcType=INTEGER}, #{signStatus,jdbcType=INTEGER}, 
       #{colorStatus,jdbcType=INTEGER}, #{frameFrozenStatus,jdbcType=INTEGER}, #{frameShadeStatus,jdbcType=INTEGER}, 
       #{frameFuzzyStatus,jdbcType=INTEGER}, #{frameDisplacedStatus,jdbcType=INTEGER}, 
       #{frameStripStatus,jdbcType=INTEGER}, #{frameColorcaseStatus,jdbcType=INTEGER}, 
-      #{lightExceptionStatus,jdbcType=INTEGER},#{blackScreenStatus,jdbcType=INTEGER}, #{recordTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
-      )
+      #{lightExceptionStatus,jdbcType=INTEGER}, #{blackScreenStatus,jdbcType=INTEGER}, 
+      #{recordTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.tianyi.yw.model.DeviceStatus" >
-    insert into t_device_status
+  <insert id="insert" parameterType="com.tianyi.yw.model.DeviceStatusRecord" >
+    insert into t_device_status_record (id, device_id, network_status, 
+      stream_status, noise_status, sign_status, 
+      color_status, frame_frozen_status, frame_shade_status, 
+      frame_fuzzy_status, frame_displaced_status, 
+      frame_strip_status, frame_colorcase_status, 
+      light_exception_status, black_screen_status, 
+      record_time, create_time)
+    values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=INTEGER}, #{networkStatus,jdbcType=INTEGER}, 
+      #{streamStatus,jdbcType=INTEGER}, #{noiseStatus,jdbcType=INTEGER}, #{signStatus,jdbcType=INTEGER}, 
+      #{colorStatus,jdbcType=INTEGER}, #{frameFrozenStatus,jdbcType=INTEGER}, #{frameShadeStatus,jdbcType=INTEGER}, 
+      #{frameFuzzyStatus,jdbcType=INTEGER}, #{frameDisplacedStatus,jdbcType=INTEGER}, 
+      #{frameStripStatus,jdbcType=INTEGER}, #{frameColorcaseStatus,jdbcType=INTEGER}, 
+      #{lightExceptionStatus,jdbcType=INTEGER}, #{blackScreenStatus,jdbcType=INTEGER}, 
+      #{recordTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tianyi.yw.model.DeviceStatusRecord" >
+    insert into t_device_status_record
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -180,7 +184,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tianyi.yw.model.DeviceStatus" >
-    update t_device_status
+    update t_device_status_record
     <set >
       <if test="deviceId != null" >
         device_id = #{deviceId,jdbcType=INTEGER},
@@ -233,8 +237,8 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.tianyi.yw.model.DeviceStatus" >
-    update t_device_status
+  <update id="updateByPrimaryKey" parameterType="com.tianyi.yw.model.DeviceStatusRecord" >
+    update t_device_status_record
     set device_id = #{deviceId,jdbcType=INTEGER},
       network_status = #{networkStatus,jdbcType=INTEGER},
       stream_status = #{streamStatus,jdbcType=INTEGER},
@@ -253,92 +257,4 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-   <select id="getDeviceStatusList" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.DeviceStatus" >
-    select <include refid="Base_Column_List" />,
-		d.point_id as point_id	
-		<include refid="query_sql"/>
-		 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
-          limit #{pageStart}, #{pageSize}
-  		</if>
-  </select> 
-  <sql id="query_sql">
-      	from t_device_status ds
-      	left join t_device d on d.id = ds.device_id  
-		where 
-		 d.flag = 0
-          and d.id = ds.device_id
-	 	<if test="searchAreaId != null and searchAreaId != ''">
-		and 
-		(select t3.parent_id from t_area t3 where 
-	    (select t1.area_id  from t_device t1
-		where device_id = t1.id) = t3.id) = #{searchAreaId,jdbcType=INTEGER}
-		</if>	 
-		<if test="searchPointNumber != null and searchPointNumber != ''">
-		and
-		d.point_id like CONCAT('%',#{searchPointNumber,jdbcType=VARCHAR},'%')
-		</if>	
-      <if test="searchStatusId == 3">
-      and(  
-      ds.network_status = #{searchStatusId,jdbcType=INTEGER}
-      and
-      ds.stream_status = #{searchStatusId,jdbcType=INTEGER}
-      and
-      ds.noise_status = #{searchStatusId,jdbcType=INTEGER}
-      and
-      ds.sign_status = #{searchStatusId,jdbcType=INTEGER}
-      and
-      ds.color_status = #{searchStatusId,jdbcType=INTEGER}
-      and
-      ds.frame_frozen_status = #{searchStatusId,jdbcType=INTEGER}
-      and
-      ds.frame_shade_status = #{searchStatusId,jdbcType=INTEGER}
-      and
-      ds.frame_fuzzy_status = #{searchStatusId,jdbcType=INTEGER}
-      and
-      ds.frame_displaced_status = #{searchStatusId,jdbcType=INTEGER}
-      and
-      ds.frame_strip_status = #{searchStatusId,jdbcType=INTEGER}
-      and
-      ds.frame_colorcase_status = #{searchStatusId,jdbcType=INTEGER}
-      and
-      ds.light_exception_status = #{searchStatusId,jdbcType=INTEGER}
-      and
-      ds.black_screen_status = #{searchStatusId,jdbcType=INTEGER} 
-      )
-     </if>
-    <if test="searchStatusId != 3 and searchStatusId != null and searchStatusId != 0">
-       and(  
-      ds.network_status = #{searchStatusId,jdbcType=INTEGER}
-      or
-      ds.stream_status = #{searchStatusId,jdbcType=INTEGER}
-      or
-      ds.noise_status = #{searchStatusId,jdbcType=INTEGER}
-      or
-      ds.sign_status = #{searchStatusId,jdbcType=INTEGER}
-      or
-      ds.color_status = #{searchStatusId,jdbcType=INTEGER}
-      or
-      ds.frame_frozen_status = #{searchStatusId,jdbcType=INTEGER}
-      or
-      ds.frame_shade_status = #{searchStatusId,jdbcType=INTEGER}
-      or
-      ds.frame_fuzzy_status = #{searchStatusId,jdbcType=INTEGER}
-      or
-      ds.frame_displaced_status = #{searchStatusId,jdbcType=INTEGER}
-      or
-      ds.frame_strip_status = #{searchStatusId,jdbcType=INTEGER}
-      or
-      ds.frame_colorcase_status = #{searchStatusId,jdbcType=INTEGER}
-      or
-      ds.light_exception_status = #{searchStatusId,jdbcType=INTEGER}
-      or
-      ds.black_screen_status = #{searchStatusId,jdbcType=INTEGER} 
-      )
-  </if>
-  </sql>
-    <select id="getDeviceStatusCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.DeviceStatus">
-  	 select count(*)
-  	 <include refid="query_sql"/>
-  </select>
-  
 </mapper>

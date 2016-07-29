@@ -2,9 +2,7 @@ package com.tianyi.yw.model;
 
 import java.util.Date;
 
-import com.tianyi.yw.common.utils.Page;
-
-public class DeviceStatus extends Page {
+public class DeviceStatusRecord {
     private Integer id;
 
     private Integer deviceId;
@@ -32,29 +30,13 @@ public class DeviceStatus extends Page {
     private Integer frameColorcaseStatus;
 
     private Integer lightExceptionStatus;
-    
+
     private Integer blackScreenStatus;
 
     private Date recordTime;
-    
-    private String recordTimes;
 
     private Date createTime;
-    
-    private String createTimes;
-    
-    private Integer searchAreaId;
-    
-    private String searchPointNumber;
-    
-    private String pointId;
-    
-  //  private String pointNumber;
-    
-  //  private Integer areaId;
-    
-    private Integer searchStatusId;
-    
+
     public Integer getId() {
         return id;
     }
@@ -167,6 +149,14 @@ public class DeviceStatus extends Page {
         this.lightExceptionStatus = lightExceptionStatus;
     }
 
+    public Integer getBlackScreenStatus() {
+        return blackScreenStatus;
+    }
+
+    public void setBlackScreenStatus(Integer blackScreenStatus) {
+        this.blackScreenStatus = blackScreenStatus;
+    }
+
     public Date getRecordTime() {
         return recordTime;
     }
@@ -182,62 +172,4 @@ public class DeviceStatus extends Page {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
-
-	public String getRecordTimes() {
-		return recordTimes;
-	}
-
-	public void setRecordTimes(String recordTimes) {
-		this.recordTimes = recordTimes;
-	}
-
-	public String getCreateTimes() {
-		return createTimes;
-	}
-
-	public void setCreateTimes(String createTimes) {
-		this.createTimes = createTimes;
-	}
-
-	public Integer getSearchStatusId() {
-		return searchStatusId;
-	}
-
-	public void setSearchStatusId(Integer searchStatusId) {
-		this.searchStatusId = searchStatusId;
-	}
-
-	public String getSearchPointNumber() {
-		return searchPointNumber;
-	}
-
-	public void setSearchPointNumber(String searchPointNumber) {
-		this.searchPointNumber = searchPointNumber;
-	}
-
-	public Integer getSearchAreaId() {
-		return searchAreaId;
-	}
-
-	public void setSearchAreaId(Integer searchAreaId) {
-		this.searchAreaId = searchAreaId;
-	}
-
-	public String getPointId() {
-		return pointId;
-	}
-
-	public void setPointId(String pointId) {
-		this.pointId = pointId;
-	}
-
-	public Integer getBlackScreenStatus() {
-		return blackScreenStatus;
-	}
-
-	public void setBlackScreenStatus(Integer blackScreenStatus) {
-		this.blackScreenStatus = blackScreenStatus;
-	}
-
-
 }

@@ -14,8 +14,8 @@
         </commentGenerator>
         
         <jdbcConnection driverClass="org.gjt.mm.mysql.Driver" 
-        connectionURL="jdbc:mysql://121.40.171.43:3306/vdq"  
-         userId="root" password="8a5c94af1d"/>  
+        connectionURL="jdbc:mysql://localhost:3306/vdq"  
+         userId="root" password="123456"/>  
          
         <!-- 指定生成的类型为java类型，避免数据库中number等类型字段 -->  
         <javaTypeResolver>  
@@ -41,7 +41,7 @@
         </javaClientGenerator>  
           
      
-        <table tableName="t_task_time" domainObjectName="TaskTime"
+        <table tableName="t_device_status_record" domainObjectName="DeviceStatusRecord"
            enableSelectByExample="false"
 	       enableDeleteByExample="false"
 	       enableCountByExample="false"

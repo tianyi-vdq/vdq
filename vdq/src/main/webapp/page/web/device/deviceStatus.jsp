@@ -113,7 +113,8 @@ function pagesearch(){
 			<th>画面移位</th> 
 			<th>画面彩条</th>
 			<th>画面偏色</th> 
-			<th>亮度异常</th>
+			<th>亮度异常</th> 
+			<th>黑屏</th>
 		</tr>
 		<c:forEach var="item" items="${DeviceStatuslist}">
 		<tr>
@@ -202,6 +203,13 @@ function pagesearch(){
 			<c:if test="${item.lightExceptionStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
 			<c:if test="${item.lightExceptionStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.lightExceptionStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
+			</td>
+			<td>
+			<c:if test="${item.blackScreenStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
+			<c:if test="${item.blackScreenStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
+			<c:if test="${item.blackScreenStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
+			<c:if test="${item.blackScreenStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
+			<c:if test="${item.blackScreenStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			</td>
 		</tr>
 		</c:forEach>

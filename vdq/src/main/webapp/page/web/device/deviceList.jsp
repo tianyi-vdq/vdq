@@ -153,13 +153,13 @@ function stopOrStartDevice(id,flag){
 		<div class="fl yw-lump">
 			<div class="yw-lump-title">
 				<i class="yw-icon icon-partner"></i><span>设备信息</span>
-				<span class="fr yw-btn bg-orange line-hei22 mr10 mt9 cur">导入设备
+				<%-- <span class="fr yw-btn bg-orange line-hei22 mr10 mt9 cur">导入设备
 					<div class="temp">
 					<form id="fileForms" name="fileForms" action="${pageContext.request.contextPath}/fileUpload/uploadDeviceExcel.do"  enctype="multipart/form-data" method="post" style="margin:0;padding:0;">
 				       	<input type="file" name="file" id="jfile" class="yw-upload-file" onChange="excelChange(this);">
 					</form>
 					</div>
-				</span>			
+				</span>		 --%>	
 			</div>
 		</div>
 		
@@ -189,16 +189,16 @@ function stopOrStartDevice(id,flag){
 				<table class="yw-cm-table yw-center yw-bg-hover" id="deviceList">
 					<tr style="background-color:#D6D3D3;font-weight: bold;">
 						<th width="4%" style="display:none">&nbsp;</th>
-						<th width="5%" >设备名称</th>
-						<th width="5%" >设备ID</th>
+						<th width="10%" >设备名称</th>
+						<th width="10%" >设备ID</th>
 						<th width="5%" >设备类型</th>  
-						<th width="5%" >设备编号</th>
+						<th width="10%" >设备编号</th>
 						<th>Naming</th>
-						<th>RTSP</th>
-						<th width="5%" >IP</th> 
+						<!-- <th>RTSP</th> -->
+						<th width="5%" >IP</th>  
 						<th width="5%" >端口</th> 
-						<th>设备地址</th>
-						<th>所属区域</th>	
+						<th width="10%" >设备地址</th>
+						<th width="10%" >所属区域</th>	
 						<!-- <th>平台ID</th>			 -->		
 						<!-- <th>操作</th> -->
 					</tr>
@@ -210,7 +210,7 @@ function stopOrStartDevice(id,flag){
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.type}</td> 
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointNumber}</td>
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointNaming}</td>
-							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.rtspUrl}</td>
+							<%-- <td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.rtspUrl}</td> --%>
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.ipAddress}</td> 
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.port}</td> 
 							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.address}</td> 

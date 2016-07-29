@@ -17,6 +17,9 @@ import net.sf.json.JSONObject;
  
 
 
+
+
+
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +30,10 @@ import com.tianyi.yw.common.utils.Constants;
 import com.tianyi.yw.common.utils.ConstantsResult;
 import com.tianyi.yw.dao.DeviceDiagnosisMapper; 
 import com.tianyi.yw.dao.DeviceStatusMapper;
+import com.tianyi.yw.dao.DeviceStatusRecordMapper;
 import com.tianyi.yw.model.DeviceDiagnosis;
 import com.tianyi.yw.model.DeviceStatus; 
+import com.tianyi.yw.model.DeviceStatusRecord;
 import com.tianyi.yw.model.Server; 
 import com.tianyi.yw.service.DataUtilService;
 import com.tianyi.yw.service.DeviceService;
@@ -64,6 +69,8 @@ public class DataUtilServiceImpl implements DataUtilService {
 
 	@Resource
 	private DeviceStatusMapper deviceStatusMapper;
+	@Resource
+	private DeviceStatusRecordMapper deviceStatusRecordMapper;
 
 
 	@Autowired
@@ -90,12 +97,11 @@ public class DataUtilServiceImpl implements DataUtilService {
 		Lock lock = new ReentrantLock();
 		lock.lock();
 		try {
-			// dg.setCountSize(8);
-			// 不足10条，补足10条
+			// dg.setCountSize(count); 
 			//if (count < Constants.DEFAULT_QUEUE_SIZE) {
 				try {
-					//一次获取8条
-					dg.setCountSize(Constants.DEFAULT_QUEUE_SIZE);// - count);
+					//一次获取count条
+					dg.setCountSize(count);// - count);
 					dglist = diagnosisService.getList(dg);
 					// 获取请求端ip
 					String ip = getIpAddress(request); 
@@ -246,6 +252,9 @@ public class DataUtilServiceImpl implements DataUtilService {
 			if(score.equals(ConstantsResult.CHECK_RESULT_OK)){
 				deviceDis.setCheckResult(ConstantsResult.CHECK_TIMES);
 				deviceDis.setEndTime(new Date());
+				dignosisMapper.updateByPrimaryKeySelective(deviceDis); 
+				updateDeviceStatus(deviceId,score);
+				updateDeviceStatusRecord(deviceId);
 			}else{ 
 				//诊断结果为异常 , 进行3次重复诊断 
 				int checkTimes = deviceDis.getCheckTimes();
@@ -255,29 +264,40 @@ public class DataUtilServiceImpl implements DataUtilService {
 					deviceDis.setCheckServer(null);
 					deviceDis.setCheckServerId(0);
 					deviceDis.setCheckTime(new Date()); 
+					dignosisMapper.updateByPrimaryKeySelective(deviceDis); 
+					updateDeviceStatus(deviceId,score);
 				}else{
 					deviceDis.setCheckTimes(ConstantsResult.CHECK_TIMES);
 					deviceDis.setCheckResult(ConstantsResult.CHECK_RESULT_STATUS_OK);
 					deviceDis.setEndTime(new Date()); 
+					dignosisMapper.updateByPrimaryKeySelective(deviceDis); 
+					updateDeviceStatus(deviceId,score);
+					updateDeviceStatusRecord(deviceId);
 					//3次诊断诊断完成 , 结果异常, 则调用mq服务推送消息
 					if(pushMessageToMQ(deviceDis)){ 
 						logService.writeLog(logType, "诊断结果异常, 结果已推送到MQ服务！");
 					}else{
 						logService.writeLog(logType, "诊断结果异常, 结果推送到MQ服务,出错！");
-					}
-					
+					} 
 				} 
 			}
-			dignosisMapper.updateByPrimaryKeySelective(deviceDis); 
-			updateDeviceStatus(deviceId,score);
 			isOk = true;
 		} catch (Exception ex) {
-			logService.writeLog(logType, "诊断分值后台服务度出错！", ex.getMessage());
+			logService.writeLog(logType, "推送MQ消息到服务器出错！", ex.getMessage());
 			//ex.printStackTrace();
 		}
 		return isOk;
 	}
 
+
+	private void updateDeviceStatusRecord(int deviceId) {
+		// TODO Auto-generated method stub
+		DeviceStatus ds =  deviceStatusMapper.selectByDeviceId(deviceId); 
+		if(ds!= null){
+			ds.setId(0);
+			deviceStatusRecordMapper.insertRecord(ds);
+		}
+	}
 	private boolean pushMessageToMQ(DeviceDiagnosis deviceDis) {
 		// TODO Auto-generated method stub
 		boolean isSuccess = false;
@@ -291,9 +311,10 @@ public class DataUtilServiceImpl implements DataUtilService {
 		try {
 			rabbitTemplate.convertAndSend(Constants.ROUTEDATA_YWALARM_VIDEO,json.toString());
 			isSuccess = true;
-		} catch (AmqpException e) {
+		} catch (AmqpException ex) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logService.writeLog(5, "诊断分值后台服务度出错！", ex.getMessage());
+			//ex.printStackTrace();
 		}
 		return isSuccess;
 	}
@@ -316,24 +337,26 @@ public class DataUtilServiceImpl implements DataUtilService {
 				ds.setFrameDisplacedStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
 				ds.setFrameColorcaseStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
 				ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);  
+				ds.setBlackScreenStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
 			}else if(score.equals(ConstantsResult.CHECK_RESULT_NULL)){
 				ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION); 
-				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setColorStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setFrameFrozenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setFrameFuzzyStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setFrameDisplacedStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setFrameColorcaseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setFrameShadeStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setFrameStripStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setColorStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setFrameFrozenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setFrameFuzzyStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setFrameDisplacedStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setFrameColorcaseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setFrameShadeStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setFrameStripStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setBlackScreenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 			}else{
 				String[] scores = score.split("\\,");
 				for(String s :scores){
 					if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_NETWORK)) {
-						ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+						ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
 					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_STREAM)) {
 						ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_NOISE)) {
@@ -354,6 +377,8 @@ public class DataUtilServiceImpl implements DataUtilService {
 						ds.setFrameColorcaseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_LIGHTEXCEPTION)) {
 						ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_BLACKSCREEN)) {
+						ds.setBlackScreenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					}
 				}
 			} 
@@ -379,24 +404,26 @@ public class DataUtilServiceImpl implements DataUtilService {
 				ds.setFrameDisplacedStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
 				ds.setFrameColorcaseStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
 				ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);  
+				ds.setBlackScreenStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
 			}else if(score.equals(ConstantsResult.CHECK_RESULT_NULL)){
 				ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION); 
-				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setFrameShadeStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setFrameStripStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setColorStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setFrameFrozenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setFrameFuzzyStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setFrameDisplacedStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setFrameColorcaseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-				ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setFrameShadeStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setFrameStripStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setColorStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setFrameFrozenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setFrameFuzzyStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setFrameDisplacedStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setFrameColorcaseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+//				ds.setBlackScreenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 			}else{
 				String[] scores = score.split("\\,");
 				for(String s :scores){
 					if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_NETWORK)) {
-						ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+						ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
 					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_STREAM)) {
 						ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_NOISE)) {
@@ -417,13 +444,16 @@ public class DataUtilServiceImpl implements DataUtilService {
 						ds.setFrameColorcaseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_LIGHTEXCEPTION)) {
 						ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					}else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_BLACKSCREEN)) {
+						ds.setBlackScreenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					}
 				}
 			} 
-			deviceStatusMapper.insert(ds);
+			deviceStatusMapper.insert(ds); 
 		}
 	}
-
+	
+	
 	/**
 	 * ip监测
 	 */
