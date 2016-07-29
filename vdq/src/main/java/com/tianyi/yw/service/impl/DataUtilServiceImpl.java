@@ -340,6 +340,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 				ds.setBlackScreenStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
 			}else if(score.equals(ConstantsResult.CHECK_RESULT_NULL)){
 				ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION); 
+				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 //				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 //				ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 //				ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
@@ -355,11 +356,9 @@ public class DataUtilServiceImpl implements DataUtilService {
 			}else{
 				String[] scores = score.split("\\,");
 				for(String s :scores){
-					if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_NETWORK)) {
-						ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
-					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_STREAM)) {
-						ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_NOISE)) {
+					ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+					ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+					if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_NOISE)) {
 						ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_SIGN)) {
 						ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
@@ -379,6 +378,8 @@ public class DataUtilServiceImpl implements DataUtilService {
 						ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_BLACKSCREEN)) {
 						ds.setBlackScreenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					}else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_STRIP)) {
+						ds.setFrameStripStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					}
 				}
 			} 
@@ -407,6 +408,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 				ds.setBlackScreenStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
 			}else if(score.equals(ConstantsResult.CHECK_RESULT_NULL)){
 				ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION); 
+				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 //				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 //				ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 //				ds.setFrameShadeStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
@@ -422,11 +424,9 @@ public class DataUtilServiceImpl implements DataUtilService {
 			}else{
 				String[] scores = score.split("\\,");
 				for(String s :scores){
-					if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_NETWORK)) {
-						ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
-					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_STREAM)) {
-						ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
-					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_NOISE)) {
+					ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+					ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
+					if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_NOISE)) {
 						ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_SIGN)) {
 						ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
@@ -446,6 +446,8 @@ public class DataUtilServiceImpl implements DataUtilService {
 						ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					}else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_BLACKSCREEN)) {
 						ds.setBlackScreenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+					}else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_STRIP)) {
+						ds.setFrameStripStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					}
 				}
 			} 

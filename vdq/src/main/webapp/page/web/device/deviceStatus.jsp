@@ -105,8 +105,8 @@ function pagesearch(){
 			<th width="8%">网络连接状态</th>
 			<th>拉流</th>
 			<th>雪花噪音</th>
-			<th>信号状态</th> 
-			<th>色彩状态</th>
+			<th>信号缺失</th> 
+			<th>色彩丢失</th>
 			<th>画面冻结</th> 
 			<th>画面遮挡</th>
 			<th>画面模糊</th>
@@ -117,7 +117,7 @@ function pagesearch(){
 			<th>黑屏</th>
 		</tr>
 		<c:forEach var="item" items="${DeviceStatuslist}">
-		<tr>
+		<tr> 
 			<td align="center" style="display:none">${item.id}</td>
 			<td>${item.pointId}</td>                          
 			<td>

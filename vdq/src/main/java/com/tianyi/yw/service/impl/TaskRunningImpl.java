@@ -64,7 +64,7 @@ public class TaskRunningImpl implements TaskRunning {
 							}
 							device.setTaskId(taskId);
 							device.setServerId(0);
-							device.setCheckTimes(0);
+							device.setCheckTimes(1);
 						}
 						// 批量插入数据到临时表
 						dignosisMapper.insertDeviceList(deviceList);
