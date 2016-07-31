@@ -115,6 +115,7 @@ function pagesearch(){
 			<th>画面偏色</th> 
 			<th>亮度异常</th> 
 			<th>黑屏</th>
+			<th width="12%">诊断时间</th>
 		</tr>
 		<c:forEach var="item" items="${DeviceStatuslist}">
 		<tr> 
@@ -211,12 +212,15 @@ function pagesearch(){
 			<c:if test="${item.blackScreenStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.blackScreenStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			</td>
+			<td>
+				${item.recordTimes}
+			</td>
 		</tr>
 		</c:forEach>
 	</table>
 	
 		<div class="page" id="pager"></div> 
-</div>	
+</div>	 
 </div>
 		
   </body>

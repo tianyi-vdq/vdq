@@ -92,7 +92,7 @@ public class DeviceAction  extends BaseAction{
 			//String pointNumber = new String(deviceStatus.getSearchPointNumber().getBytes("iso8859-1"), "utf-8");
 			deviceStatus.setSearchPointNumber(pointNumber);
 		}
-		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 小写的mm表示的是分钟  
 		if (deviceStatus.getPageNo() == null)
 			deviceStatus.setPageNo(1);
 		deviceStatus.setPageSize(Constants.DEFAULT_PAGE_SIZE);  
@@ -100,6 +100,9 @@ public class DeviceAction  extends BaseAction{
 		int totalCount =  0;
 		try{			
 			deviceStatuslist =  deviceService.getDeviceStatusList(deviceStatus);
+			for(DeviceStatus ds :deviceStatuslist){
+				ds.setRecordTimes(sdf.format(ds.getRecordTime()));
+			}
 			totalCount = deviceService.getDeviceStatusCount(deviceStatus); 
 		}catch(Exception ex){ 
 			ex.printStackTrace();

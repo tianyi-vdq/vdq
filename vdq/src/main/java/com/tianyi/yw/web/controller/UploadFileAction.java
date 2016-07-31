@@ -347,5 +347,42 @@ public class UploadFileAction extends BaseAction {
 		}
 		return result;
 	}
- 
+	
+	/**
+	 * 下载导入模板
+	 * @param request
+	 * @param response
+	 * @param filepath
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/downfile.do")
+	public void downFile(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(value = "filepath", required = true) String filepath) {
+
+		try {
+//			String moduleName = new String(filepath.getBytes("iso8859-1"),
+//					"utf-8");
+//			String filePath = request.getRealPath("/") + moduleName;
+			String filePath = request.getRealPath("/") + filepath;
+			String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+
+			response.reset();
+			response.setContentType("APPLICATION/OCTET-STREAM; charset=UTF-8");
+			response.setHeader("Content-disposition", "attachment;filename=\""
+					+ new String(fileName.getBytes("GB2312"), "ISO-8859-1")
+					+ "\"");
+
+			FileInputStream inStream = new FileInputStream(filePath);
+			byte[] b = new byte[100];
+			int len;
+			while ((len = inStream.read(b)) > 0) {
+				response.getOutputStream().write(b, 0, len);
+				// this.getRes().getOutputStream().write(b,0,len);
+			}
+			inStream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

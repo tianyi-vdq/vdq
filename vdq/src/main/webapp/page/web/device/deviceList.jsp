@@ -153,6 +153,7 @@ function stopOrStartDevice(id,flag){
 		<div class="fl yw-lump">
 			<div class="yw-lump-title">
 				<i class="yw-icon icon-partner"></i><span>设备信息</span>
+				<span class="fr yw-btn bg-green line-hei22 mr10 mt9 cur" onclick="window.location.href='${pageContext.request.contextPath}/fileUpload/downfile.do?filepath=source/excel/点位设备导入模板.xls'">下载模板</span> 
 				<span class="fr yw-btn bg-orange line-hei22 mr10 mt9 cur">导入设备
 					<div class="temp">
 					<form id="fileForms" name="fileForms" action="${pageContext.request.contextPath}/fileUpload/uploadDeviceExcel.do"  enctype="multipart/form-data" method="post" style="margin:0;padding:0;">

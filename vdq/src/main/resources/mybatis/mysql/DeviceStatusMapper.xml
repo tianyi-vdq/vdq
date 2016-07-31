@@ -35,6 +35,10 @@
     from t_device_status ds
     where ds.id = #{id,jdbcType=INTEGER}
   </select>
+  
+  <delete id="clear">
+  	delete from t_device_status
+  </delete>
   <select id="selectByDeviceId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />

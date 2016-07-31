@@ -25,4 +25,6 @@ public interface DeviceStatusMapper {
 
 	void deleteMultDataInit();
 
+	void clear();
+
 }

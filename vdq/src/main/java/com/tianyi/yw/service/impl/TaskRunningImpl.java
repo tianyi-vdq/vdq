@@ -54,6 +54,7 @@ public class TaskRunningImpl implements TaskRunning {
 				while (isOk) {
 						List<Device> deviceList = new ArrayList<Device>();
 						dignosisMapper.clear();
+						deviceStatusMapper.clear();
 						deviceList = deviceMapper.getAllDeviceList();
 						// 遍历，给device对象追加任务id,设置默认服务器id,初始化检测次数
 						for (Device device : deviceList) {
