@@ -153,13 +153,13 @@ function stopOrStartDevice(id,flag){
 		<div class="fl yw-lump">
 			<div class="yw-lump-title">
 				<i class="yw-icon icon-partner"></i><span>设备信息</span>
-				<%-- <span class="fr yw-btn bg-orange line-hei22 mr10 mt9 cur">导入设备
+				<span class="fr yw-btn bg-orange line-hei22 mr10 mt9 cur">导入设备
 					<div class="temp">
 					<form id="fileForms" name="fileForms" action="${pageContext.request.contextPath}/fileUpload/uploadDeviceExcel.do"  enctype="multipart/form-data" method="post" style="margin:0;padding:0;">
 				       	<input type="file" name="file" id="jfile" class="yw-upload-file" onChange="excelChange(this);">
 					</form>
 					</div>
-				</span>		 --%>	
+				</span>
 			</div>
 		</div>
 		

@@ -249,7 +249,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 		try { 
 			DeviceDiagnosis deviceDis = dignosisMapper.selectByDeviceId(deviceId); 
 			//诊断结果为正常 , 只进行一次诊断
-			if(score.equals(ConstantsResult.CHECK_RESULT_OK)){
+			if(score.equals(ConstantsResult.CHECK_RESULT_OK)||score.equals(ConstantsResult.CHECK_RESULT_SUCCESS)){
 				deviceDis.setCheckResult(ConstantsResult.CHECK_TIMES);
 				deviceDis.setEndTime(new Date());
 				dignosisMapper.updateByPrimaryKeySelective(deviceDis); 
@@ -324,7 +324,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 		DeviceStatus ds = new DeviceStatus();
 		ds = deviceStatusMapper.selectByDeviceId(deviceId);
 		if(ds != null){ 
-			if(score.equals(ConstantsResult.CHECK_RESULT_OK)){
+			if(score.equals(ConstantsResult.CHECK_RESULT_OK)||score.equals(ConstantsResult.CHECK_RESULT_SUCCESS)){
 				ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_OK); 
 				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
 				ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
@@ -392,7 +392,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 			ds.setDeviceId(deviceId); 
 			ds.setRecordTime(new Date());
 			ds.setCreateTime(new Date());
-			if(score.equals(ConstantsResult.CHECK_RESULT_OK)){
+			if(score.equals(ConstantsResult.CHECK_RESULT_OK)||score.equals(ConstantsResult.CHECK_RESULT_SUCCESS)){
 				ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_OK); 
 				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
 				ds.setNoiseStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);

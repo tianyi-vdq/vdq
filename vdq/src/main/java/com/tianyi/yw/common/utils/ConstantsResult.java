@@ -7,6 +7,7 @@ public class ConstantsResult {
 	public static final Integer CHECK_TIMES = 3;//诊断次数
 	public final static String CHECK_RESULT_NULL = "0"; // 视频连接异常返回值
 	public final static String CHECK_RESULT_OK = "0,0"; // 视频诊断正常返回值
+	public final static String CHECK_RESULT_SUCCESS = "0,0,0"; // 视频诊断正常返回值
 	public static final Integer CHECK_RESULT_STATUS_OK = 3;// z诊断结果正常
 	public static final Integer CHECK_RESULT_STATUS_EXCEPTION = 1;//视频诊断结果异常
 	public static final String CHECK_RESULT_STATUS_NETWORK = "0";//视频诊断故障 类型  网络连接
