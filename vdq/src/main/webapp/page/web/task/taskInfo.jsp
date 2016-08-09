@@ -157,7 +157,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div class="con-right" id="conRight">
 		<div class="fl yw-lump">
 			<div class="yw-lump-title"> 
-					<i id="i_back" class="yw-icon icon-back" onclick="window.location.href='task/taskList.do'"></i><span>任务列表</span>
+					<i id="i_back" class="yw-icon icon-back" onclick="window.location.href='<%=basePath%>task/taskList.do'"></i><span>任务列表</span>
 			</div>
 		</div>
 		<div class="fl yw-lump mt10">

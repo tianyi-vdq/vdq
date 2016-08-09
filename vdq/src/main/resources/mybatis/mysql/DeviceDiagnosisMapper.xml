@@ -30,7 +30,14 @@
     from t_device_diagnosis
     where device_id = #{id,jdbcType=INTEGER}
   </select>
-  
+  <select id="selectLatestDevice" resultMap="BaseResultMap" >
+   select 
+    <include refid="Base_Column_List" />
+    from t_device_diagnosis
+    where end_time is null 
+    		and check_result is null
+     		and check_server_id >0
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_device_diagnosis
     where id = #{id,jdbcType=INTEGER}

@@ -22,6 +22,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tianyi.yw.common.utils.Constants;
+import com.tianyi.yw.common.utils.StringUtil;
  
 
 public class UnitTest {
@@ -32,30 +33,41 @@ public class UnitTest {
 	
 	@Test
 	public  void main()  {
-		genCfg();
+		test();
     }
+
+	private void test() {
+		// TODO Auto-generated method stub
+		String str = "点位视频诊断异常,详细:数据流捕获异常;";
+		if(!StringUtil.isEmpty(str)){
+			if(str.contains("数据流捕获异常")){
+				str = "数据流捕获异常";
+			}else if(str.contains("画面冻结异常") && str.contains("画面亮度异常")){
+				str = "前端点位无视频信号";
+			}else if(str.contains("色彩丢失异常") && str.contains("画面亮度异常")){
+				str = "前端点位无视频信号";
+			}
+		}
+		System.out.printf(str);
+	}
 
 	private void mqtest() {
 		
-		int count= 5;
-		
-		while(count>0){
-			count --;
+		 
 			// TODO Auto-generated method stub 
 			JSONObject json = new JSONObject();
-			json.element("cameraId", "1");
-			json.element("cameraName", "1111");
-			json.element("deviceIp", "25.30.9.244");
+			json.element("cameraId", "010123");
+			json.element("cameraName", "010123");
+			json.element("deviceIp", "192.0.22.46");
 			json.element("faultCode", Constants.ROUTEDATA_YWALARM_VIDEO_CODE);
-			json.element("faultContent", "视频亮度异常");
+			json.element("faultContent", "视频诊断结果异常，请注意查收");
 			json.element("faultType", Constants.ROUTEDATA_YWALARM_VIDEO_TYPE);
 			try {
 				rabbitTemplate.convertAndSend(Constants.ROUTEDATA_YWALARM_VIDEO,json.toString());
 			} catch (AmqpException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-		}
+			} 
 	}
 	
 	public void genCfg(){

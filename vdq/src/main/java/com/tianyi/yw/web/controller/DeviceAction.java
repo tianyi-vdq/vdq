@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tianyi.yw.common.JsonResult;
 import com.tianyi.yw.common.utils.Constants;
+import com.tianyi.yw.common.utils.StringUtil;
 import com.tianyi.yw.model.Device;  
 import com.tianyi.yw.model.DeviceStatus; 
 import com.tianyi.yw.model.DeviceGroup;
 import com.tianyi.yw.model.DeviceGroupItem; 
+import com.tianyi.yw.model.DeviceStatusRecord;
 import com.tianyi.yw.service.AreaService;
 import com.tianyi.yw.service.DeviceService;
 
@@ -113,6 +115,45 @@ public class DeviceAction  extends BaseAction{
 		return "web/device/deviceStatus";
 	}		
 
+	/**
+	 * 设备则诊断状态历史纪录列表
+	 * @param deviceStatus
+	 * @param request
+	 * @param response
+	 * @return web/device/deviceStatus
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = "/deivceStatusRecord.do", method=RequestMethod.GET)
+	public String deivceStatusRecord(
+			DeviceStatusRecord deviceStatusRecord,
+			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{ 	
+
+		if(deviceStatusRecord.getSearchPointNumber() != null && deviceStatusRecord.getSearchPointNumber().length() > 0)
+		{
+			String pointNumber = URLDecoder.decode(deviceStatusRecord.getSearchPointNumber(),"utf-8"); 
+			//String pointNumber = new String(deviceStatus.getSearchPointNumber().getBytes("iso8859-1"), "utf-8");
+			deviceStatusRecord.setSearchPointNumber(pointNumber);
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 小写的mm表示的是分钟  
+		if (deviceStatusRecord.getPageNo() == null)
+			deviceStatusRecord.setPageNo(1);
+		deviceStatusRecord.setPageSize(Constants.DEFAULT_PAGE_SIZE);  
+		List<DeviceStatusRecord> deviceStatuslist = new ArrayList<DeviceStatusRecord>();
+		int totalCount =  0;
+		try{			
+			deviceStatuslist =  deviceService.getDeviceStatusRecordList(deviceStatusRecord);
+			for(DeviceStatusRecord ds :deviceStatuslist){
+				ds.setRecordTimes(sdf.format(ds.getRecordTime())); 
+			}
+			totalCount = deviceService.getDeviceStatusRecordCount(deviceStatusRecord); 
+		}catch(Exception ex){ 
+			ex.printStackTrace();
+		}	
+		deviceStatusRecord.setTotalCount(totalCount); 
+		request.setAttribute("DeviceStatusRecord", deviceStatusRecord); 
+		request.setAttribute("DeviceStatusRecordlist", deviceStatuslist); 
+		return "web/device/deviceStatusRecord";
+	}	
 	/** 
 	 * 新增,编辑设备
 	 */

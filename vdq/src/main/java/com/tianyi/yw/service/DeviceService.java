@@ -6,6 +6,7 @@ import com.tianyi.yw.model.Device;
 import com.tianyi.yw.model.DeviceGroup;
 import com.tianyi.yw.model.DeviceGroupItem;
 import com.tianyi.yw.model.DeviceStatus;
+import com.tianyi.yw.model.DeviceStatusRecord;
 
 public interface DeviceService {
 
@@ -62,6 +63,11 @@ public interface DeviceService {
 	void saveOrUpdateDeviceStatus(DeviceStatus ds);
 
 	void deleteMultDataInit();
+
+	List<DeviceStatusRecord> getDeviceStatusRecordList(
+			DeviceStatusRecord deviceStatusRecord);
+
+	int getDeviceStatusRecordCount(DeviceStatusRecord deviceStatusRecord);
 
 
 

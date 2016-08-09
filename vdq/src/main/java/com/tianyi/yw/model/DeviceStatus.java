@@ -55,6 +55,8 @@ public class DeviceStatus extends Page {
     
     private Integer searchStatusId;
     
+    private Integer searchExceptionId;
+    
     public Integer getId() {
         return id;
     }
@@ -237,6 +239,14 @@ public class DeviceStatus extends Page {
 
 	public void setBlackScreenStatus(Integer blackScreenStatus) {
 		this.blackScreenStatus = blackScreenStatus;
+	}
+
+	public Integer getSearchExceptionId() {
+		return searchExceptionId;
+	}
+
+	public void setSearchExceptionId(Integer searchExceptionId) {
+		this.searchExceptionId = searchExceptionId;
 	}
 
 

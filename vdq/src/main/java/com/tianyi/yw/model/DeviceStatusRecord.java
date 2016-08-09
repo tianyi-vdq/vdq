@@ -2,7 +2,9 @@ package com.tianyi.yw.model;
 
 import java.util.Date;
 
-public class DeviceStatusRecord {
+import com.tianyi.yw.common.utils.Page;
+
+public class DeviceStatusRecord extends Page{
     private Integer id;
 
     private Integer deviceId;
@@ -36,6 +38,24 @@ public class DeviceStatusRecord {
     private Date recordTime;
 
     private Date createTime;
+    
+    private Integer searchStatusId;
+ 
+    private Integer searchExceptionId;
+    
+    private String pointId;
+    
+    public String getRecordTimes() {
+		return recordTimes;
+	}
+
+	public void setRecordTimes(String recordTimes) {
+		this.recordTimes = recordTimes;
+	}
+ 
+	private String recordTimes;
+    
+    private String searchPointNumber;
 
     public Integer getId() {
         return id;
@@ -172,4 +192,36 @@ public class DeviceStatusRecord {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
+	public String getSearchPointNumber() {
+		return searchPointNumber;
+	}
+
+	public void setSearchPointNumber(String searchPointNumber) {
+		this.searchPointNumber = searchPointNumber;
+	}
+
+	public Integer getSearchStatusId() {
+		return searchStatusId;
+	}
+
+	public void setSearchStatusId(Integer searchStatusId) {
+		this.searchStatusId = searchStatusId;
+	}
+
+	public String getPointId() {
+		return pointId;
+	}
+
+	public void setPointId(String pointId) {
+		this.pointId = pointId;
+	}
+
+	public Integer getSearchExceptionId() {
+		return searchExceptionId;
+	}
+
+	public void setSearchExceptionId(Integer searchExceptionId) {
+		this.searchExceptionId = searchExceptionId;
+	}
 }

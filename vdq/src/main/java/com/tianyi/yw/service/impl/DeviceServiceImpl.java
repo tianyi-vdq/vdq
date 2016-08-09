@@ -18,10 +18,12 @@ import com.tianyi.yw.dao.DeviceGroupItemMapper;
 import com.tianyi.yw.dao.DeviceGroupMapper;
 import com.tianyi.yw.dao.DeviceMapper;
 import com.tianyi.yw.dao.DeviceStatusMapper;
+import com.tianyi.yw.dao.DeviceStatusRecordMapper;
 import com.tianyi.yw.model.Device; 
 import com.tianyi.yw.model.DeviceStatus; 
 import com.tianyi.yw.model.DeviceGroup;
 import com.tianyi.yw.model.DeviceGroupItem; 
+import com.tianyi.yw.model.DeviceStatusRecord;
 import com.tianyi.yw.service.DeviceService;
 
 @Service
@@ -37,6 +39,8 @@ public class DeviceServiceImpl implements DeviceService {
 	
 	@Resource
 	private DeviceStatusMapper deviceStatusMapper;
+	@Resource
+	private DeviceStatusRecordMapper deviceStatusRecordMapper;
 	
 	@Override
 	public int getDeviceCount(Device device) {
@@ -211,6 +215,19 @@ public class DeviceServiceImpl implements DeviceService {
 	public void deleteMultDataInit() {
 		// TODO Auto-generated method stub
 		deviceStatusMapper.deleteMultDataInit();
+	}
+
+	@Override
+	public List<DeviceStatusRecord> getDeviceStatusRecordList(
+			DeviceStatusRecord deviceStatusRecord) {
+		// TODO Auto-generated method stub
+		return deviceStatusRecordMapper.getDeviceStatusRecordList(deviceStatusRecord);
+	}
+
+	@Override
+	public int getDeviceStatusRecordCount(DeviceStatusRecord deviceStatusRecord) {
+		// TODO Auto-generated method stub
+		return deviceStatusRecordMapper.getDeviceStatusRecordCount(deviceStatusRecord);
 	}
 
 

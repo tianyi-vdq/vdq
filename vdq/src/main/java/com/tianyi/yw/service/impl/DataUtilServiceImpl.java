@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -20,6 +21,10 @@ import net.sf.json.JSONObject;
 
 
 
+
+
+
+
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +33,12 @@ import org.springframework.stereotype.Service;
 import com.tianyi.yw.common.JsonResult;
 import com.tianyi.yw.common.utils.Constants;
 import com.tianyi.yw.common.utils.ConstantsResult;
+import com.tianyi.yw.common.utils.StringUtil;
 import com.tianyi.yw.dao.DeviceDiagnosisMapper; 
+import com.tianyi.yw.dao.DeviceMapper;
 import com.tianyi.yw.dao.DeviceStatusMapper;
 import com.tianyi.yw.dao.DeviceStatusRecordMapper;
+import com.tianyi.yw.model.Device;
 import com.tianyi.yw.model.DeviceDiagnosis;
 import com.tianyi.yw.model.DeviceStatus; 
 import com.tianyi.yw.model.DeviceStatusRecord;
@@ -69,6 +77,8 @@ public class DataUtilServiceImpl implements DataUtilService {
 
 	@Resource
 	private DeviceStatusMapper deviceStatusMapper;
+	@Resource
+	private DeviceMapper deviceMapper;
 	@Resource
 	private DeviceStatusRecordMapper deviceStatusRecordMapper;
 
@@ -264,6 +274,11 @@ public class DataUtilServiceImpl implements DataUtilService {
 					deviceDis.setCheckServer(null);
 					deviceDis.setCheckServerId(0);
 					deviceDis.setCheckTime(new Date()); 
+					String oldRtsp = deviceDis.getDeviceRtsp();
+					String rtspStr = oldRtsp.substring(0, oldRtsp.length()-36); 
+					UUID uuid = UUID.randomUUID();
+					rtspStr += uuid.toString();
+					deviceDis.setDeviceRtsp(rtspStr);
 					dignosisMapper.updateByPrimaryKeySelective(deviceDis); 
 					updateDeviceStatus(deviceId,score);
 				}else{
@@ -300,20 +315,82 @@ public class DataUtilServiceImpl implements DataUtilService {
 	}
 	private boolean pushMessageToMQ(DeviceDiagnosis deviceDis) {
 		// TODO Auto-generated method stub
+		Device device = deviceMapper.selectByPrimaryKey(deviceDis.getDeviceId());
+		DeviceStatus devicestatus = deviceStatusMapper.selectByDeviceId(deviceDis.getDeviceId());
+		String resultStr = "点位视频诊断异常,详细:"; 
+		String exceptionStr = "";
+		if(devicestatus != null){
+			if(devicestatus.getNetworkStatus() !=null && devicestatus.getNetworkStatus()==Constants.CHECK_RESULT_EXCEPTION){
+				exceptionStr += "网络连接异常;";
+			}else{
+				if(devicestatus.getStreamStatus() !=null && devicestatus.getStreamStatus()==Constants.CHECK_RESULT_EXCEPTION){
+					exceptionStr += "数据流捕获异常;";
+				}
+				if(devicestatus.getSignStatus() !=null && devicestatus.getSignStatus()==Constants.CHECK_RESULT_EXCEPTION){
+					exceptionStr += "网络信号异常;";
+				}
+				if(devicestatus.getNoiseStatus() !=null && devicestatus.getNoiseStatus()==Constants.CHECK_RESULT_EXCEPTION){
+					exceptionStr += "雪花噪声异常;";
+				}
+				if(devicestatus.getColorStatus() !=null && devicestatus.getColorStatus()==Constants.CHECK_RESULT_EXCEPTION){
+					exceptionStr += "色彩丢失异常;";
+				}
+				if(devicestatus.getFrameFrozenStatus() !=null && devicestatus.getFrameFrozenStatus()==Constants.CHECK_RESULT_EXCEPTION){
+					exceptionStr += "画面冻结异常;";
+				}
+				if(devicestatus.getFrameFuzzyStatus() !=null && devicestatus.getFrameFuzzyStatus()==Constants.CHECK_RESULT_EXCEPTION){
+					exceptionStr += "画面模糊异常;";
+				}
+				if(devicestatus.getFrameShadeStatus() !=null && devicestatus.getFrameShadeStatus()==Constants.CHECK_RESULT_EXCEPTION){
+					exceptionStr += "画面遮挡异常;";
+				}
+				if(devicestatus.getFrameDisplacedStatus() !=null && devicestatus.getFrameDisplacedStatus()==Constants.CHECK_RESULT_EXCEPTION){
+					exceptionStr += "画面移位异常;";
+				}
+				if(devicestatus.getFrameStripStatus() !=null && devicestatus.getFrameStripStatus()==Constants.CHECK_RESULT_EXCEPTION){
+					exceptionStr += "画面彩条异常;";
+				}
+				if(devicestatus.getFrameColorcaseStatus() !=null && devicestatus.getFrameColorcaseStatus()==Constants.CHECK_RESULT_EXCEPTION){
+					exceptionStr += "画面偏色异常;";
+				}
+				if(devicestatus.getLightExceptionStatus() !=null && devicestatus.getLightExceptionStatus()==Constants.CHECK_RESULT_EXCEPTION){
+					exceptionStr += "画面亮度异常;";
+				}
+			}
+		}
+		if(!StringUtil.isEmpty(exceptionStr)){
+			
+			if(exceptionStr.contains("数据流捕获异常") && exceptionStr.contains("画面冻结异常")){
+				exceptionStr = "前端点位无视频信号";
+			}
+			else if(exceptionStr.contains("数据流捕获异常") && exceptionStr.contains("画面亮度异常"))
+			{
+				exceptionStr = "前端点位无视频信号"; 
+			}else{
+				if(exceptionStr.contains("画面冻结异常") && exceptionStr.contains("画面亮度异常")){
+					exceptionStr = "前端点位无视频信号";
+				}else if(exceptionStr.contains("色彩丢失异常") && exceptionStr.contains("画面亮度异常")){
+					exceptionStr = "前端点位无视频信号";
+				}else{
+					exceptionStr = "数据流捕获异常";
+				}
+			}
+		}
+		resultStr += exceptionStr;
 		boolean isSuccess = false;
 		JSONObject json = new JSONObject();
-		json.element("cameraId", deviceDis.getDeviceId());
-		json.element("cameraName",deviceDis.getDeviceName());
-		json.element("deviceIp", Constants.ROUTEDATA_YWALARM_VIDEO_IP);
+		json.element("cameraId", device.getPointId());
+		json.element("cameraName",device.getPointName());
+		json.element("deviceIp",device.getIpAddress());
 		json.element("faultCode", Constants.ROUTEDATA_YWALARM_VIDEO_CODE);
-		json.element("faultContent", "点位视频诊断异常,请注意查收");
+		json.element("faultContent", resultStr);
 		json.element("faultType", Constants.ROUTEDATA_YWALARM_VIDEO_TYPE);
 		try {
 			rabbitTemplate.convertAndSend(Constants.ROUTEDATA_YWALARM_VIDEO,json.toString());
 			isSuccess = true;
 		} catch (AmqpException ex) {
 			// TODO Auto-generated catch block
-			logService.writeLog(5, "诊断分值后台服务度出错！", ex.getMessage());
+			logService.writeLog(5, "推送异常信息到易维ＭＱ服务错误！", ex.getMessage());
 			//ex.printStackTrace();
 		}
 		return isSuccess;
@@ -473,6 +550,16 @@ public class DataUtilServiceImpl implements DataUtilService {
 				s.setFlag(1);
 				serverService.updatebyselective(s);
 			} 
+		}
+		List<DeviceDiagnosis> lst = new ArrayList<DeviceDiagnosis>();
+		lst = dignosisMapper.selectLatestDevice();
+		if(lst.size()>0){
+			for(DeviceDiagnosis dd : lst){
+				dd.setCheckResult(null);
+				dd.setCheckTimes(1);
+				dd.setCheckServerId(0);
+				dignosisMapper.updateByPrimaryKey(dd);
+			}
 		}
 	}
 }

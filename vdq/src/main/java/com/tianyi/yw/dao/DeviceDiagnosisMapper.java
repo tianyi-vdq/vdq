@@ -31,4 +31,6 @@ public interface DeviceDiagnosisMapper {
 	DeviceDiagnosis getExistDiagnosis(DeviceDiagnosis dg);
 
 	DeviceDiagnosis selectByDeviceId(int id);
+
+	List<DeviceDiagnosis> selectLatestDevice();
 }

@@ -44,8 +44,7 @@ public class LoginAction extends BaseAction {
 	 
 
 	@Resource
-	private FunctionService functionService; 
-	
+	private FunctionService functionService;  
 	
 	@ResponseBody
 	@RequestMapping(value="/login.do", method=RequestMethod.POST)
@@ -54,7 +53,7 @@ public class LoginAction extends BaseAction {
 		JsonResult <User>json  = new JsonResult<User>();
 		json.setCode(new Integer(1));
 		json.setMessage("登录失败!"); 
-		
+		 
 		try{
 			ReturnResult<User> res = userService.login(user.getAccount(), user.getPassword());
 			if(res.getCode() == ReturnResult.SUCCESS){

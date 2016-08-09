@@ -70,7 +70,7 @@ public class UploadFileAction extends BaseAction {
 					lst.add(device);
 				} else {
 					device.setId(0);
-					device.setType("B1");
+					device.setType("点位");
 					device.setPort(9554);
 					device.setFlag(0);
 					device.setPlatformId("1");
@@ -238,7 +238,7 @@ public class UploadFileAction extends BaseAction {
 					cell5.setCellType(Cell.CELL_TYPE_STRING);
 					point.setType(cell5.getStringCellValue());
 				}else{
-					point.setType("B1");
+					point.setType("点位");
 				}
 				XSSFCell cell6 = row.getCell(6);
 				if (cell6 != null || "".equals(cell6)) {

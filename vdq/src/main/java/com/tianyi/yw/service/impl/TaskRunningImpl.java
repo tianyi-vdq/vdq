@@ -71,12 +71,13 @@ public class TaskRunningImpl implements TaskRunning {
 						dignosisMapper.insertDeviceList(deviceList);
 						int result = 0;
 						boolean isOver= true;
-						while(isOver){
+						while(isOver){ 
 							result = dignosisMapper.getCheckResultList();
 							if (result == 0) {
 								dignosisMapper.clear();
 								isOver= false;
 							}
+							//Thread.sleep(60000);
 						}
 						isOk = false;
 				}

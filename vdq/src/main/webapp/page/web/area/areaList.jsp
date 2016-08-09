@@ -303,7 +303,7 @@ function excelChange(file){
 							<td align="left" onclick="window.location.href='areainfo.do?areaId=${item.id}'" >${item.name}</td> 
 							<td align="left" onclick="window.location.href='areainfo.do?areaId=${item.id}'"  >${item.parentName}</td> 
 							<td onclick="window.location.href='areainfo.do?areaId=${item.id}'" >${item.creatTime}</td>
-							<td><span class="yw-btn bg-orange cur" onclick="deleteAreaById(${item.id});">×</span></td>
+							<td><a style="color:blue" onclick="deleteAreaById(${item.id});">删除</a></td>
 						</tr>
 					</c:forEach>
 				</table>

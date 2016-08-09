@@ -10,7 +10,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <head>
     <base href="<%=basePath%>">
 <meta charset="utf-8">
-<title>设备状态</title>
+<title>设备诊断历史</title>
 <meta http-equiv="refresh" content="30">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, minimum-scale=1  ,maximum-scale=1, user-scalable=no" />
@@ -22,9 +22,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$("#pager").pager({
-			    pagenumber:'${DeviceStatus.pageNo}',                         /* 表示初始页数 */
-			    pagecount:'${DeviceStatus.pageCount}',                      /* 表示总页数 */
-			    totalCount:'${DeviceStatus.totalCount}',
+			    pagenumber:'${DeviceStatusRecord.pageNo}',                         /* 表示初始页数 */
+			    pagecount:'${DeviceStatusRecord.pageCount}',                      /* 表示总页数 */
+			    totalCount:'${DeviceStatusRecord.totalCount}',
 			    buttonClickCallback:PageClick                     /* 表示点击分页数按钮调用的方法 */                  
 			});
 			var hid_searchStatusId = $("#hid_searchStatusId").val();
@@ -32,7 +32,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				$("#statusId").combobox("setValue",hid_searchStatusId);
 			}
 			var hid_searchExceptionId = $("#hid_searchExceptionId").val();
-			if(hid_searchExceptionId!=""){
+			if(hid_searchExceptionId !=""){
 				$("#exceptionstatusId").combobox("setValue",hid_searchExceptionId);
 			}
 		});
@@ -47,7 +47,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 PageClick = function(pageclickednumber) {
 	$("#pager").pager({
 	    pagenumber:pageclickednumber,                 /* 表示启示页 */
-	    pagecount:'${DeviceStatus.pageCount}',                  /* 表示最大页数pagecount */
+	    pagecount:'${DeviceStatusRecord.pageCount}',                  /* 表示最大页数pagecount */
 	    buttonClickCallback:PageClick                 /* 表示点击页数时的调用的方法就可实现javascript分页功能 */            
 	});
 	
@@ -63,6 +63,7 @@ function search(){
 
 function pagesearch(){
 	if ($('#DeviceStatusForm').form('validate')) {
+		$("#hid_serarch").val(encodeURI($("#seaarchNameTemp").val()));
 		DeviceStatusForm.submit();
 	}  
 }
@@ -78,22 +79,22 @@ function pagesearch(){
 		</div>
 		<div class="fl yw-lump mt10">
 		<form id="DeviceStatusForm" name="DeviceStatusForm"
-				action="device/deviceStatus.do" method="get">
+				action="device/deivceStatusRecord.do" method="get">
 		<div class="pd10">
 		      <div class="fl">	 	
-				<span>设备编号：</span>	<input type="text" id="seaarchNameTemp" validType="SpecialWord" class="easyui-validatebox" value="${DeviceStatus.searchPointNumber}"  /> 
+				<span>设备编号：</span>	<input type="text" id="seaarchNameTemp" validType="SpecialWord" class="easyui-validatebox" value="${DeviceStatusRecord.searchPointNumber}"  /> 
 				<input type="hidden" name="searchPointNumber" id="hid_serarch" /> 	 
 			  <span>设备状态：</span>
-			  <input type="hidden" name="searchStatusId" id="hid_searchStatusId" value="${DeviceStatus.searchStatusId}" />
+			  <input type="hidden" name="searchStatusId" id="hid_searchStatusId" value="${DeviceStatusRecord.searchStatusId}" />
 			  <select class="easyui-combobox"  id="statusId" style="width:180px;height:32px;" data-options="editable:false,onSelect:function(record){$('#hid_searchStatusId').val(record.value);}">
 				    <option value="" >请选择设备状态</option>	             	
 					<option value="1">异常</option>	
 					<!-- <option value="2">警告</option>	 -->
-					<option value="3">正常</option>	
+					<option value="3">正常</option>	 	
 					<!-- <option value="4">失败</option>	 -->			        							
-			</select>		
+			</select>	 
 			<span>诊断状态：</span>
-		<input type="hidden" name="searchExceptionId" id="hid_searchExceptionId" value="${DeviceStatus.searchExceptionId}" />
+		<input type="hidden" name="searchExceptionId" id="hid_searchExceptionId" value="${DeviceStatusRecord.searchExceptionId}" />
 		  <select class="easyui-combobox"  id="exceptionstatusId" style="width:180px;height:32px;" data-options="editable:false,onSelect:function(record){$('#hid_searchExceptionId').val(record.value);}">
 			    <option value="" >请选择诊断状态</option>	             	
 				<option value="5">雪花噪声</option>	 
@@ -107,12 +108,12 @@ function pagesearch(){
 				<option value="10">画面偏色</option>	  
 				<option value="11">亮度异常</option>	   
 				<option value="14">黑屏</option>	       							
-		</select>	
+		</select>			
 			 <span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>
 		</div>			
 			 <div class="fr"></div>
 			 <div class="cl"></div>						
-          <input type="hidden" id="pageNumber" name="pageNo" value="${DeviceStatus.pageNo}" />
+          <input type="hidden" id="pageNumber" name="pageNo" value="${DeviceStatusRecord.pageNo}" />
       </div>
 		</form>
       </div>
@@ -137,7 +138,7 @@ function pagesearch(){
 			<th>黑屏</th>
 			<th width="12%">诊断时间</th>
 		</tr>
-		<c:forEach var="item" items="${DeviceStatuslist}">
+		<c:forEach var="item" items="${DeviceStatusRecordlist}">
 		<tr> 
 			<td align="center" style="display:none">${item.id}</td>
 			<td>${item.pointId}</td>                          

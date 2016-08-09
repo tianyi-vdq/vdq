@@ -339,6 +339,39 @@
       ds.black_screen_status = #{searchStatusId,jdbcType=INTEGER} 
       )
   </if>
+   <if test="searchExceptionId != null and searchExceptionId == 2">
+  		and ds.sign_status = #{searchExceptionId,jdbcType=INTEGER}
+  </if>
+  <if test="searchExceptionId != null and searchExceptionId == 3">
+  		and ds.frame_frozen_status = #{searchExceptionId,jdbcType=INTEGER}
+  </if>
+  <if test="searchExceptionId != null and searchExceptionId == 4">
+  		and ds.color_status = #{searchExceptionId,jdbcType=INTEGER}
+  </if>
+  <if test="searchExceptionId != null and searchExceptionId == 5">
+  		and ds.noise_status = #{searchExceptionId,jdbcType=INTEGER}
+  </if>
+  <if test="searchExceptionId != null and searchExceptionId == 6">
+  		and ds.frame_shade_status = #{searchExceptionId,jdbcType=INTEGER}
+  </if>
+  <if test="searchExceptionId != null and searchExceptionId == 7">
+  		and ds.frame_fuzzy_status = #{searchExceptionId,jdbcType=INTEGER}
+  </if>
+  <if test="searchExceptionId != null and searchExceptionId == 8">
+  		and ds.frame_displaced_status = #{searchExceptionId,jdbcType=INTEGER}
+  </if>
+  <if test="searchExceptionId != null and searchExceptionId == 9">
+  		and ds.frame_strip_status = #{searchExceptionId,jdbcType=INTEGER}
+  </if>
+  <if test="searchExceptionId != null and searchExceptionId == 10">
+  		and ds.frame_colorcase_status = #{searchExceptionId,jdbcType=INTEGER}
+  </if>
+  <if test="searchExceptionId != null and searchExceptionId == 11">
+  		and ds.light_exception_status = #{searchExceptionId,jdbcType=INTEGER}
+  </if>
+  <if test="searchExceptionId != null and searchExceptionId == 14">
+  		and ds.black_screen_status = #{searchExceptionId,jdbcType=INTEGER}
+  </if> 
   </sql>
     <select id="getDeviceStatusCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.DeviceStatus">
   	 select count(*)

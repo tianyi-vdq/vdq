@@ -9,7 +9,7 @@
             http://www.springframework.org/schema/rabbit
                 http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd">
 	<rabbit:connection-factory id="connectionFactory"
-		host="25.30.9.11" port="5672" username="admin" password="admin" />
+		host="192.0.54.88" port="5672" username="guest" password="guest" />
 		<!-- <rabbit:connection-factory id="connectionFactory"
 		host="25.30.9.186" port="5672" username="guest" password="guest" /> -->
 	<!-- <rabbit:connection-factory id="connectionFactory" host="127.0.0.1" 

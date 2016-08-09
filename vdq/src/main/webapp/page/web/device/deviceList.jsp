@@ -201,30 +201,30 @@ function stopOrStartDevice(id,flag){
 						<th width="10%" >设备地址</th>
 						<th width="10%" >所属区域</th>	
 						<!-- <th>平台ID</th>			 -->		
-						<!-- <th>操作</th> -->
+						 <th width="10%" >操作</th> 
 					</tr>
 					<c:forEach var="item" items="${Devicelist}">
 						<tr>
 							<td align="center" style="display:none">${item.id}</td>
-							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointName}</td>
-							<td align="left" onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'" >${item.pointId}</td>
-							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.type}</td> 
-							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointNumber}</td>
-							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.pointNaming}</td>
+							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.pointName}</td>
+							<td align="left" onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'" >${item.pointId}</td>
+							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.type}</td> 
+							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.pointNumber}</td>
+							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.pointNaming}</td>
 							<%-- <td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.rtspUrl}</td> --%>
-							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.ipAddress}</td> 
-							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.port}</td> 
-							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.address}</td> 
-							<td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.areaName}</td>
+							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.ipAddress}</td> 
+							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.port}</td> 
+							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.address}</td> 
+							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.areaName}</td>
 							<%-- <td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.platformId}</td> --%>
-							<%-- <td>
+							 <td>
 							<c:if test="${item.flag == 0}">
-								<a href="javascript:void(0);" onclick="stopOrStartDevice(${item.id},${item.flag});">停用设备</a>
+								<a href="javascript:void(0);" onclick="stopOrStartDevice(${item.id},${item.flag});" style="color:red">停用设备</a>
 							</c:if>
 							<c:if test="${item.flag == 1}">
-								<a href="javascript:void(0);" onclick="stopOrStartDevice(${item.id},${item.flag});">启用设备</a>
+								<a href="javascript:void(0);" onclick="stopOrStartDevice(${item.id},${item.flag});" style="color:blue">启用设备</a>
 							</c:if>
-							</td> --%>
+							</td> 
 						</tr>
 					</c:forEach>
 				</table>
