@@ -21,6 +21,8 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -35,8 +37,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tianyi.yw.common.JsonResult;
+import com.tianyi.yw.common.utils.StringUtil;
 import com.tianyi.yw.model.Area;
 import com.tianyi.yw.model.Device;
+import com.tianyi.yw.model.DeviceStatus;
 import com.tianyi.yw.model.Log;
 import com.tianyi.yw.service.AreaService;
 import com.tianyi.yw.service.DeviceService;
@@ -348,6 +352,41 @@ public class UploadFileAction extends BaseAction {
 		return result;
 	}
 	
+	
+	/**
+	 * 下载导入模板
+	 * @param request
+	 * @param response
+	 * @param filepath
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/downExceptionfile.do")
+	public void downExceptionfile(HttpServletRequest request,
+			HttpServletResponse response) { 
+		try {
+			 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+             java.util.Date date = new java.util.Date();
+             String str = sdf.format(date);
+             String filename = str +"_ExceptionInfo.xls";
+            String filePath = request.getSession().getServletContext().getRealPath("tempfile");
+            filePath += "/"+filename;
+            response.reset();
+            response.setContentType("APPLICATION/OCTET-STREAM; charset=UTF-8");
+            response.setHeader("Content-disposition", "attachment;filename=\""
+                    + new String(filename.getBytes("GB2312"), "ISO-8859-1")
+                    + "\"");
+
+            FileInputStream inStream = new FileInputStream(filePath);
+            byte[] b = new byte[100];
+            int len;
+            while ((len = inStream.read(b)) > 0) {
+                response.getOutputStream().write(b, 0, len);
+            }
+            inStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+	}
 	/**
 	 * 下载导入模板
 	 * @param request
@@ -385,4 +424,216 @@ public class UploadFileAction extends BaseAction {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * 下载导入模板
+	 * @param request
+	 * @param response
+	 * @param filepath
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/exportExcel.do")
+	public JsonResult<DeviceStatus> exportExcel(HttpServletRequest request,
+			HttpServletResponse response) {
+		JsonResult<DeviceStatus> js = new JsonResult<DeviceStatus>();
+		js.setCode(new Integer(1));
+		js.setMessage("导出失败!");
+		List<DeviceStatus> list = new ArrayList<DeviceStatus>();
+		DeviceStatus deviceStatus = new DeviceStatus();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 小写的mm表示的是分钟  
+		try {
+			deviceStatus.setSearchStatusId(1);
+			list = deviceService.getDeviceStatusList(deviceStatus);
+			for(DeviceStatus ds :list){
+				ds.setRecordTimes(sdf.format(ds.getRecordTime()));
+			}
+			if(list.size()>0){
+				String filePath = createExceptionPoint(list);
+				if(!StringUtil.isEmpty(filePath)){
+					js.setCode(0);
+					js.setGotoUrl(filePath);
+					js.setMessage("异常点位信息导出成功");
+				}else{
+					js.setMessage("创建Excle文件出错!");
+				}
+			}else{
+				js.setMessage("没有异常结果数据!");
+			} 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return js;
+	}
+
+	private String createExceptionPoint(List<DeviceStatus> list) {
+		// TODO Auto-generated method stub
+		String filePath ="";
+        String filename = "";
+        Workbook workbook = null;
+        try {
+            workbook = new HSSFWorkbook();
+            if (workbook != null) { 
+                Sheet sheet = workbook.createSheet("异常点位信息");
+
+                Row row0 = sheet.createRow(0);
+                Cell cell0_0 = row0.createCell(0, Cell.CELL_TYPE_STRING);
+                cell0_0.setCellValue("点位编号");
+                sheet.autoSizeColumn(0);
+                Cell cell0_1 = row0.createCell(1, Cell.CELL_TYPE_STRING);
+                cell0_1.setCellValue("网络连接状态");
+                sheet.autoSizeColumn(1);
+                Cell cell0_2 = row0.createCell(2, Cell.CELL_TYPE_STRING);
+                cell0_2.setCellValue("拉流");
+                sheet.autoSizeColumn(2);
+                Cell cell0_3 = row0.createCell(3, Cell.CELL_TYPE_STRING);
+                cell0_3.setCellValue("雪花噪声");
+                sheet.autoSizeColumn(3);
+                Cell cell0_4 = row0.createCell(4, Cell.CELL_TYPE_STRING);
+                cell0_4.setCellValue("信号缺失");
+                sheet.autoSizeColumn(4);	
+                Cell cell0_5 = row0.createCell(5, Cell.CELL_TYPE_STRING);
+                cell0_5.setCellValue("色彩丢失");
+                sheet.autoSizeColumn(5);
+                Cell cell0_6 = row0.createCell(6, Cell.CELL_TYPE_STRING);
+                cell0_6.setCellValue("画面冻结");
+                sheet.autoSizeColumn(6);
+                Cell cell0_7 = row0.createCell(7, Cell.CELL_TYPE_STRING);
+                cell0_7.setCellValue("画面遮挡");
+                sheet.autoSizeColumn(7);
+                Cell cell0_8 = row0.createCell(8, Cell.CELL_TYPE_STRING);
+                cell0_8.setCellValue("画面模糊");
+                sheet.autoSizeColumn(8);
+                Cell cell0_9 = row0.createCell(9, Cell.CELL_TYPE_STRING);
+                cell0_9.setCellValue("画面移位");
+                sheet.autoSizeColumn(9);
+                Cell cell0_10 = row0.createCell(10, Cell.CELL_TYPE_STRING);
+                cell0_10.setCellValue("画面彩条");
+                sheet.autoSizeColumn(10);
+                Cell cell0_11 = row0.createCell(11, Cell.CELL_TYPE_STRING);
+                cell0_11.setCellValue("画面偏色");
+                sheet.autoSizeColumn(11);
+                Cell cell0_12 = row0.createCell(12, Cell.CELL_TYPE_STRING);
+                cell0_12.setCellValue("亮度异常");
+                sheet.autoSizeColumn(12);
+                Cell cell0_13 = row0.createCell(13, Cell.CELL_TYPE_STRING);
+                cell0_13.setCellValue("亮度异常");
+                sheet.autoSizeColumn(13);
+                Cell cell0_14 = row0.createCell(14, Cell.CELL_TYPE_STRING);
+                cell0_14.setCellValue("黑屏");
+                sheet.autoSizeColumn(14);
+                Cell cell0_15 = row0.createCell(15, Cell.CELL_TYPE_STRING);
+                cell0_15.setCellValue("诊断时间");
+                sheet.autoSizeColumn(15);
+  
+
+                if(list.size()>0){
+                    try {
+                        for (int i = 0; i < list.size(); i++) {
+                            Row row = sheet.createRow(1 + i);
+                            Cell cell1 = row.createCell(0, Cell.CELL_TYPE_STRING);
+                            cell1.setCellValue(list.get(i).getPointId());
+                            sheet.autoSizeColumn(0);
+                            
+                             
+                            Cell cell2 = row.createCell(1, Cell.CELL_TYPE_STRING);
+                            cell2.setCellValue(list.get(i).getNetworkStatus()==3?"√":"×");
+                            sheet.autoSizeColumn(1);
+                            
+                            Cell cell3 = row.createCell(2, Cell.CELL_TYPE_STRING);
+                            cell3.setCellValue(list.get(i).getStreamStatus()==3?"√":"×");
+                            sheet.autoSizeColumn(2);
+                            
+                            Cell cell4 = row.createCell(3, Cell.CELL_TYPE_STRING);
+                            cell4.setCellValue(list.get(i).getNoiseStatus()==null?"":list.get(i).getNoiseStatus()==3?"√":"×");
+                            sheet.autoSizeColumn(3);
+                            
+                            Cell cell5 = row.createCell(4, Cell.CELL_TYPE_STRING);
+                            cell5.setCellValue(list.get(i).getSignStatus()==null?"":list.get(i).getNoiseStatus()==3?"√":"×");
+                            sheet.autoSizeColumn(4);
+                            
+                            Cell cell6 = row.createCell(5, Cell.CELL_TYPE_STRING);
+                            cell6.setCellValue(list.get(i).getColorStatus()==null?"":list.get(i).getColorStatus()==3?"√":"×");
+                            sheet.autoSizeColumn(5);
+                            
+                            Cell cell7 = row.createCell(6, Cell.CELL_TYPE_STRING);
+                            cell7.setCellValue(list.get(i).getFrameFrozenStatus()==null?"":list.get(i).getFrameFrozenStatus()==3?"√":"×");
+                            sheet.autoSizeColumn(6);
+                            
+                            Cell cell8 = row.createCell(7, Cell.CELL_TYPE_STRING);
+                            cell8.setCellValue(list.get(i).getNoiseStatus()==null?"":list.get(i).getNoiseStatus()==3?"√":"×");
+                            sheet.autoSizeColumn(7);
+                            
+                            Cell cell9 = row.createCell(8, Cell.CELL_TYPE_STRING);
+                            cell9.setCellValue(list.get(i).getFrameShadeStatus()==null?"":list.get(i).getFrameShadeStatus()==3?"√":"×");
+                            sheet.autoSizeColumn(8);
+                            
+                            Cell cell10 = row.createCell(9, Cell.CELL_TYPE_STRING);
+                            cell10.setCellValue(list.get(i).getFrameFuzzyStatus()==null?"":list.get(i).getFrameFuzzyStatus()==3?"√":"×");
+                            sheet.autoSizeColumn(9);
+                            
+                            Cell cell11 = row.createCell(10, Cell.CELL_TYPE_STRING);
+                            cell11.setCellValue(list.get(i).getFrameDisplacedStatus()==null?"":list.get(i).getFrameDisplacedStatus()==3?"√":"×");
+                            sheet.autoSizeColumn(10);
+                            
+                            Cell cell12 = row.createCell(11, Cell.CELL_TYPE_STRING);
+                            cell12.setCellValue(list.get(i).getFrameStripStatus()==null?"":list.get(i).getFrameStripStatus()==3?"√":"×");
+                            sheet.autoSizeColumn(11);
+                            
+                            Cell cell13 = row.createCell(12, Cell.CELL_TYPE_STRING);
+                            cell13.setCellValue(list.get(i).getFrameColorcaseStatus()==null?"":list.get(i).getFrameColorcaseStatus()==3?"√":"×");
+                            sheet.autoSizeColumn(12);
+                            
+                            Cell cell14 = row.createCell(13, Cell.CELL_TYPE_STRING);
+                            cell14.setCellValue(list.get(i).getLightExceptionStatus()==null?"":list.get(i).getLightExceptionStatus()==3?"√":"×");
+                            sheet.autoSizeColumn(13);
+                            
+                            Cell cell15 = row.createCell(14, Cell.CELL_TYPE_STRING);
+                            cell15.setCellValue(list.get(i).getBlackScreenStatus()==null?"":list.get(i).getBlackScreenStatus()==3?"√":"×");
+                            sheet.autoSizeColumn(14);
+                            
+                            Cell cell16 = row.createCell(15, Cell.CELL_TYPE_STRING);
+                            cell16.setCellValue(list.get(i).getRecordTimes());
+                            sheet.autoSizeColumn(15);
+                             
+                        }
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                }
+
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                java.util.Date date = new java.util.Date();
+                String str = sdf.format(date);
+                filePath = "tempfile";
+                String serverPath = getClass().getResource("/").getFile().toString();
+                serverPath = serverPath.substring(0, (serverPath.length() - 16));
+
+                filePath = serverPath+filePath;
+                File file = new File(filePath);
+
+                if(!file.exists()){
+                    file.mkdir();
+                }
+                filePath += "/"+ str + "_ExceptionInfo.xls";
+                filename = str + "__ExceptionInfo.xls";
+                File realFile = new File(filePath);
+                if(realFile.exists()){
+                    realFile.delete();
+                }
+                try {
+                    FileOutputStream outputStream = new FileOutputStream(filePath);
+                    workbook.write(outputStream);
+                    outputStream.flush();
+                    outputStream.close();
+                } catch (Exception e) {
+                    return "";
+                }
+            }
+        }catch (Exception ex){
+
+        }
+        return filename;
+	}
+	
 }

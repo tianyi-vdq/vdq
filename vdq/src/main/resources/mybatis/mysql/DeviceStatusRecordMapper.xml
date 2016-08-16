@@ -264,6 +264,7 @@
     select <include refid="Base_Column_List" />,
 		d.point_id as point_id	
 		<include refid="query_sql"/>
+		order by ds.device_id asc
 		 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
           limit #{pageStart}, #{pageSize}
   		</if>

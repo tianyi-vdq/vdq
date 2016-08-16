@@ -177,10 +177,10 @@
   </update>
   <select id="getList" parameterType="com.tianyi.yw.model.DeviceDiagnosis" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"/>
-  	from t_device_diagnosis
-  	where check_server_id = 0
+  	from t_device_diagnosis 
+  	WHERE check_server_id = 0  	  
   	 <if test="countSize != null and countSize > -1">
-        limit 0, #{countSize}
+       ORDER BY RAND()   limit  #{countSize}
   	</if>
   </select>
   <select id="getExistDiagnosis" parameterType="com.tianyi.yw.model.DeviceDiagnosis" resultMap="BaseResultMap">

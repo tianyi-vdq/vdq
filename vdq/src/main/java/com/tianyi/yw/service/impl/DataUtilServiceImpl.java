@@ -327,7 +327,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 					exceptionStr += "数据流捕获异常;";
 				}
 				if(devicestatus.getSignStatus() !=null && devicestatus.getSignStatus()==Constants.CHECK_RESULT_EXCEPTION){
-					exceptionStr += "网络信号异常;";
+					exceptionStr += "视频信号异常;";
 				}
 				if(devicestatus.getNoiseStatus() !=null && devicestatus.getNoiseStatus()==Constants.CHECK_RESULT_EXCEPTION){
 					exceptionStr += "雪花噪声异常;";
@@ -455,6 +455,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 						ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					} else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_BLACKSCREEN)) {
 						ds.setBlackScreenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+						ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					}else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_STRIP)) {
 						ds.setFrameStripStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					}
@@ -523,6 +524,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 						ds.setLightExceptionStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					}else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_BLACKSCREEN)) {
 						ds.setBlackScreenStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
+						ds.setSignStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					}else if (s.equals(ConstantsResult.CHECK_RESULT_STATUS_STRIP)) {
 						ds.setFrameStripStatus(ConstantsResult.CHECK_RESULT_STATUS_EXCEPTION);
 					}

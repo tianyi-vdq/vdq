@@ -31,10 +31,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			if(hid_searchStatusId!=""){
 				$("#statusId").combobox("setValue",hid_searchStatusId);
 			}
-			var hid_searchExceptionId = $("#hid_searchExceptionId").val();
+			/* var hid_searchExceptionId = $("#hid_searchExceptionId").val();
 			if(hid_searchExceptionId !=""){
 				$("#exceptionstatusId").combobox("setValue",hid_searchExceptionId);
-			}
+			} */
 		});
 		
 		
@@ -93,7 +93,7 @@ function pagesearch(){
 					<option value="3">正常</option>	 	
 					<!-- <option value="4">失败</option>	 -->			        							
 			</select>	 
-			<span>诊断状态：</span>
+			<%-- <span>诊断状态：</span>
 		<input type="hidden" name="searchExceptionId" id="hid_searchExceptionId" value="${DeviceStatusRecord.searchExceptionId}" />
 		  <select class="easyui-combobox"  id="exceptionstatusId" style="width:180px;height:32px;" data-options="editable:false,onSelect:function(record){$('#hid_searchExceptionId').val(record.value);}">
 			    <option value="" >请选择诊断状态</option>	             	
@@ -108,7 +108,7 @@ function pagesearch(){
 				<option value="10">画面偏色</option>	  
 				<option value="11">亮度异常</option>	   
 				<option value="14">黑屏</option>	       							
-		</select>			
+		</select> --%>			
 			 <span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>
 		</div>			
 			 <div class="fr"></div>
