@@ -39,7 +39,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
    				 	if(deviceId>0){
    				 		//var pId = $("#areaId").val();
    				 		var areaName = $("#areaName").val();
-   				 		$("#cmbParentArea").combotree("setValue",areaName);
+   				 		$("#cmbParentArea").combotree("setText",areaName);
    				 		
    				 	}else{
 						//$("#cmbParentArea").combotree("disable",true);
@@ -52,6 +52,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		function saveDevicePoint(obj) {
 			var areaId = $("#cmbParentArea").combotree("getValue");
+			var flag = $("#hid_flag").val();
 			$("#areaId").val(areaId);
 			if ($('#devicePointForm').form('validate')) {
 				$(obj).attr("onclick", "");
@@ -63,7 +64,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 										if (data.code == 0) {
 											$.messager.alert('保存信息',data.message,'info',
 															function() {
-																window.location.href = "device/deviceList.do";
+																window.location.href = "device/deviceList.do?flag="+flag;
 															});
 											//$("#i_back").click();
 										} else {
@@ -85,7 +86,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <div class="con-right" id="conRight">
 		<div class="fl yw-lump">
 			<div class="yw-lump-title">
-				<i  id="i_back"  class="yw-icon icon-back" onclick="javascript:history.back();"></i><span>设备：${Device.pointName }</span> 
+				<i  id="i_back"  class="yw-icon icon-back" onclick="javascript:history.back();"></i><span>设备：${Device.pointName }
+				<c:if test="${Device.flag == 1 }">
+					(已停用)
+				</c:if>
+				<c:if test="${Device.flag == 2 }">
+					(已移除)
+				</c:if>
+				</span> 
 			</div>
 		</div>
 
@@ -114,9 +122,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<td align="right" width="8%">设备ID：</td> 
 					<td  align="left" ><input  name="pointId" doc="pointInfo" onblur="valueTrim(this);"    type="text" value="${Device.pointId}" class="easyui-validatebox" required="true" validType="Length[1,100]" style="width:354px;height:28px;" />
 					<span style="color:red">*</span>
-					<input id="deviceId" name="id" type="hidden" value="${Device.id}" />
+					<input id="deviceId" name="id" type="hidden" value="${Device.id}" /> 
 					<input type="hidden" id="areaName" value="${Device.areaName}"/>
-					<input name="flag" doc="pointInfo"  type="hidden" value="${Device.flag}"/>
+					<input name="flag" doc="pointInfo" id="hid_flag"  type="hidden" value="${Device.flag}"/>
 					</td>
 					 
 				

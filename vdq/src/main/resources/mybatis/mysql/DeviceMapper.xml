@@ -18,10 +18,13 @@
     <result column="rtsp_url" property="rtspUrl" jdbcType="VARCHAR" />
     <result column="platform_id" property="platformId" jdbcType="VARCHAR" />
     <result column="device_key" property="deviceKey" jdbcType="VARCHAR" />
+    <result column="delete_time" property="delTime" jdbcType="TIMESTAMP" />
+    <result column="lock_time" property="lockTime" jdbcType="TIMESTAMP" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     t.id, t.point_id, t.point_number, t.point_name, t.point_naming, t.type, t.address, t.ip_address, t.port, 
-    t.area_id,t.rtsp_url,t.flag,t.platform_id,t.device_key
+    t.area_id,t.rtsp_url,t.flag,t.platform_id,t.device_key,t.delete_time,t.lock_time,t.description
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -182,6 +185,12 @@
         <if test="deviceKey != null" >
         device_key = #{deviceKey,jdbcType=VARCHAR},
       </if>
+      <if test="delTime != null" >
+        delete_time = #{delTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lockTime != null" >
+        lock_time = #{lockTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -199,7 +208,10 @@
       rtsp_url = #{rtspUrl,jdbcType=VARCHAR},
       flag = #{flag,jdbcType=INTEGER},
       platform_id = #{platformId,jdbcType=VARCHAR},
-      device_key = #{deviceKey,jdbcType=VARCHAR}
+      device_key = #{deviceKey,jdbcType=VARCHAR},
+      delete_time =#{delTime,jdbcType=TIMESTAMP},
+      lock_time = #{lockTime,jdbcType=TIMESTAMP},
+      description = #{description,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <sql id="query_sql">
@@ -219,6 +231,9 @@
     </if>
      <if test="platformId != null" >
         and  t.platform_id = #{platformId,jdbcType=VARCHAR}
+    </if>
+    <if test="flag != null">
+    	and  t.flag = #{flag,jdbcType=INTEGER}
     </if>
     <if test="id != null" >
         and t.id != #{id,jdbcType=VARCHAR}
@@ -310,6 +325,15 @@
   	update t_device
   	set
   	flag = #{flag,jdbcType = INTEGER}
+  	 <if test="delTime != null" >
+        ,delete_time = #{delTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="lockTime != null" >
+        ,lock_time = #{lockTime,jdbcType=TIMESTAMP} 
+      </if>
+      <if test="description != null">
+      	,description = #{description,jdbcType=VARCHAR}
+      </if>
   	where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="getDeviceListByFlag" parameterType="com.tianyi.yw.model.Device" resultMap="BaseResultMap">

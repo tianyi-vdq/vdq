@@ -64,87 +64,28 @@ function pagesearch(){
 		DeviceForm.submit();
 	}  
 }
-  
-function excelChange(file){
-	  if(!(/(?:xls)$/i.test(file.value)) && !(/(?:xlsx)$/i.test(file.value)) ) {
-	        $.messager.alert('错误', "只允许上传xl或xlsx的文档", 'error'); 
-	        if(window.ActiveXObject) {//for IE
-	            file.select();//select the file ,and clear selection
-	            document.selection.clear();
-	        } else if(window.opera) {//for opera
-	            file.type="text";file.type="file";
-	        } else file.value="";//for FF,Chrome,Safari
-	    } else {	
-			showProcess(true, '温馨提示', '正在提交数据...'); 
-	   		fileForms.submit();
-	    	/* $('#fileForms').form('submit',{
-				success : function(data) {
-					data = $.parseJSON(data);
-					if (data.code == 0) {
-						$.messager.alert('保存信息', data.message, 'info',function(){
-							search();
-						});
-						
-					} else {
-						$.messager.alert('错误信息', data.message, 'error');
-					}  
-				}
-			});	  */
-	    }
-}
+ 
 function stopOrStartDevice(id,flag){
-	var str = "";
-	if(flag == 0){
-		str = "确认停用该点位设备?"
-	}else{
-		str = "确认移除该点位设备?"
-	}
-	$.messager.confirm("操作确认",str,function(r){  
-	    if (r){  
-			showDialog(id,flag);
+	$.messager.confirm("操作确认","确认恢复该点位设备到使用状态?",function(r){  
+		    if (r){  
+				$.ajax({
+					url:"device/jsonLoadStopOrStartDevice.do?deviceId="+id+"&&flag="+flag,
+					type:"post",
+					dataType:"json",
+					success:function(data) {
+						if (data.code == 0) {
+							$.messager.alert('成功信息', data.message, 'info',function(){
+								location.reload(true);
+							});
+						} else {
+							$.messager.alert('错误信息', data.message, 'error');
+						}
+					},
+					error:function(XMLResponse){alert(XMLResponse.responseText)}
+				});
 	    }  
 	}); 
 } 
-function showDialog(id,flag){
-	$("#hid_form_deviceId").val(id);
-	$("#hid_form_flag").val(flag);
-	var wz = getDialogPosition($('#descriptionWindow').get(0),150);
-	$('#descriptionWindow').window({
-		    onBeforeClose: function () {
-		    },
-		    onClose:function(){
-		    	$('#changeCase').val('');
-		    }
-	});
-	$('#descriptionWindow').window('open');
-}
-function changeStatusAction(){
-	
-	var id = $("#hid_form_deviceId").val();
-	var flag = $("#hid_form_flag").val(); 
-	var description = $("#changeCase").val();
-	if($.trim(description).length == 0){
-		$.messager.alert('操作提示', "请输入变更事由!", 'error');
-		return;
-	}
-	var desc =encodeURI(description);
-	$.ajax({
-		url:"device/jsonLoadStopOrStartDevice.do?deviceId="+id+"&&flag="+flag+"&&description="+desc,
-		type:"post",
-		dataType:"json",
-		success:function(data) {
-			if (data.code == 0) {
-				$("#btnCancel").click();
-				$.messager.alert('成功信息', data.message, 'info',function(){
-					location.reload(true);
-				});
-			} else {
-				$.messager.alert('错误信息', data.message, 'error');
-			}
-		},
-		error:function(XMLResponse){alert(XMLResponse.responseText)}
-	});
-}
 </script>
   </head>
   
@@ -152,15 +93,7 @@ function changeStatusAction(){
     <div class="con-right" id="conRight">
 		<div class="fl yw-lump">
 			<div class="yw-lump-title">
-				<i class="yw-icon icon-partner"></i><span>设备信息</span>
-				<span class="fr yw-btn bg-green line-hei22 mr10 mt9 cur" onclick="window.location.href='${pageContext.request.contextPath}/fileUpload/downfile.do?filepath=source/excel/点位设备导入模板.xls'">下载模板</span> 
-				<span class="fr yw-btn bg-orange line-hei22 mr10 mt9 cur">导入设备
-					<div class="temp">
-					<form id="fileForms" name="fileForms" action="${pageContext.request.contextPath}/fileUpload/uploadDeviceExcel.do"  enctype="multipart/form-data" method="post" style="margin:0;padding:0;">
-				       	<input type="file" name="file" id="jfile" class="yw-upload-file" onChange="excelChange(this);">
-					</form>
-					</div>
-				</span>
+				<i class="yw-icon icon-partner"></i><span>设备信息</span> 
 			</div>
 		</div>
 		
@@ -170,16 +103,12 @@ function changeStatusAction(){
 				action="device/deviceList.do" method="get">
 				<div class="pd10">
 					<div class="fl">
-						<span class="ml26">设备信息</span>
-						
+						<span class="ml26">设备信息</span> 
 						<input type="text" name="searchName"   validType="SpecialWord" class="easyui-validatebox" 
 							placeholder="搜索" value="${Device.searchName}" /> 
-						<input type="hidden" name="flag" value="0"/> 
+						<input type="hidden" name="flag" value="1"/> 
 						<span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>
-					</div>
-					<div class="fr">
-						<span class="fl yw-btn bg-green cur" onclick="window.location.href='device/deviceInfo.do?pointId='+ 0">新建设备</span>
-					</div>
+					</div> 
 					<div class="cl"></div>
 				</div>
 
@@ -191,6 +120,7 @@ function changeStatusAction(){
 				<table class="yw-cm-table yw-center yw-bg-hover" id="deviceList">
 					<tr style="background-color:#D6D3D3;font-weight: bold;">
 						<th width="4%" style="display:none">&nbsp;</th>
+						<th width="10%" >状态</th>
 						<th width="10%" >设备名称</th>
 						<th width="10%" >设备ID</th>
 						<th width="5%" >设备类型</th>  
@@ -201,12 +131,15 @@ function changeStatusAction(){
 						<th width="5%" >端口</th> 
 						<th width="10%" >设备地址</th>
 						<th width="10%" >所属区域</th>	
+						<th width="10%" >停用日期</th>	
+						<th width="10%" >停用原因</th>	
 						<!-- <th>平台ID</th>			 -->		
 						 <th width="10%" >操作</th> 
 					</tr>
 					<c:forEach var="item" items="${Devicelist}">
 						<tr>
 							<td align="center" style="display:none">${item.id}</td>
+							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">已停用</td>
 							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.pointName}</td>
 							<td align="left" onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'" >${item.pointId}</td>
 							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.type}</td> 
@@ -218,38 +151,17 @@ function changeStatusAction(){
 							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.address}</td> 
 							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.areaName}</td>
 							<%-- <td onclick="window.location.href='device/deviceInfo.do?pointId=${item.id}'">${item.platformId}</td> --%>
-							 <td>
-							<c:if test="${item.flag == 0}">
-								<a href="javascript:void(0);" onclick="stopOrStartDevice(${item.id},${item.flag});" style="color:blue">停用</a>
-								<a href="javascript:void(0);" onclick="stopOrStartDevice(${item.id},2);" style="color:red;margin-left:15px;">删除</a>
-							</c:if>
-							<%-- <c:if test="${item.flag == 1}"> 	 
-								<a href="javascript:void(0);" onclick="stopOrStartDevice(${item.id},${item.flag});" style="color:blue">启用设备</a>
-							</c:if> --%>
+							  
+							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.lockTimes}</td> 
+							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.description}</td> 
+							<td>
+								<a href="javascript:void(0);" onclick="stopOrStartDevice(${item.id},${item.flag});" style="color:blue">启用设备</a> 
 							</td> 
 						</tr>
 					</c:forEach>
-				</table>
+				</table> 
 				<div class="page" id="pager"></div> 
 		</div>	
 		</div> 
-		
-	<div id="descriptionWindow" class="easyui-window" title="操作事由" style="width:560px;height:280px;overflow:hidden;padding:10px;text-align:center;" iconCls="icon-info" closed="true" modal="true"   resizable="false" collapsible="false" minimizable="false" maximizable="false">
-	 
-		<p style="display:none">
-        	<input name="deviceId" type="hidden" id="hid_form_deviceId"  class="easyui-validatebox" />
-        	<input name="flag" type="hidden" id="hid_form_flag" class="easyui-validatebox"  />
-        </p>
-		<p class="yw-window-p" style="text-align:left">
-        	<span>变更原因：</span> 
-        </p> 
-		<p class="yw-window-p"> 
-			<textarea id="changeCase" name="description"  style="width:532px;height:125px;"></textarea> 
-        </p> 
-        <div class="yw-window-footer txt-right">
-        	<span id="btnCancel" class="yw-window-btn bg-lightgray mt12"  onclick="$('#changeCase').val('');$('#descriptionWindow').window('close');">取消</span>
-        	<span class="yw-window-btn bg-blue mt12" onclick="changeStatusAction(this);">保存</span>
-        </div> 
-	</div>
   </body>
 </html>

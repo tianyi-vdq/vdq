@@ -1,6 +1,8 @@
 package com.tianyi.yw.model;
 
 
+import java.util.Date;
+
 import com.tianyi.yw.common.utils.Page;
 
 public class Device extends Page {
@@ -45,8 +47,50 @@ public class Device extends Page {
     private Integer checkTimes;
     
     private Integer serverId;
+     
+    private Date delTime;
+
+    private Date lockTime;
     
-    public Integer getId() {
+   private String delTimes;
+
+   private String lockTimes;
+   
+   private String description;
+    
+    public Date getDelTime() {
+	return delTime;
+}
+
+public void setDelTime(Date delTime) {
+	this.delTime = delTime;
+}
+
+public Date getLockTime() {
+	return lockTime;
+}
+
+public void setLockTime(Date lockTime) {
+	this.lockTime = lockTime;
+}
+
+public String getDelTimes() {
+	return delTimes;
+}
+
+public void setDelTimes(String delTimes) {
+	this.delTimes = delTimes;
+}
+
+public String getLockTimes() {
+	return lockTimes;
+}
+
+public void setLockTimes(String lockTimes) {
+	this.lockTimes = lockTimes;
+}
+
+	public Integer getId() {
         return id;
     }
 
@@ -212,6 +256,14 @@ public class Device extends Page {
 
 	public void setPort(Integer port) {
 		this.port = port;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 

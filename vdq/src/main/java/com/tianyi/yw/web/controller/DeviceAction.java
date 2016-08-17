@@ -3,6 +3,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -62,17 +63,31 @@ public class DeviceAction  extends BaseAction{
 		int totalCount =  0;
 		try{
 			//去t_device取满足要求的数据
-			devicelist =  deviceService.getDeviceList(device);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 小写的mm表示的是分钟  
+			devicelist =  deviceService.getDeviceList(device); 
+			for(Device d : devicelist){
+				if(d.getFlag()==1){
+					d.setLockTimes(sdf.format(d.getLockTime()));
+				}else if(d.getFlag() == 2){
+					d.setDelTimes(sdf.format(d.getDelTime()));
+				}
+			}
 			//t_device的记录数
 			totalCount = deviceService.getDeviceCount(device);
 		}catch(Exception ex){ 
 			ex.printStackTrace();
 		}
+		String jspStr = "web/device/deviceList";
+		if(device.getFlag() ==1){
+			 jspStr = "web/device/deviceLockList";
+		}else if(device.getFlag() == 2){
+			 jspStr = "web/device/deviceDelList";
+		}
 		//通过request绑定对象传到前台
 		device.setTotalCount(totalCount); 
 		request.setAttribute("Device", device); 
 		request.setAttribute("Devicelist", devicelist); 
-		return "web/device/deviceList";
+		return jspStr;
 	}	
 	
 	/**
@@ -217,36 +232,50 @@ public class DeviceAction  extends BaseAction{
 	public JsonResult<Device> stopOrStartDevice(
 			@RequestParam(value = "deviceId", required = false) Integer deviceId,
 			@RequestParam(value = "flag", required = false) Integer flag,
-			HttpServletRequest request, HttpServletResponse response) {
+			@RequestParam(value = "description", required = false) String description,
+			HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		JsonResult<Device> js = new JsonResult<Device>();
 		Device d = new Device();
-		List<DeviceGroup> deviceGroup = new ArrayList<DeviceGroup>();
+		//List<DeviceGroup> deviceGroup = new ArrayList<DeviceGroup>();
 		DeviceGroupItem dg = new DeviceGroupItem();
 		dg.setDeviceId(deviceId);
 		if(flag == 1){
 			js.setMessage("启用失败!");
+			d.setLockTime(null);
+			d.setDescription(null);
 			d.setFlag(0);
-		}else{
+		}else if(flag ==0){
+			String desc = URLDecoder.decode(description,"utf-8"); 
 			js.setMessage("停用失败!");
+			d.setLockTime(new Date());
+			d.setDescription(desc);
 			d.setFlag(1);
+		}else if(flag == 2){
+			String desc = URLDecoder.decode(description,"utf-8"); 
+			js.setMessage("删除失败!");
+			d.setDescription(desc);
+			d.setDelTime(new Date());
+			d.setFlag(2);
+		}else if(flag == 3){
+			js.setMessage("恢复失败!");
+			d.setDelTime(null);
+			d.setDescription(null);
+			d.setFlag(0);
 		}
 		js.setCode(1);
 		d.setId(deviceId);
 		try{
+			deviceService.stopOrStartDeviceById(d);
+			js.setCode(0);
 			if(flag == 1){
-				deviceService.stopOrStartDeviceById(d);
 				js.setMessage("启用成功!");
-				js.setCode(0);
+			}else if(flag == 0){ 
+				js.setMessage("停用成功!"); 
+			}else if(flag == 2){
+				js.setMessage("删除成功!"); 
 			}else{
-				deviceGroup = deviceService.getExistGroupByDeviceId(dg);
-				if(deviceGroup.size() == 0){
-					deviceService.stopOrStartDeviceById(d);
-					js.setMessage("停用成功!");
-					js.setCode(0);
-				}else{
-					js.setMessage("该设备属于其他分组成员，不能停用!");
-				}
-			}
+				js.setMessage("恢复成功!"); 
+			} 
 		}catch(Exception e){
 			e.printStackTrace();
 		}
