@@ -88,10 +88,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="yw-lump-title">
 				<i  id="i_back"  class="yw-icon icon-back" onclick="javascript:history.back();"></i><span>设备：${Device.pointName }
 				<c:if test="${Device.flag == 1 }">
-					(已停用)
+					<span style="color:red">(已停用)</span>
 				</c:if>
 				<c:if test="${Device.flag == 2 }">
-					(已移除)
+					<span style="color:red">(已移除)</span>
 				</c:if>
 				</span> 
 			</div>

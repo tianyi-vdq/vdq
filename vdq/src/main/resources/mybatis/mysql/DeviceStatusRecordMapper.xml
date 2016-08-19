@@ -20,12 +20,13 @@
     <result column="record_time" property="recordTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="point_id" property="pointId" jdbcType="VARCHAR" />
+    <result column="shot_url" property="shotUrl" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
      ds.id,  ds.device_id,  ds.network_status,  ds.stream_status,  ds.noise_status,  ds.sign_status,  ds.color_status, 
      ds.frame_frozen_status,  ds.frame_shade_status,  ds.frame_fuzzy_status,  ds.frame_displaced_status, 
      ds.frame_strip_status,  ds.frame_colorcase_status,  ds.light_exception_status,  ds.black_screen_status, 
-     ds.record_time,  ds.create_time
+     ds.record_time,  ds.create_time,ds.shot_url
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -50,14 +51,14 @@
       frame_fuzzy_status, frame_displaced_status, 
       frame_strip_status, frame_colorcase_status, 
       light_exception_status, black_screen_status, 
-      record_time, create_time)
+      record_time, create_time,shot_url)
     values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=INTEGER}, #{networkStatus,jdbcType=INTEGER}, 
       #{streamStatus,jdbcType=INTEGER}, #{noiseStatus,jdbcType=INTEGER}, #{signStatus,jdbcType=INTEGER}, 
       #{colorStatus,jdbcType=INTEGER}, #{frameFrozenStatus,jdbcType=INTEGER}, #{frameShadeStatus,jdbcType=INTEGER}, 
       #{frameFuzzyStatus,jdbcType=INTEGER}, #{frameDisplacedStatus,jdbcType=INTEGER}, 
       #{frameStripStatus,jdbcType=INTEGER}, #{frameColorcaseStatus,jdbcType=INTEGER}, 
       #{lightExceptionStatus,jdbcType=INTEGER}, #{blackScreenStatus,jdbcType=INTEGER}, 
-      #{recordTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+      #{recordTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},#{shotUrl,jdbcType=VARCHAR})
   </insert>
   <insert id="insert" parameterType="com.tianyi.yw.model.DeviceStatusRecord" >
     insert into t_device_status_record (id, device_id, network_status, 
@@ -66,14 +67,14 @@
       frame_fuzzy_status, frame_displaced_status, 
       frame_strip_status, frame_colorcase_status, 
       light_exception_status, black_screen_status, 
-      record_time, create_time)
+      record_time, create_time,shot_url)
     values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=INTEGER}, #{networkStatus,jdbcType=INTEGER}, 
       #{streamStatus,jdbcType=INTEGER}, #{noiseStatus,jdbcType=INTEGER}, #{signStatus,jdbcType=INTEGER}, 
       #{colorStatus,jdbcType=INTEGER}, #{frameFrozenStatus,jdbcType=INTEGER}, #{frameShadeStatus,jdbcType=INTEGER}, 
       #{frameFuzzyStatus,jdbcType=INTEGER}, #{frameDisplacedStatus,jdbcType=INTEGER}, 
       #{frameStripStatus,jdbcType=INTEGER}, #{frameColorcaseStatus,jdbcType=INTEGER}, 
       #{lightExceptionStatus,jdbcType=INTEGER}, #{blackScreenStatus,jdbcType=INTEGER}, 
-      #{recordTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+      #{recordTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},#{shotUrl,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tianyi.yw.model.DeviceStatusRecord" >
     insert into t_device_status_record
@@ -129,6 +130,9 @@
       <if test="createTime != null" >
         create_time,
       </if>
+      <if test="shotUrl != null" >
+        shot_url,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -181,6 +185,9 @@
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shotUrl != null" >
+        #{shotUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -235,6 +242,9 @@
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="shotUrl != null" >
+        shot_url = #{shotUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -255,7 +265,8 @@
       light_exception_status = #{lightExceptionStatus,jdbcType=INTEGER},
       black_screen_status = #{blackScreenStatus,jdbcType=INTEGER},
       record_time = #{recordTime,jdbcType=TIMESTAMP},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      create_time = #{createTime,jdbcType=TIMESTAMP}, 
+      shot_url = #{shotUrl,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
@@ -338,37 +349,37 @@
       )
   </if>
   <if test="searchExceptionId != null and searchExceptionId == 2">
-  		and ds.sign_status = #{searchExceptionId,jdbcType=INTEGER}
+  		and ds.sign_status = 1
   </if>
   <if test="searchExceptionId != null and searchExceptionId == 3">
-  		and ds.frame_frozen_status = #{searchExceptionId,jdbcType=INTEGER}
+  		and ds.frame_frozen_status = 1
   </if>
   <if test="searchExceptionId != null and searchExceptionId == 4">
-  		and ds.color_status = #{searchExceptionId,jdbcType=INTEGER}
+  		and ds.color_status = 1
   </if>
   <if test="searchExceptionId != null and searchExceptionId == 5">
-  		and ds.noise_status = #{searchExceptionId,jdbcType=INTEGER}
+  		and ds.noise_status = 1
   </if>
   <if test="searchExceptionId != null and searchExceptionId == 6">
-  		and ds.frame_shade_status = #{searchExceptionId,jdbcType=INTEGER}
+  		and ds.frame_shade_status = 1
   </if>
   <if test="searchExceptionId != null and searchExceptionId == 7">
-  		and ds.frame_fuzzy_status = #{searchExceptionId,jdbcType=INTEGER}
+  		and ds.frame_fuzzy_status = 1
   </if>
   <if test="searchExceptionId != null and searchExceptionId == 8">
-  		and ds.frame_displaced_status = #{searchExceptionId,jdbcType=INTEGER}
+  		and ds.frame_displaced_status = 1
   </if>
   <if test="searchExceptionId != null and searchExceptionId == 9">
-  		and ds.frame_strip_status = #{searchExceptionId,jdbcType=INTEGER}
+  		and ds.frame_strip_status = 1
   </if>
   <if test="searchExceptionId != null and searchExceptionId == 10">
-  		and ds.frame_colorcase_status = #{searchExceptionId,jdbcType=INTEGER}
+  		and ds.frame_colorcase_status = 1
   </if>
   <if test="searchExceptionId != null and searchExceptionId == 11">
-  		and ds.light_exception_status = #{searchExceptionId,jdbcType=INTEGER}
+  		and ds.light_exception_status = 1
   </if>
   <if test="searchExceptionId != null and searchExceptionId == 14">
-  		and ds.black_screen_status = #{searchExceptionId,jdbcType=INTEGER}
+  		and ds.black_screen_status = 1
   </if> 
   </sql>
     <select id="getDeviceStatusRecordCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.DeviceStatusRecord">

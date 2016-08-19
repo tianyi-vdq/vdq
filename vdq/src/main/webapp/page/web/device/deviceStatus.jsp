@@ -1,6 +1,6 @@
 <%@ page language="java" import="java.util.*" contentType="text/html;charset=utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%
+<%  
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
@@ -31,10 +31,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			if(hid_searchStatusId!=""){
 				$("#statusId").combobox("setValue",hid_searchStatusId);
 			}
-			/* var hid_searchExceptionId = $("#hid_searchExceptionId").val();
+			var hid_searchExceptionId = $("#hid_searchExceptionId").val();
 			if(hid_searchExceptionId!=""){
 				$("#exceptionstatusId").combobox("setValue",hid_searchExceptionId);
-			} */
+			}
 		});
 		
 		
@@ -87,6 +87,40 @@ function loadExceptionInfo(){
 			//showProcess(false); 
             //window.location.href="<%=basePath %>fileUpload/downExceptionfile.do";
         }
+        var oldRowNumber = "";
+        function showDetails(rowNumber){
+        	if(oldRowNumber.length == 0||oldRowNumber.length == undefined){ 
+        		$("#hid_tr_"+rowNumber).removeAttr("class");
+        		oldRowNumber = rowNumber;
+        	}else{
+        		if(oldRowNumber == rowNumber){
+	        		if($("#hid_tr_"+rowNumber).hasClass("displaynone")){
+	        			$("#hid_tr_"+rowNumber).removeAttr("class");  
+	        		}else{ 
+	        			$("#hid_tr_"+rowNumber).attr("class","displaynone");     
+	        		}
+				}else{ 
+	        		$("#hid_tr_"+oldRowNumber).attr("class","displaynone");   
+	        		$("#hid_tr_"+rowNumber).removeAttr("class");  
+		        	$("#btn_showDetails_"+oldRowNumber).removeAttr("class");  
+			        $("#btn_collspanDetails_"+oldRowNumber).attr("class","displaynone");  
+        			oldRowNumber = rowNumber;
+				}
+        	} 
+	        $("#btn_showDetails_"+oldRowNumber).attr("class","displaynone");  
+        	$("#btn_collspanDetails_"+rowNumber).removeAttr("class"); 
+        } 
+        function collspanDetails(rowNumber){
+        	$("#btn_showDetails_"+rowNumber).removeAttr("class");  
+	        $("#btn_collspanDetails_"+rowNumber).attr("class","displaynone");     
+	        $("#hid_tr_"+rowNumber).attr("class","displaynone");  
+        }
+        
+function showDialog(obj){ 
+	$("#bigShotPic").attr("src",obj.src);	
+	var wz = getDialogPosition($('#picWindow').get(0),150);
+	$('#picWindow').window('open');
+}
 </script>
   </head>  
  <body>
@@ -112,7 +146,7 @@ function loadExceptionInfo(){
 					<option value="3">正常</option>	
 					<!-- <option value="4">失败</option>	 -->			        							
 			</select>		
-			<%-- <span>诊断状态：</span>
+			 <span>诊断状态：</span>
 		<input type="hidden" name="searchExceptionId" id="hid_searchExceptionId" value="${DeviceStatus.searchExceptionId}" />
 		  <select class="easyui-combobox"  id="exceptionstatusId" style="width:180px;height:32px;" data-options="editable:false,onSelect:function(record){$('#hid_searchExceptionId').val(record.value);}">
 			    <option value="" >请选择诊断状态</option>	             	
@@ -127,7 +161,7 @@ function loadExceptionInfo(){
 				<option value="10">画面偏色</option>	  
 				<option value="11">亮度异常</option>	   
 				<option value="14">黑屏</option>	       							
-		</select>	 --%>
+		</select>	 
 			 <span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span> 
 		</div>			
 			 <div class="fr"> 
@@ -145,8 +179,8 @@ function loadExceptionInfo(){
 		<tr style="background-color:#D6D3D3;font-weight: bold;">
 			<th width="4%" style="display:none">&nbsp;</th>
 			<th>设备编号</th>
-			<th width="8%">网络连接状态</th>
-			<th>拉流</th>
+			<!-- <th width="8%">网络连接状态</th> -->
+			<th width="8%">拉流</th>
 			<th>雪花噪音</th>
 			<th>信号缺失</th> 
 			<th>色彩丢失</th>
@@ -159,18 +193,19 @@ function loadExceptionInfo(){
 			<th>亮度异常</th> 
 			<th>黑屏</th>
 			<th width="12%">诊断时间</th>
+			<th width="8%">操作</th>
 		</tr>
 		<c:forEach var="item" items="${DeviceStatuslist}">
 		<tr> 
 			<td align="center" style="display:none">${item.id}</td>
 			<td>${item.pointId}</td>                          
-			<td>
+			<%-- <td>
 			<c:if test="${item.networkStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			<c:if test="${item.networkStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
 			<c:if test="${item.networkStatus==2}"><img src="${pageContext.request.contextPath}/source/images/warming.png"/></c:if>
 			<c:if test="${item.networkStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.networkStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
-			</td>
+			</td> --%>
 			<td> 
 			<c:if test="${item.streamStatus==null}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			<c:if test="${item.streamStatus==1}"><img src="${pageContext.request.contextPath}/source/images/exception.png"/></c:if>
@@ -255,16 +290,56 @@ function loadExceptionInfo(){
 			<c:if test="${item.blackScreenStatus==3}"><img src="${pageContext.request.contextPath}/source/images/good.png"/></c:if>
 			<c:if test="${item.blackScreenStatus==4}"><img src="${pageContext.request.contextPath}/source/images/fail.png"/></c:if>
 			</td>
-			<td>
+			<td> 
 				${item.recordTimes}
 			</td>
+			<td>  
+				<a id="btn_showDetails_${item.id }" style="color:blue" onclick="showDetails('${item.id }');">▲ 展开详情</a>
+				<a id="btn_collspanDetails_${item.id }" style="color:red;" class="displaynone"  onclick="collspanDetails('${item.id }');">▲ 收起</a>
+			</td> 
 		</tr>
+		<tr id="hid_tr_${item.id }" height="250px" class="displaynone">  
+			<td colspan="15"> 
+				<table style="width:100%;heigth:100%;border:0px;overflow:hidden">
+					<tr> 
+						<td width="305"  style="border-bottom:0px"> 
+							<img alt="视频截图" src="<%=basePath %>${item.shotUrl }" width="400" height="249" onclick="showDialog(this);" >  
+						</td>	
+						<td style="border-bottom:0px;text-align:left">
+							<p><span style="margin-left:30px;">点位编号:</span><span style="margin-left:30px;">${item.pointId }</span></p>
+							<p><span style="margin-left:30px;">所属机构:</span><span style="margin-left:30px;">${item.areaName }</span></p>  
+							<p><span style="margin-left:30px;">诊断时间:</span><span style="margin-left:30px;">${item.recordTimes}</span></p> 
+							<p><span style="margin-left:30px;">诊断结果:</span>  
+								<c:if test="${item.streamStatus==1}"><span style="margin-left:30px;">网络连接/拉流异常</span></c:if>  
+								<c:if test="${item.noiseStatus==1}"><span style="margin-left:30px;">雪花噪声</span></c:if>  
+								<c:if test="${item.signStatus==1}"><span style="margin-left:30px;">信号缺失</span></c:if> 
+								<c:if test="${item.colorStatus==1}"><span style="margin-left:30px;">色彩丢失</span></c:if>  
+								<c:if test="${item.frameFrozenStatus==1}"><span style="margin-left:30px;">画面冻结</span></c:if> 
+								<c:if test="${item.frameShadeStatus==1}"><span style="margin-left:30px;">画面遮挡</span></c:if> 
+								<c:if test="${item.frameFuzzyStatus==1}"><span style="margin-left:30px;">画面模糊</span></c:if> 
+								<c:if test="${item.frameDisplacedStatus==1}"><span style="margin-left:30px;">画面移位</span></c:if> 
+								<c:if test="${item.frameColorcaseStatus==1}"><span style="margin-left:30px;">画面偏色</span></c:if> 
+								<c:if test="${item.frameStripStatus==1}"><span style="margin-left:30px;">画面彩条</span></c:if> 
+								<c:if test="${item.lightExceptionStatus==1}"><span style="margin-left:30px;">亮度异常</span></c:if> 
+								<c:if test="${item.blackScreenStatus==1}"><span style="margin-left:30px;">黑屏</span></c:if> 
+							</p> 
+						</td>  
+					</tr>   
+				</table>
+			</td> 
+		</tr> 
 		</c:forEach>
-	</table>
-	
+	</table>  
+	 
 		<div class="page" id="pager"></div> 
-</div>	 
-</div>
-		
+</div>	  
+</div>  
+				 
+	<div id="picWindow" class="easyui-window" title="视频截图" style="width:900px;height:700px;overflow:hidden;padding:10px;text-align:center;" iconCls="icon-info" closed="true" modal="true"   resizable="true" collapsible="false" minimizable="false" maximizable="true">
+		 <img alt="视频截图" id="bigShotPic" width="100%" height="92%">
+        <div class="yw-window-footer txt-right"> 
+        	<span class="yw-window-btn bg-blue mt12" onclick="$('#picWindow').window('close');">关闭</span>
+        </div> 
+	</div>
   </body>
 </html>

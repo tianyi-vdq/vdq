@@ -38,6 +38,8 @@ public class DeviceStatusRecord extends Page{
     private Date recordTime;
 
     private Date createTime;
+
+    private String shotUrl;
     
     private Integer searchStatusId;
  
@@ -56,6 +58,8 @@ public class DeviceStatusRecord extends Page{
 	private String recordTimes;
     
     private String searchPointNumber;
+    
+    private String areaName;
 
     public Integer getId() {
         return id;
@@ -223,5 +227,21 @@ public class DeviceStatusRecord extends Page{
 
 	public void setSearchExceptionId(Integer searchExceptionId) {
 		this.searchExceptionId = searchExceptionId;
+	}
+
+	public String getShotUrl() {
+		return shotUrl;
+	}
+
+	public void setShotUrl(String shotUrl) {
+		this.shotUrl = shotUrl;
+	}
+
+	public String getAreaName() {
+		return areaName;
+	}
+
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
 	}
 }

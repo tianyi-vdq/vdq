@@ -248,7 +248,7 @@ function changeStatusAction(){
         </p> 
         <div class="yw-window-footer txt-right">
         	<span id="btnCancel" class="yw-window-btn bg-lightgray mt12"  onclick="$('#changeCase').val('');$('#descriptionWindow').window('close');">取消</span>
-        	<span class="yw-window-btn bg-blue mt12" onclick="changeStatusAction(this);">保存</span>
+        	<span class="yw-window-btn bg-blue mt12" onclick="changeStatusAction(this);">确定</span>
         </div> 
 	</div>
   </body>

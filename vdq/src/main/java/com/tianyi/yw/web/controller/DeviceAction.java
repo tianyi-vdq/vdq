@@ -61,6 +61,12 @@ public class DeviceAction  extends BaseAction{
 		device.setPageSize(Constants.DEFAULT_PAGE_SIZE);  
 		List<Device> devicelist = new ArrayList<Device>();
 		int totalCount =  0;
+		if(StringUtil.isEmpty(device.getStartTime())){
+			device.setStartTime(null);
+		}		
+		if(StringUtil.isEmpty(device.getEndTime())){
+			device.setEndTime(null);
+		}
 		try{
 			//去t_device取满足要求的数据
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 小写的mm表示的是分钟  
@@ -70,7 +76,7 @@ public class DeviceAction  extends BaseAction{
 					d.setLockTimes(sdf.format(d.getLockTime()));
 				}else if(d.getFlag() == 2){
 					d.setDelTimes(sdf.format(d.getDelTime()));
-				}
+				} 
 			}
 			//t_device的记录数
 			totalCount = deviceService.getDeviceCount(device);
@@ -118,7 +124,8 @@ public class DeviceAction  extends BaseAction{
 		try{			
 			deviceStatuslist =  deviceService.getDeviceStatusList(deviceStatus);
 			for(DeviceStatus ds :deviceStatuslist){
-				ds.setRecordTimes(sdf.format(ds.getRecordTime()));
+				ds.setRecordTimes(sdf.format(ds.getRecordTime())); 
+				ds.setAreaName(ds.getPointId().substring(0, 3));
 			}
 			totalCount = deviceService.getDeviceStatusCount(deviceStatus); 
 		}catch(Exception ex){ 

@@ -40,7 +40,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					});
 				}
 			}); */
-			  
+			var stTIme = $("#hid_sch_stTime").val();
+			if(stTIme != "" && stTIme.length >0){
+				$("#sch_stTime").datebox("setValue",stTIme);
+			}
+			var edTIme = $("#hid_sch_edTime").val();
+			if(edTIme != "" && edTIme.length >0){
+				$("#sch_edTime").datebox("setValue",edTIme);
+			}
 		});
 		
 PageClick = function(pageclickednumber) {
@@ -58,7 +65,12 @@ function search(){
 	$("#pageNumber").val("1");
 	pagesearch();
 }
-
+function resetSearch(){
+	$("#hid_sch_stTime").val("");
+	$("#hid_sch_edTime").val("");
+	$("#sch_stTime").datebox("setValue","");
+	$("#sch_edTime").datebox("setValue","");
+}
 function pagesearch(){
 	if ($('#DeviceForm').form('validate')) {
 		DeviceForm.submit();
@@ -105,9 +117,16 @@ function stopOrStartDevice(id,flag){
 					<div class="fl">
 						<span class="ml26">设备信息</span> 
 						<input type="text" name="searchName"   validType="SpecialWord" class="easyui-validatebox" 
-							placeholder="搜索" value="${Device.searchName}" /> 
-						<input type="hidden" name="flag" value="1"/> 
-						<span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>
+							placeholder="搜索" value="${Device.searchName}" />  
+						<input type="hidden" name="flag" value="1"/>  
+						<span class="ml26">开始时间:</span> 
+						<input type="hidden" name="startTime" id="hid_sch_stTime" value="${Device.startTime}" /> 
+						<input id="sch_stTime" class="easyui-datebox" type="text" style="width:254px;height:32px"  data-options="editable:false,onSelect:function(date){$('#hid_sch_stTime').val($('#sch_stTime').datebox('getValue'))}"  />
+						
+						<span class="ml26">结束时间:</span> 
+						<input type="hidden" name="endTime" id="hid_sch_edTime" value="${Device.endTime}" /> 
+						<input id="sch_edTime"  class="easyui-datebox" type="text" style="width:254px;height:32px"  data-options="editable:false,onSelect:function(date){$('#hid_sch_edTime').val($('#sch_edTime').datebox('getValue'));}"  />
+						<span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span><span class="yw-btn bg-red ml30 cur" onclick="resetSearch();">重置</span>
 					</div> 
 					<div class="cl"></div>
 				</div>
@@ -155,7 +174,7 @@ function stopOrStartDevice(id,flag){
 							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.lockTimes}</td> 
 							<td onclick="window.location.href='<%=basePath%>device/deviceInfo.do?pointId=${item.id}'">${item.description}</td> 
 							<td>
-								<a href="javascript:void(0);" onclick="stopOrStartDevice(${item.id},${item.flag});" style="color:blue">启用设备</a> 
+								<a href="javascript:void(0);" onclick="stopOrStartDevice(${item.id},${item.flag});" style="color:blue">启用</a> 
 							</td> 
 						</tr>
 					</c:forEach>

@@ -57,6 +57,10 @@ public class Device extends Page {
    private String lockTimes;
    
    private String description;
+   
+   private String startTime;
+   
+   private String endTime;
     
     public Date getDelTime() {
 	return delTime;
@@ -264,6 +268,22 @@ public void setLockTimes(String lockTimes) {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
 	}
 
 

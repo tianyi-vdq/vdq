@@ -306,3 +306,4 @@
 .yw-upload-file{position:absolute;left:-25px;top:-29px;width:122px;height:36px;border:1px solid #ddd;z-index:999;filter:Alpha(Opacity = 0);-moz-opacity: 0;opacity:0;cursor:pointer;}
 .yw-fault-list-excel{position:absolute;top:20px;right:226px;}
 .yw-grgz-textarea{width:320px;height:90px;padding:4px;font-size:13px;}
+.displaynone{display:none;}

@@ -100,7 +100,7 @@ function fillAreaList(lst){
 	for(var i = 0; i<lst.length;i++){
 		html += "<tr ondblclick=window.location.href='areainfo.do?areaId='+"+lst[i].id+">";
 		html += "<td style='display:none'>"+lst[i].id+"</td><td align='left'  onclick=window.location.href='areainfo.do?areaId="+lst[i].id+"'  >"+lst[i].name+"</td><td  align='left'   onclick=window.location.href='areainfo.do?areaId="+lst[i].id+"'  >"+lst[i].parentName+"</td>";
-		html += "<td   onclick=window.location.href='areainfo.do?areaId="+lst[i].id+"' >"+lst[i].creatTime+"</td><td><span class='yw-btn bg-orange cur' onclick='deleteAreaById("+lst[i].id+");'>×</span></td>";
+		html += "<td   onclick=window.location.href='areainfo.do?areaId="+lst[i].id+"' >"+lst[i].creatTime+"</td><td><a style='color:blue' onclick='deleteAreaById("+lst[i].id+");'>删除</a></td>";
 		html += "</tr>";
 	}
 	html += "</tbody>";
@@ -111,7 +111,7 @@ PageClick = function(pageclickednumber) {
 	    pagenumber:pageclickednumber,                 /* 表示启示页 */
 	    pagecount:'${area.pageCount}',                  /* 表示最大页数pagecount */
 	    buttonClickCallback:PageClick                 /* 表示点击页数时的调用的方法就可实现javascript分页功能 */            
-	});
+	}); 
 	
 	$("#pageNumber").val(pageclickednumber);          /* 给pageNumber从新赋值 */
 	/* 执行Action */

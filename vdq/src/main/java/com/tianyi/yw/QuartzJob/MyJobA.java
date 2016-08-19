@@ -3,20 +3,10 @@ package com.tianyi.yw.QuartzJob;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
-
-
-
-
-
-
-
-import com.tianyi.yw.dao.DeviceDiagnosisMapper;
-import com.tianyi.yw.model.DeviceDiagnosis;
 import com.tianyi.yw.model.Task; 
 import com.tianyi.yw.model.TaskTime;
 import com.tianyi.yw.service.DignosisService;
