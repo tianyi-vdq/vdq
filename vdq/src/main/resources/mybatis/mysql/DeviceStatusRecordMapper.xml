@@ -36,8 +36,9 @@
   </select>
   <select id="selectByDeviceId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
-    <include refid="Base_Column_List" />
-    from t_device_status_record ds
+    <include refid="Base_Column_List" />,d.point_id as point_id
+    from t_device_status ds
+    left join t_device  d on ds.device_id = d.id
     where ds.device_id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >

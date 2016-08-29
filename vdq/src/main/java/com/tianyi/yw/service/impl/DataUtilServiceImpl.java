@@ -132,7 +132,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 						js.setList(dglist);
 					}
 				} catch (Exception ex) {
-					logService.writeLog(5, "服务器分配任务出错！", ex.getMessage());
+					logService.writeLog(5, "服务器分配任务出错！", "");
 					ex.printStackTrace();
 				}
 			//}
@@ -218,7 +218,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 								} catch (Exception e) {
 									e.printStackTrace();
 									logService.writeLog(1, "任务发送服务器出错！",
-											e.getMessage());
+											"");
 								}
 							}
 							for (DeviceDiagnosis d : list) {
@@ -229,7 +229,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 						}
 					}
 				} catch (Exception ex) {
-					logService.writeLog(5, "服务器分配任务出错！", ex.getMessage());
+					logService.writeLog(5, "服务器分配任务出错！", "");
 					ex.printStackTrace();
 				}
 			}
@@ -298,7 +298,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 			}
 			isOk = true;
 		} catch (Exception ex) {
-			logService.writeLog(logType, "推送MQ消息到服务器出错！", ex.getMessage());
+			logService.writeLog(logType, "推送MQ消息到服务器出错！");
 			//ex.printStackTrace();
 		}
 		return isOk;
@@ -309,7 +309,15 @@ public class DataUtilServiceImpl implements DataUtilService {
 		// TODO Auto-generated method stub
 		DeviceStatus ds =  deviceStatusMapper.selectByDeviceId(deviceId); 
 		if(ds!= null){
-			ds.setId(0);
+			ds.setId(0); 
+			if(StringUtil.isEmpty(ds.getShotUrl())){
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+				Date date = new Date();
+				String dateStr = sdf.format(date);
+				String fileName = dateStr+"_"+ds.getPointId();
+				String filePath = "source/caputrue/a/"+dateStr+"/"+fileName+".bmp";
+				ds.setShotUrl(filePath);
+			}
 			deviceStatusRecordMapper.insertRecord(ds);
 		}
 	}
@@ -390,7 +398,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 			isSuccess = true;
 		} catch (AmqpException ex) {
 			// TODO Auto-generated catch block
-			logService.writeLog(5, "推送异常信息到易维ＭＱ服务错误！", ex.getMessage());
+			logService.writeLog(5, "推送异常信息到易维ＭＱ服务错误！", "");
 			//ex.printStackTrace();
 		}
 		return isSuccess;
@@ -401,6 +409,14 @@ public class DataUtilServiceImpl implements DataUtilService {
 		DeviceStatus ds = new DeviceStatus();
 		ds = deviceStatusMapper.selectByDeviceId(deviceId);
 		if(ds != null){ 
+			if(StringUtil.isEmpty(ds.getShotUrl())){
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+				Date date = new Date();
+				String dateStr = sdf.format(date);
+				String fileName = dateStr+"_"+ds.getPointId();
+				String filePath = "source/caputrue/a/"+dateStr+"/"+fileName+".bmp";
+				ds.setShotUrl(filePath);
+			}
 			if(score.equals(ConstantsResult.CHECK_RESULT_OK)||score.equals(ConstantsResult.CHECK_RESULT_SUCCESS)){
 				ds.setNetworkStatus(ConstantsResult.CHECK_RESULT_STATUS_OK); 
 				ds.setStreamStatus(ConstantsResult.CHECK_RESULT_STATUS_OK);
@@ -466,6 +482,16 @@ public class DataUtilServiceImpl implements DataUtilService {
 			deviceStatusMapper.updateByPrimaryKeySelective(ds);
 		}else{
 			ds = new DeviceStatus();
+			Device d = deviceMapper.selectByPrimaryKey(deviceId);
+			if(d!= null){
+				ds.setPointId(d.getPointId());
+			}
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			Date date = new Date();
+			String dateStr = sdf.format(date);
+			String fileName = dateStr+"_"+ds.getPointId();
+			String filePath = "source/caputrue/a/"+dateStr+"/"+fileName+".bmp";
+			ds.setShotUrl(filePath);
 			ds.setId(0);
 			ds.setDeviceId(deviceId); 
 			ds.setRecordTime(new Date());

@@ -42,8 +42,9 @@
   </delete>
   <select id="selectByDeviceId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
-    <include refid="Base_Column_List" />
+    <include refid="Base_Column_List" />,d.point_id as point_id
     from t_device_status ds
+    left join t_device  d on ds.device_id = d.id
     where ds.device_id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteMultDataInit">
@@ -65,7 +66,7 @@
       color_status, frame_frozen_status, frame_shade_status, 
       frame_fuzzy_status, frame_displaced_status, 
       frame_strip_status, frame_colorcase_status, 
-      light_exception_status,black_screen_status, record_time, create_time
+      light_exception_status,black_screen_status, record_time, create_time,shot_url
       )
     values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=INTEGER}, #{networkStatus,jdbcType=INTEGER}, 
       #{streamStatus,jdbcType=INTEGER}, #{noiseStatus,jdbcType=INTEGER}, #{signStatus,jdbcType=INTEGER}, 
@@ -73,7 +74,7 @@
       #{frameFuzzyStatus,jdbcType=INTEGER}, #{frameDisplacedStatus,jdbcType=INTEGER}, 
       #{frameStripStatus,jdbcType=INTEGER}, #{frameColorcaseStatus,jdbcType=INTEGER}, 
       #{lightExceptionStatus,jdbcType=INTEGER},#{blackScreenStatus,jdbcType=INTEGER}, #{recordTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
-      ,#{shotUrl,jdbcType=VARCHAR}))
+      ,#{shotUrl,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tianyi.yw.model.DeviceStatus" >
     insert into t_device_status

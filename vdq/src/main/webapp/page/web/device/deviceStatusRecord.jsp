@@ -278,12 +278,12 @@ var oldRowNumber = "";
 			<td colspan="15">
 				<table style="width:100%;heigth:100%;border:0px;overflow:hidden">
 					<tr>
-						<td width="305"  style="border-bottom:0px"> 
+						<td width="305"  style="border-bottom:0px">  
 							<img alt="视频截图" src="<%=basePath %>${item.shotUrl }" width="400" height="249" onclick="showDialog(this);"  >  
 						</td>	
-						<td style="border-bottom:0px;text-align:left">
+						<td style="border-bottom:0px;text-align:left"> 
 							<p><span style="margin-left:30px;">点位编号:</span><span style="margin-left:30px;">${item.pointId }</span></p>
-							<p><span style="margin-left:30px;">所属机构:</span><span style="margin-left:30px;">${item.areaName }</span></p>  
+							<p><span style="margin-left:30px;">所属机构:</span><span style="margin-left:30px;">${item.pointId }</span></p>  
 							<p><span style="margin-left:30px;">诊断时间:</span><span style="margin-left:30px;">${item.recordTimes}</span></p> 
 							<p><span style="margin-left:30px;">诊断结果:</span>  
 								<c:if test="${item.streamStatus==1}"><span style="margin-left:30px;">网络连接/拉流异常</span></c:if>  
