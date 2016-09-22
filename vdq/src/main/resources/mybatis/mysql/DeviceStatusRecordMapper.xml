@@ -349,6 +349,9 @@
       ds.black_screen_status = #{searchStatusId,jdbcType=INTEGER} 
       )
   </if>
+   <if test="searchExceptionId != null and searchExceptionId == 1">
+  		and ds.stream_status = 1
+  </if>
   <if test="searchExceptionId != null and searchExceptionId == 2">
   		and ds.sign_status = 1
   </if>
@@ -382,9 +385,41 @@
   <if test="searchExceptionId != null and searchExceptionId == 14">
   		and ds.black_screen_status = 1
   </if> 
+  <if test="schBeginTime != null">
+    and   ds.create_time &gt;  #{schBeginTime,jdbcType=VARCHAR}
+  </if>
+  <if test="schEndTime != null">
+    and   ds.create_time &lt;  #{schEndTime,jdbcType=VARCHAR}
+  </if>
   </sql>
     <select id="getDeviceStatusRecordCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.DeviceStatusRecord">
   	 select count(*)
   	 <include refid="query_sql"/>
+  </select>
+  
+  <select id="getStatisticResultList"  resultType="com.tianyi.yw.model.StatisticResultModel" parameterType="com.tianyi.yw.model.StatisticResultModel">
+  	select DISTINCT d.point_id as deviceNumber,DATE_FORMAT(dsr.record_time,'%Y-%m-%d') as recordDate,
+		 CASE WHEN dsr.network_status = 3 and dsr.stream_status = 3 and dsr.noise_status =3 and dsr.black_screen_status = 3
+				and dsr.sign_status = 3 and dsr.color_status = 3 and dsr.frame_frozen_status = 3 
+				and dsr.frame_shade_status = 3 	and dsr.frame_fuzzy_status = 3 	and dsr.frame_displaced_status = 3 
+				and dsr.frame_strip_status = 3 	and dsr.frame_colorcase_status = 3 	and dsr.light_exception_status = 3 
+		 THEN 1
+			ELSE 0 END as resultValue
+		 from t_device_status_record dsr 
+		left join t_device d on dsr.device_id = d.id
+		where 1=1 
+		<if test="schBeginTime != null">
+			and  dsr.record_time BETWEEN #{schBeginTime,jdbcType=VARCHAR} and #{schEndTime,jdbcType=VARCHAR}
+		</if> 
+		<if test="deviceId != null">
+			and dsr.device_id = #{deviceId,jdbcType=INTEGER}
+		</if>
+		<if test="idList != null">
+			and dsr.device_id in 
+				<foreach item="item" index="index" collection="idList" open="(" separator="," close=")">  
+					#{item}
+				</foreach>
+		</if>
+					order by dsr.device_id , dsr.record_time;
   </select>
 </mapper>

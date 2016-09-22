@@ -16,5 +16,6 @@
      <mapping path="**/jsonSaveOrUpdate**" exclue="true" />
      <mapping path="**/dataUtil/**" exclue="true" />
      <mapping path="**/fileUpload/export**" exclue="true" />
+     <mapping path="**/statistic/export**" exclue="true" />
 </sitemesh>
     

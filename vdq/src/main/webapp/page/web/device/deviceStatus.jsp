@@ -150,6 +150,7 @@ function showDialog(obj){
 		<input type="hidden" name="searchExceptionId" id="hid_searchExceptionId" value="${DeviceStatus.searchExceptionId}" />
 		  <select class="easyui-combobox"  id="exceptionstatusId" style="width:180px;height:32px;" data-options="editable:false,onSelect:function(record){$('#hid_searchExceptionId').val(record.value);}">
 			    <option value="" >请选择诊断状态</option>	             	
+				<option value="1">网络连接/拉流</option>	              	
 				<option value="5">雪花噪声</option>	 
 				<option value="2">信号缺失</option>	 
 				<option value="4">色彩丢失</option>	  

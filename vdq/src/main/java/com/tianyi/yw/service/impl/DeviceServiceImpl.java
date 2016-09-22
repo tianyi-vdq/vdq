@@ -24,6 +24,7 @@ import com.tianyi.yw.model.DeviceStatus;
 import com.tianyi.yw.model.DeviceGroup;
 import com.tianyi.yw.model.DeviceGroupItem; 
 import com.tianyi.yw.model.DeviceStatusRecord;
+import com.tianyi.yw.model.StatisticResultModel;
 import com.tianyi.yw.service.DeviceService;
 
 @Service
@@ -52,6 +53,12 @@ public class DeviceServiceImpl implements DeviceService {
 	public int getDeviceStatusCount(DeviceStatus deviceStatus)
 	{
 		return deviceStatusMapper.getDeviceStatusCount(deviceStatus);
+	}
+
+	@Override
+	public List<Device> getDeviceListWithPage(Device device) {
+		// TODO Auto-generated method stub
+		return deviceMapper.getDeviceListWithPage(device);
 	}
 
 	@Override
@@ -228,6 +235,13 @@ public class DeviceServiceImpl implements DeviceService {
 	public int getDeviceStatusRecordCount(DeviceStatusRecord deviceStatusRecord) {
 		// TODO Auto-generated method stub
 		return deviceStatusRecordMapper.getDeviceStatusRecordCount(deviceStatusRecord);
+	}
+
+	@Override
+	public List<StatisticResultModel> getStatisticResultList(
+			StatisticResultModel statistic) {
+		// TODO Auto-generated method stub
+		return deviceStatusRecordMapper.getStatisticResultList(statistic);
 	}
 
 

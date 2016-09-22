@@ -1,5 +1,10 @@
 package com.tianyi.yw.service.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -16,6 +21,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
  
+
+
+
+
+
 
 
 
@@ -104,8 +114,8 @@ public class DataUtilServiceImpl implements DataUtilService {
 		List<DeviceDiagnosis> dglist = new ArrayList<DeviceDiagnosis>();
 		js.setCode(1);
 		js.setMessage("加载数据失败!");
-		Lock lock = new ReentrantLock();
-		lock.lock();
+//		Lock lock = new ReentrantLock();
+//		lock.lock();
 		try {
 			// dg.setCountSize(count); 
 			//if (count < Constants.DEFAULT_QUEUE_SIZE) {
@@ -125,7 +135,8 @@ public class DataUtilServiceImpl implements DataUtilService {
 							diagnosisService.updatebyselective(d);
 						}
 						for (DeviceDiagnosis d : dglist) { 
-							d.setCheckTime(null); 
+							d.setCheckTime(null);  
+							d.setEndTime(null);
 						} 
 						js.setCode(0);
 						js.setMessage("加载数据成功!");
@@ -137,7 +148,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 				}
 			//}
 		} finally {
-			lock.unlock();// 释放锁
+			//lock.unlock();// 释放锁
 		}
 		return js;
 	}
@@ -288,6 +299,44 @@ public class DataUtilServiceImpl implements DataUtilService {
 					dignosisMapper.updateByPrimaryKeySelective(deviceDis); 
 					updateDeviceStatus(deviceId,score);
 					updateDeviceStatusRecord(deviceId);
+					try{
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+						Date date = new Date();
+						String dateStr = sdf.format(date);
+						String fileName = dateStr+"_exception.log";
+						String filePath = "c:\\usr\\"+fileName;
+						File file = new File(filePath);
+						if(!file.exists()){
+							file.createNewFile();
+						}
+						String fileData = deviceDis.getEndTime()+"---"+deviceDis.getDeviceName()+"----"+deviceDis.getDeviceRtsp()+"\r\n";
+						byte contents[] = fileData.getBytes() ;
+						OutputStream out = null ;
+						try{
+							out = new FileOutputStream(file,true) ;
+						}
+						catch (FileNotFoundException e) 
+						{
+							e.printStackTrace();
+						}
+						try{ 
+							// 将byte数组写入到文件之中  
+							out.write(contents) ; 
+						}  
+						catch (IOException e1) 
+						{
+						    e1.printStackTrace();
+						}
+						try{
+							out.close() ;
+						} 
+						catch (IOException e2) 
+						{
+							e2.printStackTrace();
+						} 
+					}catch(Exception ex){
+						ex.printStackTrace();
+					}
 					//3次诊断诊断完成 , 结果异常, 则调用mq服务推送消息
 					if(pushMessageToMQ(deviceDis)){ 
 						logService.writeLog(logType, "诊断结果异常, 结果已推送到MQ服务！");
@@ -583,8 +632,7 @@ public class DataUtilServiceImpl implements DataUtilService {
 		lst = dignosisMapper.selectLatestDevice();
 		if(lst.size()>0){
 			for(DeviceDiagnosis dd : lst){
-				dd.setCheckResult(null);
-				dd.setCheckTimes(1);
+				dd.setCheckResult(null); 
 				dd.setCheckServerId(0);
 				dignosisMapper.updateByPrimaryKey(dd);
 			}

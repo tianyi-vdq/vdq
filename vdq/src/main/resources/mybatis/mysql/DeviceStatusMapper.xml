@@ -352,6 +352,9 @@
       ds.black_screen_status = #{searchStatusId,jdbcType=INTEGER} 
       )
   </if>
+   <if test="searchExceptionId != null and searchExceptionId == 1">
+  		and ds.stream_status = 1
+  </if>
    <if test="searchExceptionId != null and searchExceptionId == 2">
   		and ds.sign_status = 1
   </if>

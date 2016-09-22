@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.tianyi.yw.model.DeviceStatus;
 import com.tianyi.yw.model.DeviceStatusRecord;
+import com.tianyi.yw.model.StatisticResultModel;
 @MyBatisRepository
 public interface DeviceStatusRecordMapper {
     int deleteByPrimaryKey(Integer id);
@@ -26,4 +27,7 @@ public interface DeviceStatusRecordMapper {
 			DeviceStatusRecord deviceStatusRecord);
 
 	int getDeviceStatusRecordCount(DeviceStatusRecord deviceStatusRecord);
+
+	List<StatisticResultModel> getStatisticResultList(
+			StatisticResultModel statistic);
 }

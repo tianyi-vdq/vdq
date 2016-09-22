@@ -156,6 +156,17 @@ public class DeviceAction  extends BaseAction{
 			//String pointNumber = new String(deviceStatus.getSearchPointNumber().getBytes("iso8859-1"), "utf-8");
 			deviceStatusRecord.setSearchPointNumber(pointNumber);
 		}
+
+        if(StringUtil.isEmpty(deviceStatusRecord.getSchBeginTime())){
+        	deviceStatusRecord.setSchBeginTime(null);
+        }else{
+        	deviceStatusRecord.setSchBeginTime(deviceStatusRecord.getSchBeginTime()+" 00:00:00");
+        }
+        if(StringUtil.isEmpty(deviceStatusRecord.getSchEndTime())){
+        	deviceStatusRecord.setSchEndTime(null);
+        }else{
+        	deviceStatusRecord.setSchEndTime(deviceStatusRecord.getSchEndTime()+" 23:59:59");
+        }
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 小写的mm表示的是分钟  
 		if (deviceStatusRecord.getPageNo() == null)
 			deviceStatusRecord.setPageNo(1);

@@ -185,6 +185,7 @@
     <result column="flag" property="flag" jdbcType="INTEGER" />
     <result column="item_type_name" property="itemTypeName" jdbcType="VARCHAR" />
     <result column="item_type_id" property="itemTypeId" jdbcType="VARCHAR" />
+    <result column="task_run_status" property="runStatus" jdbcType="INTEGER" />
   </resultMap>
   <select id="getTaskById" resultMap="VMModelResultMap" parameterType="java.lang.Integer" >
     select <include refid="Base_Column_List" />, 
@@ -207,7 +208,8 @@
 		 left join t_task_item  ti on t1.id = ti.task_id
 		 left join t_task_item_type tt on ti.item_type_id = tt.id
 		where t.id = t1.id
-		) as item_type_id	
+		) as item_type_id,
+		( select count(dd.id) from t_device_diagnosis dd where dd.task_id = t.id ) as task_run_status	
 		<include refid="query_sql"/> 
 		order by t.id desc  
 		 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">

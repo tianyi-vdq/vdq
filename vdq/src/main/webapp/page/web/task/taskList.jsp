@@ -9,6 +9,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <head>
 <meta charset="utf-8">
 <title>任务管理</title>
+<meta http-equiv="refresh" content="3600">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, minimum-scale=1  ,maximum-scale=1, user-scalable=no" />
 <script
@@ -248,6 +249,7 @@ function StopTask(id){
 						 <th width="10%" >执行次数</th> 
 						<!-- <th width="8%" >诊断并发路数</th>  -->
 				 		<th style="text-align: left" >诊断项目</th>  
+						<th width="10%" >执行状态</th> 
 						<th width="15%">操作</th>					
 					<!--  	<th width="8%" >删除任务</th> -->
 					</tr>
@@ -259,7 +261,15 @@ function StopTask(id){
 							<%-- <td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.runIntervals}</td>  --%>
 							<td align="right" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.runTimes}</td>  
 					    	<%-- <td align="right" onclick="window.location.href='taskI nfo.do?id=${item.id}'" >${item.runCount}</td>   --%>						  
-							<td style="text-align: left" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.itemTypeName}</td>  							  
+							<td style="text-align: left" onclick="window.location.href='taskInfo.do?id=${item.id}'" >${item.itemTypeName}</td>  						  
+							<td style="text-align: center" onclick="window.location.href='taskInfo.do?id=${item.id}'" >
+								<c:if test="${item.runStatus > 0 }">
+									<span style="color:blue;margin-left:15px;"  >任务执行中......</span>
+								</c:if>								
+								<c:if test="${item.runStatus == 0 }">
+									<span style="color:blue;margin-left:15px;"  >已完成</span>
+								</c:if>
+							</td>  						  
 							<td align="left">							
 							<c:if test="${item.flag == 0 && Task.flagCount == 0}">
 						<%-- 	<input id="runTaskId" name="runTaskId" value="${item.id}" type="hidden" />		 --%>					

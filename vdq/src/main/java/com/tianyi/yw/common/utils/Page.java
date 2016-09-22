@@ -36,6 +36,12 @@ public class Page {
     private Integer pageEnd;
     
     private Integer roleUserId; 
+
+	private String schBeginTime;
+
+	private String schEndTime;
+	
+	private Integer searchMonthId;
     
 	public Integer getPageStart() {
 		if (pageNo != null && pageSize != null) {
@@ -109,6 +115,30 @@ public class Page {
 
 	public void setPageCount(Integer pageCount) {
 		this.pageCount = pageCount;
+	}
+
+	public String getSchBeginTime() {
+		return schBeginTime;
+	}
+
+	public void setSchBeginTime(String schBeginTime) {
+		this.schBeginTime = schBeginTime;
+	}
+
+	public String getSchEndTime() {
+		return schEndTime;
+	}
+
+	public void setSchEndTime(String schEndTime) {
+		this.schEndTime = schEndTime;
+	}
+
+	public Integer getSearchMonthId() {
+		return searchMonthId;
+	}
+
+	public void setSearchMonthId(Integer searchMonthId) {
+		this.searchMonthId = searchMonthId;
 	} 
 }
 

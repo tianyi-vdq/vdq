@@ -2048,12 +2048,12 @@
   border-color: #95B8E7;
 }
 .progressbar-text {
-  color: #000000;
+  color: #ffffff;
   font-size: 12px;
 }
 .progressbar-value .progressbar-text {
-  background-color: #ffe48d;
-  color: #000000;
+  background-color: #00A2CA;
+  color: #00A2CA;
 }
 .searchbox {
   display: inline-block;

@@ -253,6 +253,18 @@
         limit #{pageStart}, #{pageSize}
     </if>
   </select>
+  <select id="getDeviceListWithPage" resultMap="BaseResultMap" parameterType="com.tianyi.yw.model.Device">
+  	 select <include refid="Base_Column_List" />,a.name as area_name  
+  	 from t_device t left join t_area a on t.area_id = a.id
+  	 where 1=1 
+    <if test="flag != null">
+    	and  t.flag = #{flag,jdbcType=INTEGER}
+    </if>
+    order by t.id asc
+  	 <if test="pageStart != null and pageSize != null and pageStart>-1 and pageSize>-1">
+        limit #{pageStart}, #{pageSize}
+    </if>
+  </select>
   
   <select id="getDeviceCount" resultType="java.lang.Integer" parameterType="com.tianyi.yw.model.Device">
   	 select count(*)

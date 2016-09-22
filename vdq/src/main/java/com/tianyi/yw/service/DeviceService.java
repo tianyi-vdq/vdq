@@ -7,6 +7,7 @@ import com.tianyi.yw.model.DeviceGroup;
 import com.tianyi.yw.model.DeviceGroupItem;
 import com.tianyi.yw.model.DeviceStatus;
 import com.tianyi.yw.model.DeviceStatusRecord;
+import com.tianyi.yw.model.StatisticResultModel;
 
 public interface DeviceService {
 
@@ -15,6 +16,8 @@ public interface DeviceService {
 	int getDeviceStatusCount(DeviceStatus deviceStatus);
 
 	List<Device> getDeviceList(Device device);
+	
+	List<Device> getDeviceListWithPage(Device device);
 
 	List<Device> getExistDevicePoint(Device p);
 	
@@ -68,6 +71,10 @@ public interface DeviceService {
 			DeviceStatusRecord deviceStatusRecord);
 
 	int getDeviceStatusRecordCount(DeviceStatusRecord deviceStatusRecord);
+
+	List<StatisticResultModel> getStatisticResultList(
+			StatisticResultModel statistic);
+ 
 
 
 

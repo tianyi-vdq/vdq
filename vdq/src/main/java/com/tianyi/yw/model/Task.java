@@ -42,6 +42,8 @@ public class Task extends Page {
     private Date endTime;
     
     private String endTimes;
+    
+    private Integer runStatus;
      
     /**
      * 增加前台显示字段，诊断项目名称
@@ -220,6 +222,14 @@ public class Task extends Page {
 
 	public void setLastTimes(String lastTimes) {
 		this.lastTimes = lastTimes;
+	}
+
+	public Integer getRunStatus() {
+		return runStatus;
+	}
+
+	public void setRunStatus(Integer runStatus) {
+		this.runStatus = runStatus;
 	}
  
 }

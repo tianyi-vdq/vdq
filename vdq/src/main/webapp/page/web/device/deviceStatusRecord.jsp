@@ -10,8 +10,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <head>
     <base href="<%=basePath%>">
 <meta charset="utf-8">
-<title>设备诊断历史</title>
-<meta http-equiv="refresh" content="30">
+<title>设备诊断历史</title> 
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, minimum-scale=1  ,maximum-scale=1, user-scalable=no" />
 <script
@@ -35,6 +34,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			if(hid_searchExceptionId !=""){
 				$("#exceptionstatusId").combobox("setValue",hid_searchExceptionId);
 			} 
+			 var sch_stime = $("#hid_sch_starttime").val();
+            if($.trim(sch_stime).length>0){
+                $("#dbx_startTime").datebox("setValue",sch_stime);
+            }
+            var sch_etime = $("#hid_sch_endtime").val();
+            if($.trim(sch_etime).length>0){
+                $("#dbx_endTime").datebox("setValue",sch_etime);
+            }
 		});
 		
 		
@@ -66,6 +73,18 @@ function pagesearch(){
 		$("#hid_serarch").val(encodeURI($("#seaarchNameTemp").val()));
 		DeviceStatusForm.submit();
 	}  
+}
+function reset(){
+	$("#seaarchNameTemp").val("");
+	$("#statusId").combobox("setValue",""); 
+	$("#exceptionstatusId").combobox("setValue",""); 
+	$("#dbx_startTime").datebox("setValue",""); 
+	$("#dbx_endTime").datebox("setValue",""); 
+	$("#hid_serarch").val("");
+	$("#hid_searchStatusId").val("");
+	$("#hid_searchExceptionId").val("");
+	$("#hid_sch_starttime").val("");
+	$("#hid_sch_endtime").val("");
 }
 var oldRowNumber = "";
         function showDetails(rowNumber){
@@ -114,12 +133,12 @@ var oldRowNumber = "";
 				action="device/deivceStatusRecord.do" method="get">
 		<div class="pd10">
 		      <div class="fl">	 	
-				<span>设备编号：</span>	<input type="text" id="seaarchNameTemp" validType="SpecialWord" class="easyui-validatebox" value="${DeviceStatusRecord.searchPointNumber}"  /> 
+				<span>设备编号：</span>	<input type="text" id="seaarchNameTemp" validType="SpecialWord" style="width:80px;" class="easyui-validatebox" value="${DeviceStatusRecord.searchPointNumber}"  /> 
 				<input type="hidden" name="searchPointNumber" id="hid_serarch" /> 	 
 			  <span>设备状态：</span>
 			  <input type="hidden" name="searchStatusId" id="hid_searchStatusId" value="${DeviceStatusRecord.searchStatusId}" />
-			  <select class="easyui-combobox"  id="statusId" style="width:180px;height:32px;" data-options="editable:false,onSelect:function(record){$('#hid_searchStatusId').val(record.value);}">
-				    <option value="" >请选择设备状态</option>	             	
+			  <select class="easyui-combobox"  id="statusId" style="width:80px;height:32px;" data-options="editable:false,onSelect:function(record){$('#hid_searchStatusId').val(record.value);}">
+				    <option value="" >设备状态</option>	             	
 					<option value="1">异常</option>	
 					<!-- <option value="2">警告</option>	 -->
 					<option value="3">正常</option>	 	
@@ -127,13 +146,14 @@ var oldRowNumber = "";
 			</select>	 
 			 <span>诊断状态：</span>
 		<input type="hidden" name="searchExceptionId" id="hid_searchExceptionId" value="${DeviceStatusRecord.searchExceptionId}" />
-		  <select class="easyui-combobox"  id="exceptionstatusId" style="width:180px;height:32px;" data-options="editable:false,onSelect:function(record){$('#hid_searchExceptionId').val(record.value);}">
-			    <option value="" >请选择诊断状态</option>	             	
-				<option value="5">雪花噪声</option>	 
+		  <select class="easyui-combobox"  id="exceptionstatusId" style="width:120px;height:32px;" data-options="editable:false,onSelect:function(record){$('#hid_searchExceptionId').val(record.value);}">
+			    <option value="" >诊断状态</option>	              	
+				<option value="1">网络连接/拉流</option>	               	
+				<option value="5">雪花噪声</option>	  
 				<option value="2">信号缺失</option>	 
 				<option value="4">色彩丢失</option>	  
 				<option value="3">画面冻结</option>	   
-				<option value="6">画面遮挡</option>	  
+				<option value="6">画面遮挡</option>	   
 				<option value="7">画面模糊</option>	  
 				<option value="8">画面移位</option>	  
 				<option value="9">画面彩条</option>	  
@@ -141,7 +161,14 @@ var oldRowNumber = "";
 				<option value="11">亮度异常</option>	   
 				<option value="14">黑屏</option>	       							
 		</select> 	
+		<span>开始时间: </span>
+        <input id="hid_sch_starttime" type="hidden"  name="schBeginTime" value="${DeviceStatusRecord.schBeginTime}"  />
+        <input id="dbx_startTime"  style="width:100px;height:32px;" data-options="editable:false,onSelect:function(date){$('#hid_sch_starttime').val($('#dbx_startTime').datebox('getValue'));}" type="text"  class="easyui-datebox" />
+        <span>结束时间: </span>
+        <input id="hid_sch_endtime" type="hidden"  name="schEndTime"  value="${DeviceStatusRecord.schEndTime}"/>
+        <input id="dbx_endTime" style="width:100px;height:32px;" data-options="editable:false,onSelect:function(date){$('#hid_sch_endtime').val($('#dbx_endTime').datebox('getValue'));}" type="text"  class="easyui-datebox" />
 			 <span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span>
+			 <span class="yw-btn bg-red ml10 cur" onclick="reset();">清空</span> 
 		</div>			
 			 <div class="fr"></div>
 			 <div class="cl"></div>						

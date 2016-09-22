@@ -2,10 +2,15 @@
 package com.tianyi.yw; 
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import net.sf.json.JSONObject;
@@ -38,17 +43,44 @@ public class UnitTest {
 
 	private void test() {
 		// TODO Auto-generated method stub
-		String str = "点位视频诊断异常,详细:数据流捕获异常;";
-		if(!StringUtil.isEmpty(str)){
-			if(str.contains("数据流捕获异常")){
-				str = "数据流捕获异常";
-			}else if(str.contains("画面冻结异常") && str.contains("画面亮度异常")){
-				str = "前端点位无视频信号";
-			}else if(str.contains("色彩丢失异常") && str.contains("画面亮度异常")){
-				str = "前端点位无视频信号";
+		try{
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			Date date = new Date();
+			String dateStr = sdf.format(date);
+			String fileName = dateStr+"_exception.log";
+			String filePath = "c:\\usr\\"+fileName;
+			File file = new File(filePath);
+			if(!file.exists()){
+				file.createNewFile();
 			}
+			String fileData = "2016-09-01 12:54:23---009031----sssssssssssssssssssss";
+			byte contents[] = fileData.getBytes() ;
+			OutputStream out = null ;
+			try{
+				out = new FileOutputStream(file) ;
+			}
+			catch (FileNotFoundException e) 
+			{
+				e.printStackTrace();
+			}
+			try{ 
+				// 将byte数组写入到文件之中 
+			    out.write(contents) ; 
+			}  
+			catch (IOException e1) 
+			{
+			    e1.printStackTrace();
+			}
+			try{
+				out.close() ;
+			} 
+			catch (IOException e2) 
+			{
+				e2.printStackTrace();
+			} 
+		}catch(Exception ex){
+			ex.printStackTrace();
 		}
-		System.out.printf(str);
 	}
 
 	private void mqtest() {
