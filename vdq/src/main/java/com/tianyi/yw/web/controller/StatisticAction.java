@@ -398,41 +398,56 @@ public class StatisticAction  extends BaseAction{
 	        statistic.setSchEndTime(statistic.getSchEndTime()+" 23:59:59");
 		} 
 		device.setFlag(0);
+		int totalCount = deviceService.getDeviceCount(device);
 		List<StatisticResultModel> resultList = new ArrayList<StatisticResultModel>();
-	 
+		int PageCount = 0;
+		if(totalCount % Constants.DEFAULT_PAGE_SIZE ==0){
+			PageCount = totalCount / Constants.DEFAULT_PAGE_SIZE;
+		}else{
+			PageCount = totalCount / Constants.DEFAULT_PAGE_SIZE + 1 ; 
+		}
 		try{			
-			List<Device> dList = deviceService.getDeviceListWithPage(device);   
-			for(Device d : dList){
-				List<StatisticResultModel> statisticList = new ArrayList<StatisticResultModel>();
-				StatisticResultModel rl = new StatisticResultModel(); 
-				rl.setDeviceNumber(d.getPointId()); 
-				rl.setDateStrList(dateStrList1);
-				rl.setIpAddress(d.getIpAddress());
-				statistic.setDeviceId(d.getId());
-				statisticList =  deviceService.getStatisticResultList(statistic);
-				List<String> valueList = new ArrayList<String>();
-				for(String dtr : dateStrList1){
-					String resultStr = "";
-					for(int i=0;i<statisticList.size();i++){ 
-						String datr1 = statisticList.get(i).getRecordDate();
-						if(dtr.equals(datr1)){ 
-							resultStr = statisticList.get(i).getResultValue();
-							if(i<(statisticList.size()-1)){
-								String tempStr = statisticList.get(i+1).getRecordDate();
-								if(!dtr.equals(tempStr)){
-									break;
+			for(int p = 1; p<=PageCount;p++){
+				device.setPageNo(p);
+				device.setPageSize(Constants.DEFAULT_PAGE_SIZE);  
+				List<Device> dList = deviceService.getDeviceListWithPage(device);   
+				List<Integer> idList = new ArrayList<Integer>();
+				for(Device d : dList){
+					idList.add(d.getId());
+				}
+				for(Device d : dList){
+					List<StatisticResultModel> statisticList = new ArrayList<StatisticResultModel>();
+					StatisticResultModel rl = new StatisticResultModel(); 
+					rl.setDeviceNumber(d.getPointId()); 
+					rl.setDateStrList(dateStrList1);
+					rl.setIpAddress(d.getIpAddress());
+					//statistic.setDeviceId(d.getId());
+					statistic.setIdList(idList);
+					statisticList =  deviceService.getStatisticResultList(statistic);
+					List<String> valueList = new ArrayList<String>();
+					for(String dtr : dateStrList1){
+						String resultStr = "";
+						for(int i=0;i<statisticList.size();i++){ 
+							String datr1 = statisticList.get(i).getRecordDate();
+							if(dtr.equals(datr1)){ 
+								resultStr = statisticList.get(i).getResultValue();
+								if(i<(statisticList.size()-1)){
+									String tempStr = statisticList.get(i+1).getRecordDate();
+									if(!dtr.equals(tempStr)){
+										break;
+									}
 								}
 							}
 						}
+						if(resultStr.length() == 0){
+							resultStr = "2";
+						}
+						valueList.add(resultStr);
 					}
-					if(resultStr.length() == 0){
-						resultStr = "2";
-					}
-					valueList.add(resultStr);
-				}
-				rl.setValueList(valueList);
-				resultList.add(rl);
-			}  
+					rl.setValueList(valueList);
+					resultList.add(rl);
+				}  
+			}
 		}catch(Exception ex){ 
 			ex.printStackTrace();
 		}	
@@ -451,7 +466,7 @@ public class StatisticAction  extends BaseAction{
 	
 	            Row row0 = sheet.createRow(0);
 	            Cell cell0_0 = row0.createCell(0, Cell.CELL_TYPE_STRING);
-	            cell0_0.setCellValue("点位诊断信息(0: 表示诊断结果为异常 , 1: 表示诊断结果正常)");
+	            cell0_0.setCellValue("点位诊断信息(0: 表示诊断结果为异常 , 1: 表示诊断结果正常, 2: 表示没有诊断数据)");
 	            sheet.autoSizeColumn(0);
 	            
 
