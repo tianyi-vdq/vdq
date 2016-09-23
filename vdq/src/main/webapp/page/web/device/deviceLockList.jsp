@@ -98,6 +98,25 @@ function stopOrStartDevice(id,flag){
 	    }  
 	}); 
 } 
+function loadLockDeviceInfo(){
+	showProcess(true, '温馨提示', '正在导出数据...'); 
+       $.ajax({
+           url : "<%=basePath %>fileUpload/exportLockDeviceExcel.do",
+           type : "post",
+           dataType:"json", 
+           //async:false,
+           success : function(data) { 
+				showProcess(false); 
+               if(data.code == 0){
+                   $.messager.alert('获取信息', data.message, 'info',function() {
+                       window.location.href="<%=basePath %>fileUpload/downLockDevicefile.do";
+                   });
+               }else{
+                   $.messager.alert('操作信息', data.message, 'error');
+               }
+           }
+       });
+}
 </script>
   </head>
   
@@ -128,6 +147,9 @@ function stopOrStartDevice(id,flag){
 						<input id="sch_edTime"  class="easyui-datebox" type="text" style="width:254px;height:32px"  data-options="editable:false,onSelect:function(date){$('#hid_sch_edTime').val($('#sch_edTime').datebox('getValue'));}"  />
 						<span class="yw-btn bg-blue ml30 cur" onclick="search();">搜索</span><span class="yw-btn bg-red ml30 cur" onclick="resetSearch();">重置</span>
 					</div> 
+					 <div class="fr">
+					 	<span class="yw-btn bg-green ml20 cur" onclick="loadLockDeviceInfo();">导出Excel</span>  
+					 </div> 
 					<div class="cl"></div>
 				</div>
 

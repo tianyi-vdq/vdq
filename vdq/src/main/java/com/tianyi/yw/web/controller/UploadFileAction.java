@@ -387,6 +387,42 @@ public class UploadFileAction extends BaseAction {
             e.printStackTrace();
         }
 	}
+
+	/**
+	 * 下载停用设备导出列表
+	 * @param request
+	 * @param response
+	 * @param filepath
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/downLockDevicefile.do")
+	public void downLockDevicefile(HttpServletRequest request,
+			HttpServletResponse response) { 
+		try {
+			 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+             java.util.Date date = new java.util.Date();
+             String str = sdf.format(date);
+             String filename = str +"_LockDeviceInfo.xls";
+            String filePath = request.getSession().getServletContext().getRealPath("tempfile");
+            filePath += "/"+filename;
+            response.reset();
+            response.setContentType("APPLICATION/OCTET-STREAM; charset=UTF-8");
+            response.setHeader("Content-disposition", "attachment;filename=\""
+                    + new String(filename.getBytes("GB2312"), "ISO-8859-1")
+                    + "\"");
+
+            FileInputStream inStream = new FileInputStream(filePath);
+            byte[] b = new byte[100];
+            int len;
+            while ((len = inStream.read(b)) > 0) {
+                response.getOutputStream().write(b, 0, len);
+            }
+            inStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+	}
+	
 	/**
 	 * 下载导入模板
 	 * @param request
@@ -423,6 +459,148 @@ public class UploadFileAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	
+	/**
+	 * 下载导入模板
+	 * @param request
+	 * @param response
+	 * @param filepath
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/exportLockDeviceExcel.do")
+	public JsonResult<Device> exportLockDeviceExcel(HttpServletRequest request,
+			HttpServletResponse response) {
+		JsonResult<Device> js = new JsonResult<Device>();
+		js.setCode(new Integer(1));
+		js.setMessage("导出失败!");
+		List<Device> list = new ArrayList<Device>(); 
+		Device device = new Device();
+		device.setFlag(1);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 小写的mm表示的是分钟  
+		try { 
+			list = deviceService.getDeviceList(device);
+			for(Device ds :list){
+				if(ds.getLockTime()!=null){
+					ds.setLockTimes(sdf.format(ds.getLockTime()));
+				}
+			}
+			if(list.size()>0){
+				String filePath = createLockDevicePoint(list);
+				if(!StringUtil.isEmpty(filePath)){
+					js.setCode(0);
+					js.setGotoUrl(filePath);
+					js.setMessage("点位信息导出成功");
+				}else{
+					js.setMessage("创建Excle文件出错!");
+				}
+			}else{
+				js.setMessage("没有异常结果数据!");
+			} 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return js;
+	}
+	private String createLockDevicePoint(List<Device> list) {
+		// TODO Auto-generated method stub
+		String filePath ="";
+        String filename = "";
+        Workbook workbook = null;
+        try {
+	        workbook = new HSSFWorkbook();
+	        if (workbook != null) { 
+	            Sheet sheet = workbook.createSheet("停用设备点位信息");
+	
+	            Row row0 = sheet.createRow(0);
+	            Cell cell0_0 = row0.createCell(0, Cell.CELL_TYPE_STRING);
+	            cell0_0.setCellValue("停用设备点位信息");
+	            sheet.autoSizeColumn(0); 
+
+	       		 Row rowh = sheet.createRow(1);
+	       		 Cell rowh_0 = rowh.createCell(0, Cell.CELL_TYPE_STRING);
+	       		rowh_0.setCellValue("点位编号");
+	                sheet.autoSizeColumn(0);
+	       		 Cell rowh_1 = rowh.createCell(1, Cell.CELL_TYPE_STRING);
+	       		rowh_1.setCellValue("点位名称");
+	                sheet.autoSizeColumn(0); 
+	       		 Cell rowh_2 = rowh.createCell(2, Cell.CELL_TYPE_STRING);
+	       		rowh_2.setCellValue("点位Ip");
+	                sheet.autoSizeColumn(0); 
+	       		 Cell rowh_3 = rowh.createCell(3, Cell.CELL_TYPE_STRING);
+	       		rowh_3.setCellValue("Naming");
+	                sheet.autoSizeColumn(0); 
+	       		 Cell rowh_4 = rowh.createCell(4, Cell.CELL_TYPE_STRING);
+	       		rowh_4.setCellValue("所属区域");
+	                sheet.autoSizeColumn(0); 
+	       		 Cell rowh_5 = rowh.createCell(5, Cell.CELL_TYPE_STRING);
+	       		rowh_5.setCellValue("停用时间");
+	                sheet.autoSizeColumn(0); 
+	       		 Cell rowh_6 = rowh.createCell(6, Cell.CELL_TYPE_STRING);
+	       		rowh_6.setCellValue("停用原因");
+	                sheet.autoSizeColumn(0);
+                if(list.size()>0){ 
+                	 for(int i = 0; i<list.size(); i++){
+                		 Device device = list.get(i);
+                		 Row rowx = sheet.createRow(2 + i);
+                		 Cell cellx_0 = rowx.createCell(0, Cell.CELL_TYPE_STRING);
+                		 cellx_0.setCellValue(device.getPointId());
+                         sheet.autoSizeColumn(0);
+                		 Cell cellx_1 = rowx.createCell(1, Cell.CELL_TYPE_STRING);
+                		 cellx_1.setCellValue(device.getPointName());
+                         sheet.autoSizeColumn(0); 
+                		 Cell cellx_2 = rowx.createCell(2, Cell.CELL_TYPE_STRING);
+                		 cellx_2.setCellValue(device.getIpAddress());
+                         sheet.autoSizeColumn(0); 
+                		 Cell cellx_3 = rowx.createCell(3, Cell.CELL_TYPE_STRING);
+                		 cellx_3.setCellValue(device.getPointNaming());
+                         sheet.autoSizeColumn(0); 
+                		 Cell cellx_4 = rowx.createCell(4, Cell.CELL_TYPE_STRING);
+                		 cellx_4.setCellValue(device.getAreaName());
+                         sheet.autoSizeColumn(0); 
+                		 Cell cellx_5 = rowx.createCell(5, Cell.CELL_TYPE_STRING);
+                		 cellx_5.setCellValue(device.getLockTimes());
+                         sheet.autoSizeColumn(0); 
+                		 Cell cellx_6 = rowx.createCell(6, Cell.CELL_TYPE_STRING);
+                		 cellx_6.setCellValue(device.getDescription());
+                         sheet.autoSizeColumn(0); 
+                	 }
+	            }
+	
+	
+	            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+	            java.util.Date date = new java.util.Date();
+	            String str = sdf.format(date);
+	            filePath = "tempfile";
+	            String serverPath = getClass().getResource("/").getFile().toString();
+	            serverPath = serverPath.substring(0, (serverPath.length() - 16));
+	
+	            filePath = serverPath+filePath;
+	            File file = new File(filePath);
+	
+	            if(!file.exists()){
+	                file.mkdir();
+	            }
+	            filePath += "/"+ str + "_LockDeviceInfo.xls";
+	            filename = str + "_LockDeviceInfo.xls";
+	            File realFile = new File(filePath);
+	            if(realFile.exists()){
+	                realFile.delete();
+	            }
+	            try {
+	                FileOutputStream outputStream = new FileOutputStream(filePath);
+	                workbook.write(outputStream);
+	                outputStream.flush();
+	                outputStream.close();
+	            } catch (Exception e) {
+	                return "";
+	            }
+	        }
+	    }catch (Exception ex){
+	
+	    }
+	    return filename;
 	}
 
 	/**
