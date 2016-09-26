@@ -390,7 +390,7 @@ public class StatisticAction  extends BaseAction{
 			theCa.setTime(endDate);
 			theCa.add(theCa.DATE, subDay*-1);//没有选择日期 , 则 默认加载
 			for(int i = 0;i<=subDay;i++){
-	        	String dates = shortSdf.format(theCa.getTime());   
+	        	//String dates = shortSdf.format(theCa.getTime());   
 	        	dateStrList1.add(sdf.format(theCa.getTime()));
 	        	theCa.add(theCa.DATE, 1);
 	        }
@@ -398,32 +398,34 @@ public class StatisticAction  extends BaseAction{
 	        statistic.setSchEndTime(statistic.getSchEndTime()+" 23:59:59");
 		} 
 		device.setFlag(0);
-		int totalCount = deviceService.getDeviceCount(device);
+		//int totalCount = deviceService.getDeviceCount(device);
 		List<StatisticResultModel> resultList = new ArrayList<StatisticResultModel>();
-		int PageCount = 0;
-		if(totalCount % Constants.DEFAULT_PAGE_SIZE ==0){
-			PageCount = totalCount / Constants.DEFAULT_PAGE_SIZE;
-		}else{
-			PageCount = totalCount / Constants.DEFAULT_PAGE_SIZE + 1 ; 
-		}
+		//int PageCount = 0;
+		//if(totalCount % Constants.DEFAULT_PAGE_SIZE ==0){
+		//	PageCount = totalCount / Constants.DEFAULT_PAGE_SIZE;
+		//}else{
+		//	PageCount = totalCount / Constants.DEFAULT_PAGE_SIZE + 1 ; 
+		//}
 		try{			
-			for(int p = 1; p<=PageCount;p++){
-				device.setPageNo(p);
-				device.setPageSize(Constants.DEFAULT_PAGE_SIZE);  
+			//for(int p = 1; p<=PageCount;p++){
+				//device.setPageNo(p);
+				//device.setPageSize(Constants.DEFAULT_PAGE_SIZE);  
 				List<Device> dList = deviceService.getDeviceListWithPage(device);   
-				List<Integer> idList = new ArrayList<Integer>();
+				//List<Integer> idList = new ArrayList<Integer>();
+				//for(Device d : dList){
+				//	idList.add(d.getId());
+				//}
+				List<StatisticResultModel> statisticList = new ArrayList<StatisticResultModel>();
+				//List<StatisticResultModel> tempList = new ArrayList<StatisticResultModel>();
+				statisticList =  deviceService.getStatisticResultList(statistic);
+				//statisticList = tempList;
 				for(Device d : dList){
-					idList.add(d.getId());
-				}
-				for(Device d : dList){
-					List<StatisticResultModel> statisticList = new ArrayList<StatisticResultModel>();
 					StatisticResultModel rl = new StatisticResultModel(); 
 					rl.setDeviceNumber(d.getPointId()); 
 					rl.setDateStrList(dateStrList1);
 					rl.setIpAddress(d.getIpAddress());
 					//statistic.setDeviceId(d.getId());
-					statistic.setIdList(idList);
-					statisticList =  deviceService.getStatisticResultList(statistic);
+					//statistic.setIdList(idList);
 					List<String> valueList = new ArrayList<String>();
 					for(String dtr : dateStrList1){
 						String resultStr = "";
@@ -431,14 +433,16 @@ public class StatisticAction  extends BaseAction{
 							String datr1 = statisticList.get(i).getRecordDate();
 							if(dtr.equals(datr1)){ 
 								resultStr = statisticList.get(i).getResultValue();
+								//tempList.remove(i);
 								if(i<(statisticList.size()-1)){
 									String tempStr = statisticList.get(i+1).getRecordDate();
 									if(!dtr.equals(tempStr)){
 										break;
 									}
 								}
-							}
+							} 
 						}
+						//statisticList = tempList;
 						if(resultStr.length() == 0){
 							resultStr = "2";
 						}
@@ -447,7 +451,7 @@ public class StatisticAction  extends BaseAction{
 					rl.setValueList(valueList);
 					resultList.add(rl);
 				}  
-			}
+			//}
 		}catch(Exception ex){ 
 			ex.printStackTrace();
 		}	
@@ -467,22 +471,22 @@ public class StatisticAction  extends BaseAction{
 	            Row row0 = sheet.createRow(0);
 	            Cell cell0_0 = row0.createCell(0, Cell.CELL_TYPE_STRING);
 	            cell0_0.setCellValue("点位诊断信息(0: 表示诊断结果为异常 , 1: 表示诊断结果正常, 2: 表示没有诊断数据)");
-	            sheet.autoSizeColumn(0);
+	            //sheet.autoSizeColumn(0);
 	            
 
 	            Row row1 = sheet.createRow(1);
 	            Cell cell1_0 = row1.createCell(0, Cell.CELL_TYPE_STRING);
 	            cell1_0.setCellValue("开始时间:");
-	            sheet.autoSizeColumn(0);
+	            //sheet.autoSizeColumn(0);
 	            Cell cell1_1 = row1.createCell(1, Cell.CELL_TYPE_STRING);
 	            cell1_1.setCellValue(statistic.getSchBeginTime());
-	            sheet.autoSizeColumn(0);
+	            //sheet.autoSizeColumn(0);
 	            Cell cell1_2 = row1.createCell(2, Cell.CELL_TYPE_STRING);
 	            cell1_2.setCellValue("结束时间");
-	            sheet.autoSizeColumn(0);
+	            //sheet.autoSizeColumn(0);
 	            Cell cell1_3 = row1.createCell(3, Cell.CELL_TYPE_STRING);
 	            cell1_3.setCellValue(statistic.getSchEndTime());
-	            sheet.autoSizeColumn(0);
+	            //sheet.autoSizeColumn(0);
 
                 if(list.size()>0){
                 	List<String> dateList = list.get(0).getDateStrList();
@@ -490,28 +494,33 @@ public class StatisticAction  extends BaseAction{
 
     	            Cell cell2_0 = row2.createCell(0, Cell.CELL_TYPE_STRING);
     	            cell2_0.setCellValue("点位编号");
-    	            sheet.autoSizeColumn(0);
+    	            //sheet.autoSizeColumn(0);
 
     	            Cell cell2_1 = row2.createCell(1, Cell.CELL_TYPE_STRING);
     	            cell2_1.setCellValue("ip地址");
-    	            sheet.autoSizeColumn(0);
+    	            //sheet.autoSizeColumn(0);
                 	 for (int i = 0; i < dateList.size(); i++) {
                 		Cell cellx = row2.createCell(2+i, Cell.CELL_TYPE_STRING);
                 		cellx.setCellValue(dateList.get(i));
-         	            sheet.autoSizeColumn(0);
+         	            //sheet.autoSizeColumn(0);
+                	 }
+                	 List<Row> rowList = new ArrayList<Row>();
+                	 for(int i = 0; i<list.size(); i++){
+                		 Row row = sheet.createRow(3 + i);
+                		 rowList.add(row);
                 	 }
                 	 for(int i = 0; i<list.size(); i++){
-                		 Row rowx = sheet.createRow(3 + i);
+                		 Row rowx = rowList.get(i);
                 		 Cell cellx_0 = rowx.createCell(0, Cell.CELL_TYPE_STRING);
                 		 cellx_0.setCellValue(list.get(i).getDeviceNumber());
-                         sheet.autoSizeColumn(0);
+                         //sheet.autoSizeColumn(0);
                 		 Cell cellx_1 = rowx.createCell(1, Cell.CELL_TYPE_STRING);
                 		 cellx_1.setCellValue(list.get(i).getIpAddress());
-                         sheet.autoSizeColumn(0);
+                         //sheet.autoSizeColumn(0);
                          for(int j = 0; j<list.get(i).getValueList().size(); j++){ 
                     		 Cell cellx_x = rowx.createCell(2+j, Cell.CELL_TYPE_STRING);
                     		 cellx_x.setCellValue(list.get(i).getValueList().get(j));
-                             sheet.autoSizeColumn(0);
+                             //sheet.autoSizeColumn(0);
                          }
                 	 }
 	            }
