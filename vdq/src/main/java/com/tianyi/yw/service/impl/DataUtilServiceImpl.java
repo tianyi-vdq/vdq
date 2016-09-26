@@ -338,11 +338,12 @@ public class DataUtilServiceImpl implements DataUtilService {
 						ex.printStackTrace();
 					}
 					//3次诊断诊断完成 , 结果异常, 则调用mq服务推送消息
-					if(pushMessageToMQ(deviceDis)){ 
+					//公安内网, 没有MQ服务, 取消 推送业务
+					/*if(pushMessageToMQ(deviceDis)){ 
 						logService.writeLog(logType, "诊断结果异常, 结果已推送到MQ服务！");
 					}else{
 						logService.writeLog(logType, "诊断结果异常, 结果推送到MQ服务,出错！");
-					} 
+					} */
 				} 
 			}
 			isOk = true;
